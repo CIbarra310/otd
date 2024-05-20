@@ -24,7 +24,7 @@ def register(request):
             return redirect("login")
         
     context = {'form':form}  
-    return render(request, 'app/register.html', context = context) 
+    return render(request, 'interface/register.html', context = context) 
 
 # - Login an existing user
 def login(request):
@@ -43,7 +43,7 @@ def login(request):
                 return redirect("dashboard")
     
     context = {'form':form}
-    return render(request, 'app/login.html', context=context)
+    return render(request, 'interface/login.html', context=context)
 
 # - Logout a user
 def logout(request):
