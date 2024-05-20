@@ -1,0 +1,112 @@
+{% extends 'interface/layout.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <main>
+        <div class="container text-white shadow-md col-12 col-md-6 col-lg-6 col-xl-4">
+            <h2 class="text-center">Create New Run</h2>
+            <hr>
+            <form method="POST" autocomplete="off" action="">
+                {% csrf_token %}
+                <div class="row" hidden>
+                    <h5>Contact Information</h5>
+                    <div class="col-6">
+                        <label>Name</label>
+                        <input type="text" class="form-control" value="" disabled>
+                    </div>
+                    <div class="col-6">
+                        <label>Department</label>
+                        <input type="text" class="form-control" value="" disabled>
+                    </div>
+                    <div class="col-6">
+                        <label>Email</label>
+                        <input type="text" class="form-control" value="" disabled>
+                    </div>
+                    <div class="col-6">
+                        <label>Phone</label>
+                        <input type="text" class="form-control" value="" disabled>
+                    </div>
+                </div>
+                <br>
+                <div class="row" id="pickup">
+                    <h5>Where are we going?</h5>
+                    <div class="col-12">
+                        <label>Pick Up From</label>
+                        <input type="text" class="form-control" value="" placeholder="Keslow Camera" >
+                    </div>
+                    <div class="col-12">
+                        <label>Address 1</label>
+                        <input type="text" class="form-control" value="" placeholder="5900 Blackwelder St.">
+                    </div>
+                    <div class="col-12">
+                        <label>Address 2</label>
+                        <input type="text" class="form-control" value="" placeholder="Unit/Ste.">
+                    </div>
+                    <div class="col-5">
+                        <label>City</label>
+                        <input type="text" class="form-control" value="" placeholder="Culver City">
+                    </div>
+                    <div class="col-3">
+                        <label>State</label>
+                        <input type="text" class="form-control" value="" placeholder="CA">
+                    </div>
+                    <div class="col-4">
+                        <label>Zip</label>
+                        <input type="text" class="form-control" value="" placeholder="90232">
+                    </div>
+                </div>
+                <br>
+                <div class="row" id="dropoff">
+                    <h5>Where are we taking the item(s)?</h5>
+                    <div class="col-12">
+                        <label>Drop Off</label>
+                        <input type="text" class="form-control" value="" placeholder="Sony Pictures Studios">
+                    </div>
+                    <div class="col-12">
+                        <label>Address 1</label>
+                        <input type="text" class="form-control" value="" placeholder="10202 Washington Blvd">
+                    </div>
+                    <div class="col-12">
+                        <label>Address 2</label>
+                        <input type="text" class="form-control" value="" placeholder="Stage 21">
+                    </div>
+                    <div class="col-5">
+                        <label>City</label>
+                        <input type="text" class="form-control" value="" placeholder="Culver City">
+                    </div>
+                    <div class="col-3">
+                        <label>State</label>
+                        <input type="text" class="form-control" value="" placeholder="CA">
+                    </div>
+                    <div class="col-4">
+                        <label>Zip</label>
+                        <input type="text" class="form-control" value="" placeholder="90232">
+                    </div>
+                </div>           
+                <br>
+                <div class="row">
+                    <h5>What are we getting?</h5>
+                    <div class="col-6 mb-3">
+                        <label>P.O. #</label>
+                        <input type="text" class="form-control" value="" placeholder="1234">
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label>Vendor Order #</label>
+                        <input type="text" class="form-control" value="" placeholder="1234">
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">Run Details</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                      </div>
+                </div>
+                <div class="col-12 mb-3">
+                    <label for="formFileSm" class="form-label">Supporting Documents</label>
+                    <input class="form-control form-control-sm" id="formFileSm" type="file">
+                  </div>
+                <br>
+                <button type="submit" class="btn btn-primary w-100 p-2 btn-block">Submit Run Request</button>
+            </form>
+        </div>
+    </main>
+{% endblock %}
