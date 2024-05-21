@@ -43,7 +43,7 @@ def login(request):
                 return redirect("dashboard")
     
     context = {'form':form}
-    return render(request, 'interface/login.html', context=context)
+    return render(request, 'interface/dashboard.html', context=context)
 
 # - Logout a user
 def logout(request):
@@ -52,6 +52,7 @@ def logout(request):
     return redirect("login")
 
 # - Dashboard Page
+@login_required(login_url=login)
 def dashboard(request):
     # Fetch RunRequest data model
     # runs = RunRequest.objects.all()

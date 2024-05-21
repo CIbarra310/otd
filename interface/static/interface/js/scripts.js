@@ -22,3 +22,5 @@ document.addEventListener('DOMContentLoaded', () => {
     hideNavbarItemsOnAuthPages();
     anotherFunction(); // Call other functions as needed
 });
+
+
