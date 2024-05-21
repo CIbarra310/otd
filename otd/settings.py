@@ -134,3 +134,7 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'core.NewUser'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://on-the-day-6d3c5e11e0df.herokuapp.com',  # Replace with your actual domain
+]
