@@ -28,6 +28,9 @@ def register(request):
 
 # - Login an existing user
 def login(request):
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+    
     form = LoginForm()
     if request.method == "POST":
         form = LoginForm(request, data=request.POST)
@@ -40,10 +43,10 @@ def login(request):
 
             if user is not None:
                 auth.login(request, user)
-                return redirect("dashboard")
+                return redirect("login")
     
     context = {'form':form}
-    return render(request, 'interface/dashboard.html', context=context)
+    return render(request, 'interface/login.html', context=context)
 
 # - Logout a user
 def logout(request):

@@ -25,7 +25,7 @@
                         </li>
                         &nbsp;     &nbsp;     &nbsp; 
                         <li class="nav-item">
-                        <a class="nav-link" href="">Sign out &nbsp; <i class="fa fa-sign-out" aria-hidden="true"></i> </a>
+                        <a class="nav-link" href="{% url 'logout' %}">Sign out &nbsp; <i class="fa fa-sign-out" aria-hidden="true"></i> </a>
                         </li>
                     {% else %}
                         <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a></li>
