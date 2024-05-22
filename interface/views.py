@@ -1,5 +1,6 @@
 from .forms import LoginForm, CreateUserForm
 from transportation.forms import RunRequest, NewRunRequest
+from production.forms import RadioForm
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
@@ -109,3 +110,14 @@ def run_history(request):
         'runs': runs
     }
     return render(request, 'interface/run_history.html', context=context)
+
+@login_required(login_url='login')
+def radio_scan(request):
+    if request.method == 'POST':
+        form = RadioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('radios')
+    else:
+        form = RadioForm()
+    return render(request, 'interface/radios.html', {'form': form})
