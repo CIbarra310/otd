@@ -97,3 +97,15 @@ def new_run(request):
 
     context = {'run': run}
     return render(request, 'interface/new_run.html', context=context)
+
+# Run History
+@login_required(login_url='login')
+def run_history(request):
+    # Fetch RunRequest data model
+    runs = RunRequest.objects.all()
+
+    # Pass the object to the template context
+    context = {
+        'runs': runs
+    }
+    return render(request, 'interface/run_history.html', context=context)
