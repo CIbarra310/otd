@@ -1,4 +1,5 @@
 from .forms import LoginForm, CreateUserForm
+from transportation.forms import RunRequest, NewRunRequest
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
@@ -69,30 +70,30 @@ def dashboard(request):
 # - Create a new run
 def new_run(request):
     # Get logged-in user's data
-    #user = request.user
-    #requester_name = f"{user.first_name} {user.last_name}"
-    #requester_phone = user.phone_number
-    #requester_email = user.email
-    #requester_department = user.department
+    user = request.user
+    requester_name = f"{user.first_name} {user.last_name}"
+    requester_phone = user.phone_number
+    requester_email = user.email
+    requester_department = user.department
 
     # Create a dictionary with the user data
-    #initial_data = {
-    #    'requester_name': requester_name,
-    #    'requester_phone': requester_phone,
-    #    'requester_email': requester_email,
-    #    'requester_department': requester_department,
-    #}
+    initial_data = {
+        'requester_name': requester_name,
+        'requester_phone': requester_phone,
+        'requester_email': requester_email,
+        'requester_department': requester_department,
+    }
 
-    #if request.method == "POST":
+    if request.method == "POST":
         # If it's a POST request, process the form data
-    #    run = NewRunRequest(request.POST)
-    #    if run.is_valid():
+        run = NewRunRequest(request.POST)
+        if run.is_valid():
             # Process the form data
-    #        run.save()
-    #        return redirect("dashboard")
-    #else:
+            run.save()
+            return redirect("dashboard")
+    else:
         # If it's not a POST request, create a new form instance with initial data
-    #    run = NewRunRequest(initial=initial_data)
+        run = NewRunRequest(initial=initial_data)
 
-    #context = {'run': run}
-    return render(request, 'interface/new_run.html') # context=context)
+    context = {'run': run}
+    return render(request, 'interface/new_run.html', context=context)

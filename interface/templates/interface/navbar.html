@@ -8,21 +8,25 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     {% if user.is_authenticated %}
-                        <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard &nbsp;<i class="fa fa-home" aria-hidden="true"></i></a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Runs
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'new_run' %}">New Run</a></li>
+                                <li><a class="dropdown-item" href="#">Run History</a></li>
+                            </ul>
                         </li>
-                        &nbsp;     &nbsp;     &nbsp; 
-                        <li class="nav-item">
-                        <a class="nav-link" href="">New Run &nbsp;<i class="fa fa-file" aria-hidden="true"></i></a>
-                        </li>
-                        &nbsp;     &nbsp;     &nbsp; 
-                        <li class="nav-item">
-                        <a class="nav-link" href="">Run Queue &nbsp;<i class="fa fa-list" aria-hidden="true"></i></a>
-                        </li>
-                        &nbsp;     &nbsp;     &nbsp; 
-                        <li class="nav-item">
-                        <a class="nav-link" href="">Run History &nbsp;<i class="fa fa-list" aria-hidden="true"></i></a>
-                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              Transportation
+                            </a>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">Run Queue</a></li>
+                              <li><a class="dropdown-item" href="#">Drivers</a></li>
+                              <li><a class="dropdown-item" href="#">Equipment</a></li>
+                            </ul>
+                          </li>
                         &nbsp;     &nbsp;     &nbsp; 
                         <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Sign out &nbsp; <i class="fa fa-sign-out" aria-hidden="true"></i> </a>

@@ -4,7 +4,8 @@
 
 {% block content %}
     <main>
-        <div class="container text-white shadow-md col-12 col-md-6 col-lg-6 col-xl-4">
+        <br>
+        <div class="container shadow-md col-12 col-md-6 col-lg-6 col-xl-4">
             <h2 class="text-center">Create New Run</h2>
             <hr>
             <form method="POST" autocomplete="off" action="">
@@ -13,23 +14,23 @@
                     <h5>Contact Information</h5>
                     <div class="col-6">
                         <label>Name</label>
-                        <input type="text" class="form-control" value="" disabled>
+                        <input type="text" class="form-control" value="{{ run.requester_name.value }}" disabled>
                     </div>
                     <div class="col-6">
                         <label>Department</label>
-                        <input type="text" class="form-control" value="" disabled>
+                        <input type="text" class="form-control" value="{{ run.requester_department.value}}" disabled>
                     </div>
                     <div class="col-6">
                         <label>Email</label>
-                        <input type="text" class="form-control" value="" disabled>
+                        <input type="text" class="form-control" value="{{ run.requester_email.value}}" disabled>
                     </div>
                     <div class="col-6">
                         <label>Phone</label>
-                        <input type="text" class="form-control" value="" disabled>
+                        <input type="text" class="form-control" value="{{ run.requester_phone.value }}" disabled>
                     </div>
                 </div>
-                <br>
                 <div class="row" id="pickup">
+                    <br>
                     <h5>Where are we going?</h5>
                     <div class="col-12">
                         <label>Pick Up From</label>
@@ -108,5 +109,6 @@
                 <button type="submit" class="btn btn-primary w-100 p-2 btn-block">Submit Run Request</button>
             </form>
         </div>
+        <br>
     </main>
 {% endblock %}
