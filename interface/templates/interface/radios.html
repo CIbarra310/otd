@@ -4,40 +4,7 @@
 
 {% block content %}
     <main>
-        <h1>Scan Barcode</h1>
-        <video id="preview"></video>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="hidden" name="barcode" id="barcode" value="">
-            <button type="submit">Scan</button>
-        </form>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Quagga.init({
-                    inputStream: {
-                        name: "Live",
-                        type: "LiveStream",
-                        target: document.querySelector('#preview'),
-                    },
-                    decoder: {
-                        readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader", "i2of5_reader"]
-                    }
-                }, function(err) {
-                    if (err) {
-                        console.log(err);
-                        return
-                    }
-                    Quagga.start();
-                });
-    
-                Quagga.onDetected(function(data) {
-                    var barcode = data.codeResult.code;
-                    document.getElementById('barcode').value = barcode;
-                    Quagga.stop();
-                });
-            });
-        </script>
+
         
     </main>
 {% endblock %}
