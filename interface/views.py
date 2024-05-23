@@ -69,6 +69,7 @@ def dashboard(request):
     return render(request, 'interface/dashboard.html') #context=context
 
 # - Create a new run
+@login_required(login_url=login)
 def new_run(request):
     # Get logged-in user's data
     user = request.user
