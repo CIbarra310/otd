@@ -9,5 +9,6 @@ urlpatterns = [
     path('dashboard', views.dashboard, name="dashboard"),
     path('new_run', views.new_run, name="new_run"),
     path('run_history', views.run_history, name="run_history"),
-    path('radios', views.radio_scan, name="radios"),
+    path('radios', views.radios, name="radios"),
+    path('radio_scan', views.radio_scan, name="radio_scan"),
 ]

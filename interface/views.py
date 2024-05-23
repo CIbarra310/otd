@@ -112,6 +112,9 @@ def run_history(request):
     return render(request, 'interface/run_history.html', context=context)
 
 @login_required(login_url='login')
+def radios(request):
+    return render(request, 'interface/radios.html')
+
 def radio_scan(request):
     if request.method == 'POST':
         form = RadioForm(request.POST)
