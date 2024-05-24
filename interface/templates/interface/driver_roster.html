@@ -4,74 +4,79 @@
 
 {% block content %}
     <main>
-        <div class="container run-request-container">
+        <div class="container">
+            <br>
             <div class="d-flex justify-content-between">
                 <h1>Driver Roster</h1>
                 <button class="btn btn-outline-primary">Add New Driver</button>
             </div>
             <hr>
             <h3>Active Drivers</h3>
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">OCC</th>
-                    <th scope="col">Rate</th>
-                    <th scope="col">Last 4</th>
-                    <th scope="col">Group</th>
-                    <th scope="col">Vehicle</th>
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td scope="row">Chasen</td>
-                    <td>Ibarra</td>
-                    <td>chasen.ibarra@icloud.com</td>
-                    <td>3501</td>
-                    <td>$51.77</td>
-                    <td>8479</td>
-                    <td>2</td>
-                    <td>Stakebed</td>
-                    <td>
-                        <button class="btn btn-danger">Deactivate</button>
-                    </td>
-                  </tr>
-                </tbody>
-            </table>   
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">First</th>
+                        <th scope="col">Last</th>
+                        <th class="hidden-column" scope="col">Email</th>
+                        <th class="hidden-column" scope="col">OCC</th>
+                        <th class="hidden-column" scope="col">Rate</th>
+                        <th class="hidden-column" scope="col">Last 4</th>
+                        <th scope="col">Group</th>
+                        <th scope="col">Vehicle</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td scope="row">Chasen</td>
+                        <td>Ibarra</td>
+                        <td class="hidden-column" >chasen.ibarra@icloud.com</td>
+                        <td class="hidden-column" >3501</td>
+                        <td class="hidden-column" >$51.77</td>
+                        <td class="hidden-column" >8479</td>
+                        <td>2</td>
+                        <td>Stakebed</td>
+                        <td>
+                            <button class="btn btn-danger">Deactivate</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>   
+            </div>
             <br><br>
             <h3>Inactive Drivers</h3>
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">OCC</th>
-                    <th scope="col">Rate</th>
-                    <th scope="col">Last 4</th>
-                    <th scope="col">Group</th>
-                    <th scope="col">Vehicle</th>
-                    <th scope="col">Activate</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td scope="row">Chasen</td>
-                    <td>Ibarra</td>
-                    <td>chasen.ibarra@icloud.com</td>
-                    <td>3501</td>
-                    <td>$51.77</td>
-                    <td>8479</td>
-                    <td>2</td>
-                    <td>Stakebed</td>
-                    <td>
-                        <button class="btn btn-success">Activate</button>
-                    </td>
-                  </tr>
-                </tbody>
-            </table>   
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">First</th>
+                        <th scope="col">Last</th>
+                        <th class="hidden-column" scope="col">Email</th>
+                        <th class="hidden-column" scope="col">OCC</th>
+                        <th class="hidden-column" scope="col">Rate</th>
+                        <th class="hidden-column" scope="col">Last 4</th>
+                        <th scope="col">Group</th>
+                        <th scope="col">Vehicle</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td scope="row">Chasen</td>
+                        <td>Ibarra</td>
+                        <td class="hidden-column" >chasen.ibarra@icloud.com</td>
+                        <td class="hidden-column" >3501</td>
+                        <td class="hidden-column" >$51.77</td>
+                        <td class="hidden-column" >8479</td>
+                        <td>2</td>
+                        <td>Stakebed</td>
+                        <td>
+                            <button class="btn btn-success">Activate</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>   
+            </div>
     </main>
 {% endblock %}
