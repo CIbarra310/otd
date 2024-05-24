@@ -41,6 +41,10 @@
     margin: 0 10px;;
 }
 
+td, th {
+    text-align: center;
+}
+
 @media (max-width: 575.98px) {
     .hidden-column {
         display: none; /* Hide on extra small devices */
