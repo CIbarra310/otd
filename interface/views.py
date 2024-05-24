@@ -68,6 +68,11 @@ def dashboard(request):
     #}
     return render(request, 'interface/dashboard.html') #context=context
 
+# - Driver roster page
+@login_required(login_url=login)
+def driver_roster(request):
+    return render(request, 'interface/driver_roster.html')
+
 # - Create a new run
 @login_required(login_url=login)
 def new_run(request):
