@@ -1,3 +1,39 @@
-.dashboard-icons {
-    border-radius: 50%;
+/* Run Request Styling */
+.run-request-container {
+    width: 360px;
+    height: 600;
+    margin: 8% auto;
+    border-color: black;
+    border-style:solid;
+    border-radius: 5px;
+    position: relative;
+}
+
+.run-request-input {
+    width: 100%;
+    padding: 10px 5px;
+    margin: 5px 0px;
+    border-bottom: 1px solid black;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    background: transparent;
+}
+
+.next-button-box {
+    width: 100%;
+    margin: 30px auto;
+    text-align: center;
+}
+
+.next-button {
+    width: 110px;
+    height: 35px;
+    margin: 0 10px;;
+}
+
+.back-button {
+    width: 110px;
+    height: 35px;
+    margin: 0 10px;;
 }

@@ -5,10 +5,100 @@
 {% block content %}
     <main>
         <br>
-        <div class="container shadow-md col-12 col-md-6 col-lg-6 col-xl-4">
+        <div class="run-request-container">
+            <h1>New Run</h1>
+            <form>
+                <div class="container p-2" hidden>
+                    <input type="text" class="form-control" value="{{ run.requester_name.value}}" disabled>
+                    <input type="text" class="form-control" value="{{ run.requester_email.value}}" disabled>
+                    <input type="text" class="form-control" value="{{ run.requester_phone.value}}" disabled>
+                    <input type="text" class="form-control" value="{{ run.requester_department.value}}" disabled>
+                </div>
+                <div class="container p-1">
+                    <h3>Where are we going?</h3>
+                    <input type="text" class="form-control run-request-input" placeholder="Vendor Name">
+                    <input type="text" class="form-control run-request-input" placeholder="123 Main St">
+                    <input type="text" class="form-control run-request-input" placeholder="Unit/Suite/Stage">
+                    <div class="row">
+                        <div class="col-5">
+                            <input type="text" class="form-control run-request-input" placeholder="Los Angeles">
+                        </div>
+                        <div class="col-3">
+                            <input type="text" class="form-control run-request-input" placeholder="CA">
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control run-request-input" placeholder="90066">
+                        </div>
+                    </div>
+                    <div class="next-button-box">
+                        <br>
+                        <button type="button" class="btn btn-primary next-button">Next</button>
+                    </div>
+                </div>
+                <div class="container p-1">
+                    <h3>What are we getting?</h3>
+                    <textarea class="form-control run-request-details" id="exampleFormControlTextarea1" rows="6" placeholder="Run details here"></textarea>
+                    <div class="next-button-box">
+                        <br>
+                        <button type="button" class="btn btn-secondary back-button">Back</button>
+                        <button type="button" class="btn btn-primary next-button">Next</button>
+                    </div>
+                </div>
+                <div class="container p-1">
+                    <h3>Where are we taking it?</h3>
+                    <input type="text" class="form-control run-request-input" placeholder="Vendor Name">
+                    <input type="text" class="form-control run-request-input" placeholder="123 Main St">
+                    <input type="text" class="form-control run-request-input" placeholder="Unit/Suite/Stage">
+                    <div class="row">
+                        <div class="col-5">
+                            <input type="text" class="form-control run-request-input" placeholder="Los Angeles">
+                        </div>
+                        <div class="col-3">
+                            <input type="text" class="form-control run-request-input" placeholder="CA">
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control run-request-input" placeholder="90066">
+                        </div>
+                    </div>
+                    <div class="next-button-box">
+                        <br>
+                        <button type="button" class="btn btn-secondary back-button">Back</button>
+                        <button type="button" class="btn btn-primary next-button">Next</button>
+                    </div>
+                </div>
+                <div class="container p-1">
+                    <h3>Other Information</h3>
+                    <input type="text" class="form-control run-request-input" placeholder="Vendor Name">
+                    <input type="text" class="form-control run-request-input" placeholder="123 Main St">
+                    <input type="text" class="form-control run-request-input" placeholder="Unit/Suite/Stage">
+                    <div class="row">
+                        <div class="col-5">
+                            <input type="text" class="form-control run-request-input" placeholder="Los Angeles">
+                        </div>
+                        <div class="col-3">
+                            <input type="text" class="form-control run-request-input" placeholder="CA">
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control run-request-input" placeholder="90066">
+                        </div>
+                    </div>
+                    <div class="next-button-box">
+                        <br>
+                        <button type="button" class="btn btn-secondary back-button">Back</button>
+                        <button type="button" class="btn btn-primary next-button">Next</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+
+
+        <div class="container shadow-md col-12 col-md-6 col-lg-6 col-xl-4" hidden>
             <h2 class="text-center">Create New Run</h2>
             <hr>
             <form method="POST" action="" enctype="multipart/form-data">
+                <!-- Contact information (should be disabled and hidden)-->
                 <div class="container">
                     <div class="d-flex justify-content-center">
                         <div class="col-auto">
@@ -51,7 +141,8 @@
                         </div>
                     </div>
                 </div>
-                
+                <br>
+
             </form>
         </div>
         <br>
