@@ -3,10 +3,14 @@
     width: 360px;
     height: 600;
     margin: 8% auto;
-    border-color: black;
-    border-style:solid;
     border-radius: 5px;
     position: relative;
+}
+
+.run-request-container #step1 {
+    /* Your animation properties here */
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .run-request-input {
