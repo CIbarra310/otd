@@ -1,5 +1,5 @@
 from .forms import LoginForm, CreateUserForm
-from transportation.forms import NewRunRequest
+from transportation.forms import NewRunRequest, RunRequest, NewDriver, Driver
 from production.forms import RadioForm
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -69,9 +69,26 @@ def dashboard(request):
     return render(request, 'interface/dashboard.html') #context=context
 
 # - Driver roster page
-@login_required(login_url=login)
+@login_required(login_url='login')
 def driver_roster(request):
-    return render(request, 'interface/driver_roster.html')
+    drivers = Driver.objects.all()
+
+    context = {'drivers': drivers}
+    return render(request, 'interface/driver_roster.html', context=context)
+
+@login_required(login_url=login)
+def add_driver(request):
+    if request.method == "POST":
+        driver = NewDriver(request.POST)
+        if driver.is_valid():
+            driver.save()
+            return redirect("driver_roster")
+        else:
+           messages.error(request, "There was an error with your submission. Please check the form for errors.")
+
+    driver = NewDriver()
+    context = {'driver': driver}
+    return render(request, 'interface/add_driver.html', context=context)
 
 # - Create a new run
 @login_required(login_url=login)

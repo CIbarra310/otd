@@ -8,7 +8,7 @@
             <br>
             <div class="d-flex justify-content-between">
                 <h1>Driver Roster</h1>
-                <button class="btn btn-outline-primary">Add New Driver</button>
+                <a class="btn btn-outline-primary" href="{% url 'add_driver' %}">Add New Driver</a>
             </div>
             <hr>
             <h3>Active Drivers</h3>
@@ -27,18 +27,20 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td scope="row">Chasen Ibarra</td>
-                        <td class="hidden-column" >chasen.ibarra@icloud.com</td>
-                        <td class="hidden-column" >3501</td>
-                        <td class="hidden-column" >$51.77</td>
-                        <td class="hidden-column" >8479</td>
-                        <td>2</td>
-                        <td>Stakebed</td>
-                        <td>
-                            <button class="btn btn-danger">Remove</button>
-                        </td>
-                      </tr>
+                        {% for driver in drivers %}
+                        <tr>
+                            <td scope="row"> {{driver.first_name}} {{driver.last_name}}</td>
+                            <td class="hidden-column" >{{ driver.driver_email }}</td>
+                            <td class="hidden-column" >{{ driver.occupation_code }}</td>
+                            <td class="hidden-column" >{{ driver.rate }}</td>
+                            <td class="hidden-column" >{{ driver.last_4 }}</td>
+                            <td>{{ driver.grouping }}</td>
+                            <td>Stakebed</td>
+                            <td>
+                                <button class="btn btn-danger">Remove</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>   
             </div>

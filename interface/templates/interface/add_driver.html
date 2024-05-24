@@ -1,0 +1,17 @@
+{% extends 'interface/layout.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <main>
+        <div class="container run-request-container">
+            <h1>Driver Roster</h1>
+            <hr>
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{ driver.as_p }}
+                <button class=" btn btn-primary" type="submit">submit</button>
+                <br>
+            </form>
+    </main>
+{% endblock %}

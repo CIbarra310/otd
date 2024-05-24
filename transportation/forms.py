@@ -2,7 +2,7 @@ from django import forms
 from django.utils import timezone
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, ButtonHolder, Submit, Div
-from .models import RunRequest
+from .models import RunRequest, Driver
 
 # - Create new run
 class NewRunRequest(forms.ModelForm):
@@ -33,4 +33,19 @@ class NewRunRequest(forms.ModelForm):
             'truck_size',
             'run_details',
             'assigned_driver'
+        ]
+
+# - Create new driver
+class NewDriver(forms.ModelForm):
+    class Meta:
+        model = Driver
+        fields = [
+            'production_title', 
+            'first_name',
+            'last_name',
+            'driver_email',
+            'occupation_code',
+            'rate',
+            'grouping',
+            'last_4'
         ]

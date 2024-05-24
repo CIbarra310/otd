@@ -42,6 +42,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=20)
     department = models.CharField(max_length=150)
     job_title = models.CharField(max_length=150)
+    
 
     objects = CustomAccountManager()
 
