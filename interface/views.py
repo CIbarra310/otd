@@ -8,6 +8,7 @@ from django.contrib.auth.models import auth
 from django.db.models.functions import Lower
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from core.models import Production, NewUser
 import json
 
 # - Home Page
@@ -55,6 +56,24 @@ def logout(request):
     auth.logout(request)
     messages.success(request, "You have been logged out")
     return redirect("login")
+
+# - Production Admin
+@login_required(login_url=login)
+def production_admin(request):
+    productions = Production.objects.all()
+
+    context = {'productions': productions}
+
+    return render(request, 'interface/production_admin.html', context = context)
+
+# - User Admin
+@login_required(login_url=login)
+def user_admin(request):
+    users = NewUser.objects.all()
+
+    context = {'users': users}
+
+    return render(request, 'interface/user_admin.html', context = context)
 
 # - Dashboard Page
 @login_required(login_url=login)

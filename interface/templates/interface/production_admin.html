@@ -1,0 +1,38 @@
+{% extends 'interface/layout.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <main>
+        <div class="container run-request-container">
+            <h1>Productions</h1>
+            <hr>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Title</th>
+                            <th scope="col">Studio</th>
+                            <th scope="col" class="hidden-column">Purchase Order</th>
+                            <th scope="col">Active</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for production in productions %}
+                            <tr>
+                                <td>{{ production.production_title }}</td>
+                                <td >{{ production.production_studio }}</td>
+                                <td class="hidden-column">{{ production.purchase_order }}</td>
+                                <td>{{ production.is_active }}</td>
+                                <td>
+                                    <button class="btn btn-secondary">View</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+{% endblock %}

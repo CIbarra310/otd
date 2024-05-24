@@ -7,6 +7,7 @@ from core.models import Production, Department, JobTitle
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit
 from transportation.models import RunRequest
+from core.models import Production
 
 # - Register/Create a user
 class CreateUserForm(UserCreationForm):    

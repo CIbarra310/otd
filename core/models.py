@@ -42,7 +42,8 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=20)
     department = models.CharField(max_length=150)
     job_title = models.CharField(max_length=150)
-    
+
+    productions = models.ManyToManyField('Production', related_name='users')
 
     objects = CustomAccountManager()
 
@@ -51,6 +52,10 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.user_name
+    
+    @property
+    def production_titles(self):
+        return ", ".join([production.production_title for production in self.productions.all()])
 
 # Create your models here.
 class Production(models.Model):
