@@ -1,7 +1,12 @@
+/* Dashboard Styling */
+.dashboard-icon {
+    border-radius: 10px;
+}
+
 /* Run Request Styling */
 .run-request-container {
     width: 100%;
-    height: 600;
+    height: 600px;
     margin: 8% auto;
     border-radius: 5px;
     position: relative;

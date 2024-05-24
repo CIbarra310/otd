@@ -1,5 +1,5 @@
 from .forms import LoginForm, CreateUserForm
-from transportation.forms import RunRequest, NewRunRequest
+from transportation.forms import NewRunRequest
 from production.forms import RadioForm
 from django.contrib import messages
 from django.contrib.auth import authenticate

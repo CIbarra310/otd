@@ -37,6 +37,8 @@ class RunRequest(models.Model):
     requester_email = models.CharField(max_length=255)
     requester_department = models.CharField(max_length=100)
     run_date = models.DateField()
+    ready_time = models.TimeField(null=True, blank=True)
+    need_by_this_time = models.TimeField(null=True, blank=True)
 
     #Pick Up Information
     pickup_name = models.CharField(max_length=100)
@@ -62,7 +64,7 @@ class RunRequest(models.Model):
     run_status = models.CharField(max_length=20, null=True)
     truck_size = models.CharField(max_length=50, null=True, blank=True)
     run_details = models.TextField(max_length=500)
-    assigned_driver = models.CharField(max_length=100, null=True)
+    assigned_driver = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return "Run #" + str(self.id) + " - " + self.requester_department
