@@ -112,32 +112,21 @@ def add_driver(request):
 # - Create a new run
 @login_required(login_url=login)
 def new_run(request):
-    # Get logged-in user's data
     user = request.user
-    requester_name = f"{user.first_name} {user.last_name}"
-    requester_phone = user.phone_number
-    requester_email = user.email
-    requester_department = user.department
-    production_title = user.production_title
-
-    # Create a dictionary with the user data
     initial_data = {
-        'requester_name': requester_name,
-        'requester_phone': requester_phone,
-        'requester_email': requester_email,
-        'requester_department': requester_department,
-        'production_title': production_title,
+        'requester_name': f"{user.first_name} {user.last_name}",
+        'requester_phone': user.phone_number,
+        'requester_email': user.email,
+        'requester_department': user.department,
+        'production_title': user.production_title,
     }
 
     if request.method == "POST":
-        # If it's a POST request, process the form data
         run = NewRunRequest(request.POST)
         if run.is_valid():
-            # Process the form data
             run.save()
             return redirect("dashboard")
     else:
-        # If it's not a POST request, create a new form instance with initial data
         run = NewRunRequest(initial=initial_data)
 
     context = {'run': run}

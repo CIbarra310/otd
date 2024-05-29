@@ -1,9 +1,12 @@
 from django import forms
 from datetime import datetime
+from django.urls import reverse_lazy
 from django.utils import timezone
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, ButtonHolder, Submit, Div
 from .models import RunRequest, Driver
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 
 # - Create new run
 class NewRunRequest(forms.ModelForm):
@@ -18,8 +21,8 @@ class NewRunRequest(forms.ModelForm):
     ]
 
     run_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'min': datetime.now().date()}))
-    ready_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time','min': datetime.now().date()}))
-    need_by_this_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time','min': datetime.now().date()}))
+    ready_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
+    need_by_this_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
     truck_size = forms.ChoiceField(choices=TRUCK_SIZE_CHOICES)
 
     class Meta:
@@ -85,6 +88,10 @@ class NewRunRequest(forms.ModelForm):
 
     def __init__(self,*args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_action = reverse_lazy('dashboard')
+        self.helper.form_method = 'POST'
+        self.helper.add_input(Submit('submit','Submit'))
         self.fields['requester_name'].disabled = True
         self.fields['requester_phone'].disabled = True
         self.fields['requester_email'].disabled = True

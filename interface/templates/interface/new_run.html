@@ -1,136 +1,155 @@
 {% extends 'interface/layout.html' %}
-
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <main>
-        <div class="container run-request-container">
-            <h1>New Run</h1>
-            <hr>
-            <form action="" method="POST">
-                {% csrf_token %}
-                <div class="row">
-                    <p>Information to hide</p>
-                    <div class="col-6">
-                        {{ run.requester_name|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-6">
-                        {{ run.requester_department|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-6">
-                        {{ run.requester_email|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-6">
-                        {{ run.requester_phone|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-6">
-                        {{ run.production_title|as_crispy_field|safe }}
-                    </div>
+<main>
+    <div class="container run-request-container">
+        <h1>New Run Request</h1>
+        <form method="POST" action="{% url 'new_run' %}">
+            {% csrf_token %}
+            <!-- Contact information taken from the user data -->
+            <div class="container p-2" hidden>
+                <input type="text" class="form-control" value="{{ run.requester_name.value}}" disabled>
+                <input type="text" class="form-control" value="{{ run.requester_email.value}}" disabled>
+                <input type="text" class="form-control" value="{{ run.requester_phone.value}}" disabled>
+                <input type="text" class="form-control" value="{{ run.requester_department.value}}" disabled>
+            </div>
+            <!-- Date and time information for the run-->
+            <div class="container p-1" id="step1">
+                <div class="p-3">
+                    <strong>Date:</strong>
+                    <input type="date" class="form-control run-request-input" name="run_date">
                 </div>
-                <hr>
-                <div class="row">
-                    <p>Step 1: date/time</p>
-                    <div class="col-6">
-                        {{ run.run_date|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-6">
-                        {{ run.ready_time|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-6">
-                        {{ run.need_by_this_time|as_crispy_field|safe }}
-                    </div>
+                <div class="p-3">
+                    <strong>When will it be ready?</strong>
+            <input type="time" class="form-control run-request-input" name="ready_time">
                 </div>
-                <hr>
+                <div class="p-3">
+                    <strong>When do you need it by?</strong>
+                    <input type="time" class="form-control run-request-input" name="need_by_this_time">
+                </div>
+                <div class="next-button-box">
+                    <br>
+                    <button type="button" class="btn btn-primary next-button">Next</button>
+                </div>
+            </div>
+            <div class="container p-1" id="step2" hidden>
+                <h3>Where are we going?</h3>
+                <input type="text" class="form-control run-request-input" placeholder="Vendor Name" name="pickup_name">
+                <input type="text" class="form-control run-request-input" placeholder="123 Main St" name="pickup_address_1">
+                <input type="text" class="form-control run-request-input" placeholder="Unit/Suite/Stage" name="pickup_address_2">
                 <div class="row">
-                    <p>Step 2: Where are we going?</p>
-                    <div class="col-6">
-                        <label for="">Name</label>
-                        {{ run.pickup_name|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-6">
-                        <label for="">Phone</label>
-                        {{ run.pickup_phone|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-12">
-                        <label for="">Address 1</label>
-                        {{ run.pickup_address_1|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-12">
-                        <label for="">Address 2</label>
-                        {{ run.pickup_address_2|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-7">
-                        <label for="">City</label>
-                        {{ run.pickup_city|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-2">
-                        <label for="">State</label>
-                        {{ run.pickup_state|as_crispy_field|safe }}
+                    <div class="col-5">
+                        <input type="text" class="form-control run-request-input" placeholder="Los Angeles" name="pickup_city">
                     </div>
                     <div class="col-3">
-                        <label for="">Zip</label>
-                        {{ run.pickup_zip|as_crispy_field|safe }}
+                        <input type="text" class="form-control run-request-input" placeholder="CA" name="pickup_state">
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control run-request-input" placeholder="90066" name="pickup_zip">
                     </div>
                 </div>
-                <hr>
-                <div class="row">
-                    <p>Step 3: What are we getting?</p>
-                    <div class="col-12">
-                        <label for="">Run Details</label>
-                        {{ run.run_details|as_crispy_field|safe }}
-                    </div>
+                <div class="next-button-box">
+                    <br>
+                    <button type="button" class="btn btn-secondary back-button">Back</button>
+                    <button type="button" class="btn btn-primary next-button">Next</button>
                 </div>
-                <hr>
+            </div>
+            <div class="container p-1" id="step3" hidden>
+                <h3>What are we getting?</h3>
+                <textarea class="form-control run-request-details" name="run_details" rows="6" placeholder="Run details here"></textarea>
+                <div class="next-button-box">
+                    <br>
+                    <button type="button" class="btn btn-secondary back-button">Back</button>
+                    <button type="button" class="btn btn-primary next-button">Next</button>
+                </div>
+            </div>
+            <div class="container p-1" id="step4" hidden>
+                <h3>Where are we taking it?</h3>
+                <input type="text" class="form-control run-request-input" placeholder="Vendor Name" name="dropoff_name">
+                <input type="text" class="form-control run-request-input" placeholder="123 Main St" name="dropoff_address_1">
+                <input type="text" class="form-control run-request-input" placeholder="Unit/Suite/Stage" name="dropoff_address_2">
                 <div class="row">
-                    <p>Step 4: Where are we taking it?</p>
-                    <div class="col-6">
-                        <label for="">Name</label>
-                        {{ run.pickup_name|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-6">
-                        <label for="">Phone</label>
-                        {{ run.pickup_phone|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-12">
-                        <label for="">Address 1</label>
-                        {{ run.pickup_address_1|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-12">
-                        <label for="">Address 2</label>
-                        {{ run.pickup_address_2|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-7">
-                        <label for="">City</label>
-                        {{ run.pickup_city|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-2">
-                        <label for="">State</label>
-                        {{ run.pickup_state|as_crispy_field|safe }}
+                    <div class="col-5">
+                        <input type="text" class="form-control run-request-input" placeholder="Los Angeles" name="dropoff_city">
                     </div>
                     <div class="col-3">
-                        <label for="">Zip</label>
-                        {{ run.pickup_zip|as_crispy_field|safe }}
+                        <input type="text" class="form-control run-request-input" placeholder="CA" name="dropoff_state">
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control run-request-input" placeholder="90066" name="dropoff_zip">
                     </div>
                 </div>
-                <hr>
-                <div class="row">
-                    <p>Step 5: Additional Information?</p>
-                    <div class="col-12">
-                        <label for="">Vehicle</label>
-                        {{ run.truck_size|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-6">
-                        <label for="">PO</label>
-                        {{ run.purchase_order|as_crispy_field|safe }}
-                    </div>
-                    <div class="col-6">
-                        <label for="">Invoice</label>
-                        {{ run.vendor_invoice|as_crispy_field|safe }}
-                    </div>
+                <div class="next-button-box">
+                    <br>
+                    <button type="button" class="btn btn-secondary back-button">Back</button>
+                    <button type="button" class="btn btn-primary next-button">Next</button>
                 </div>
-                <hr>
-                <button class=" btn btn-primary" type="submit">submit</button>
-                <br><br>
-            </form>
-    </main>
+            </div>
+            <div class="container p-1" id="step5" hidden>
+                <h3>Other Information</h3>
+                <input type="text" class="form-control run-request-input" placeholder="Vehicle Size" name="truck_size" list="truck_size">
+                <datalist id="truck_size">
+                    <option value="Van">
+                    <option value="Stakebed">
+                    <option value="Box Truck">
+                    <option value="5-Ton">
+                    <option value="10-Ton">
+                    <option value="Tractor">
+                </datalist>
+                <input type="text" class="form-control run-request-input" placeholder="Purchase Order" name="purchase_order">
+                <input type="text" class="form-control run-request-input" placeholder="Invoice #" name="vendor_invoice">
+                <div class="next-button-box">
+                    <br>
+                    <button type="button" class="btn btn-secondary back-button">Back</button>
+                    <button type="submit" class="btn btn-primary next-button">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('#step1 .next-button').addEventListener('click', function() {
+                document.getElementById('step1').hidden = true;
+                document.getElementById('step2').hidden = false;
+            });
+
+            document.querySelector('#step2 .back-button').addEventListener('click', function() {
+                document.getElementById('step2').hidden = true;
+                document.getElementById('step1').hidden = false;
+            });
+            document.querySelector('#step2 .next-button').addEventListener('click', function() {
+                document.getElementById('step1').hidden = true;
+                document.getElementById('step2').hidden = true;
+                document.getElementById('step3').hidden = false;
+            });
+            document.querySelector('#step3 .back-button').addEventListener('click', function() {
+                document.getElementById('step1').hidden = true;
+                document.getElementById('step2').hidden = false;
+                document.getElementById('step3').hidden = true;
+            });
+            document.querySelector('#step3 .next-button').addEventListener('click', function() {
+                document.getElementById('step1').hidden = true;
+                document.getElementById('step2').hidden = true;
+                document.getElementById('step3').hidden = true;
+                document.getElementById('step4').hidden = false;
+            });
+            document.querySelector('#step4 .back-button').addEventListener('click', function() {
+                document.getElementById('step1').hidden = true;
+                document.getElementById('step2').hidden = true;
+                document.getElementById('step3').hidden = false;
+                document.getElementById('step4').hidden = true;
+            });
+            document.querySelector('#step4 .next-button').addEventListener('click', function() {
+                document.getElementById('step1').hidden = true;
+                document.getElementById('step2').hidden = true;
+                document.getElementById('step3').hidden = true;
+                document.getElementById('step4').hidden = true;
+                document.getElementById('step5').hidden = false;
+            });
+        });
+    </script>
+    </div>
+</main>
 {% endblock %}
