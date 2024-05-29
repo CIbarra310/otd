@@ -9,9 +9,128 @@
             <hr>
             <form action="" method="POST">
                 {% csrf_token %}
-                {{ run.as_p }}
+                <div class="row">
+                    <p>Information to hide</p>
+                    <div class="col-6">
+                        {{ run.requester_name|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-6">
+                        {{ run.requester_department|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-6">
+                        {{ run.requester_email|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-6">
+                        {{ run.requester_phone|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-6">
+                        {{ run.production_title|as_crispy_field|safe }}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <p>Step 1: date/time</p>
+                    <div class="col-6">
+                        {{ run.run_date|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-6">
+                        {{ run.ready_time|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-6">
+                        {{ run.need_by_this_time|as_crispy_field|safe }}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <p>Step 2: Where are we going?</p>
+                    <div class="col-6">
+                        <label for="">Name</label>
+                        {{ run.pickup_name|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-6">
+                        <label for="">Phone</label>
+                        {{ run.pickup_phone|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-12">
+                        <label for="">Address 1</label>
+                        {{ run.pickup_address_1|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-12">
+                        <label for="">Address 2</label>
+                        {{ run.pickup_address_2|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-7">
+                        <label for="">City</label>
+                        {{ run.pickup_city|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-2">
+                        <label for="">State</label>
+                        {{ run.pickup_state|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-3">
+                        <label for="">Zip</label>
+                        {{ run.pickup_zip|as_crispy_field|safe }}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <p>Step 3: What are we getting?</p>
+                    <div class="col-12">
+                        <label for="">Run Details</label>
+                        {{ run.run_details|as_crispy_field|safe }}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <p>Step 4: Where are we taking it?</p>
+                    <div class="col-6">
+                        <label for="">Name</label>
+                        {{ run.pickup_name|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-6">
+                        <label for="">Phone</label>
+                        {{ run.pickup_phone|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-12">
+                        <label for="">Address 1</label>
+                        {{ run.pickup_address_1|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-12">
+                        <label for="">Address 2</label>
+                        {{ run.pickup_address_2|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-7">
+                        <label for="">City</label>
+                        {{ run.pickup_city|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-2">
+                        <label for="">State</label>
+                        {{ run.pickup_state|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-3">
+                        <label for="">Zip</label>
+                        {{ run.pickup_zip|as_crispy_field|safe }}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <p>Step 5: Additional Information?</p>
+                    <div class="col-12">
+                        <label for="">Vehicle</label>
+                        {{ run.truck_size|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-6">
+                        <label for="">PO</label>
+                        {{ run.purchase_order|as_crispy_field|safe }}
+                    </div>
+                    <div class="col-6">
+                        <label for="">Invoice</label>
+                        {{ run.vendor_invoice|as_crispy_field|safe }}
+                    </div>
+                </div>
+                <hr>
                 <button class=" btn btn-primary" type="submit">submit</button>
-                <br>
+                <br><br>
             </form>
     </main>
 {% endblock %}

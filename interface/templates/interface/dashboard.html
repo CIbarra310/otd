@@ -3,7 +3,7 @@
 {% block content %}
     <main>
         <div class="container p-2">
-            <h3> Welcome, {{user}} </h3>
+            <h3> Welcome, {{user.first_name}} </h3>
             <hr>
             <div class="row p-2">
                 <div class="col-12">
@@ -14,20 +14,21 @@
                 <div class="col-3 p-1">
                     <div class="card border-primary dashboard-icon">
                         <a href="{% url 'new_run' %}">
-                        <div class="card-header text-center"><h5 class="p-1">New Run</h5></div>
-                            <div class="card-body text-center">
-                                <p class="card-text text-center dash-p">
-                                    <i class="fa fa-plus"></i>
-                                </p>
-                            </div>  
-                        </div>
-                    </a>
+                            <div class="card-header text-center"><h5 class="p-1">New Run</h5></div>
+                                <div class="card-body text-center">
+                                    <p class="card-text text-center dash-p">
+                                        <i class="fa fa-plus"></i>
+                                    </p>
+                                </div>  
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
+            <br>
+            <a class="btn btn-outline-primary btn-sm" href="" hidden>Request New Run</a>
+            <br>
         </div>
-        <br>
-        <a class="btn btn-outline-primary btn-sm" href="" hidden>Request New Run</a>
-        <br>
     </main>
 
 {% endblock %}

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'production',
     'transportation',
     'crispy_forms',
+    'formtools',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

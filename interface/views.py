@@ -118,6 +118,7 @@ def new_run(request):
     requester_phone = user.phone_number
     requester_email = user.email
     requester_department = user.department
+    production_title = user.production_title
 
     # Create a dictionary with the user data
     initial_data = {
@@ -125,6 +126,7 @@ def new_run(request):
         'requester_phone': requester_phone,
         'requester_email': requester_email,
         'requester_department': requester_department,
+        'production_title': production_title,
     }
 
     if request.method == "POST":
