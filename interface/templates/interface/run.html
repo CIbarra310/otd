@@ -1,9 +1,32 @@
 {% extends 'interface/layout.html' %}
 
 {% block content %}
+    <nav class="p-2" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'run_history' %}">Run History</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Run {{ run_request.id }}</li>
+        </ol>
+    </nav>
     <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-sm btn-secondary">Back</a>
     <div class="container shadow-md col-12 col-md-6 col-lg-6 col-xl-4">
         <h1>Run {{ run_request.id }}</h1>
+        {% if run_request.run_status == "Open" %}
+        <div class="alert alert-primary" role="alert">
+            This run is scheduled
+        </div>
+        {% elif run_request.run_status == "In Progress" %}
+        <div class="alert alert-warning" role="alert">
+            This run is currently in progress
+        </div>
+        {% elif run_request.run_status == "Cancelled" %}
+        <div class="alert alert-danger" role="alert">
+            This run has been cancelled
+        </div>
+        {% elif run_request.run_status == "Completed" %}
+        <div class="alert alert-success" role="alert">
+            This run has been completed
+        </div>
+        {% endif %}
         <div class="row" >
             <h5>Requested By</h5>
             <div class="col-6">
@@ -36,7 +59,11 @@
             </div>
             <div class="col-12">
                 <label>Address 2</label>
-                <input type="text" class="form-control" value="{{ run_request.pickup_address_2 }}">
+                {% if run_request.pickup_address_2 %}
+                    <input type="text" class="form-control" value="{{ run_request.pickup_address_2 }}">
+                {% else %}
+                    <input type="text" class="form-control" value="">
+                {% endif %}
             </div>
             <div class="col-5">
                 <label>City</label>
@@ -64,8 +91,11 @@
             </div>
             <div class="col-12">
                 <label>Address 2</label>
-                <input type="text" class="form-control" value="{{ run_request.dropoff_address_2 }}">
-            </div>
+                {% if run_request.dropoff_address_2 %}
+                    <input type="text" class="form-control" value="{{ run_request.dropoff_address_2 }}">
+                {% else %}
+                    <input type="text" class="form-control" value="">
+                {% endif %}
             <div class="col-5">
                 <label>City</label>
                 <input type="text" class="form-control" value="{{ run_request.dropoff_city }}">
