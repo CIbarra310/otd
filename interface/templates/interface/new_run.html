@@ -2,6 +2,12 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+<nav class="p-2" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item active" aria-current="page">New Run</li>
+    </ol>
+</nav>
 <main>
     <div class="container run-request-container">
         <h1>New Run Request</h1>

@@ -6,23 +6,29 @@
             <h3> Welcome, {{user.first_name}} </h3>
             <hr>
             <div class="row p-2">
-                <div class="col-12">
-                    <button class="btn btn-primary">
-                        New Run
-                    </button>
-                </div>
-                <div class="col-3 p-1">
-                    <div class="card border-primary dashboard-icon">
+                <div class="col-3 text-center">
+                    <div class="card border-dark dashboard-icon">
                         <a href="{% url 'new_run' %}">
-                            <div class="card-header text-center"><h5 class="p-1">New Run</h5></div>
-                                <div class="card-body text-center">
-                                    <p class="card-text text-center dash-p">
-                                        <i class="fa fa-plus"></i>
-                                    </p>
-                                </div>  
-                            </div>
+                            <div class="card-body text-center">
+                                <p class="card-text text-center dash-p">
+                                    <i class="fa fa-plus"></i>
+                                </p>
+                            </div>  
                         </a>
                     </div>
+                    <p>New Run</p>
+                </div>
+                <div class="col-3 text-center">
+                    <div class="card border-dark dashboard-icon">
+                        <a href="{% url 'run_history' %}">
+                            <div class="card-body text-center">
+                                <p class="card-text text-center dash-p">
+                                    <i class="fa fa-history"></i>
+                                </p>
+                            </div>  
+                        </a>
+                    </div>
+                    <p>All Runs</p>
                 </div>
             </div>
             <br>

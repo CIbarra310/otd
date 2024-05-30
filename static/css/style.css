@@ -1,6 +1,17 @@
 /* Dashboard Styling */
 .dashboard-icon {
     border-radius: 10px;
+    width: 100%;
+    height: 100px;
+    font-size: 50px;
+    padding: 0;
+    margin: 0;
+    justify-content: center;
+}
+
+.dashboard-icon-text {
+    justify-content: center;
+    align-items: center;
 }
 
 /* Run Request Styling */
@@ -48,5 +59,19 @@ td, th {
 @media (max-width: 575.98px) {
     .hidden-column {
         display: none; /* Hide on extra small devices */
+    }
+
+    .run-request-container {
+        width: 380px;
+    }
+
+    .dashboard-icon {
+        border-radius: 10px;
+        width: 72px;
+        height: 72px;
+        font-size: 50px;
+        padding: 0;
+        margin: 0;
+        justify-content: center;
     }
 }
