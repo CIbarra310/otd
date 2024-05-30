@@ -18,14 +18,15 @@
             <table class="table">
                 <thead>
                     <th scope="col">#</th>
-                    <th scope="col">Run Date</th>
-                    <th scope="col">Department</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Dept.</th>
                     <th scope="col" class="hidden-column">Contact</th>
                     <th scope="col">Pick Up</th>
                     <th scope="col" class="hidden-column">Drop Off</th>
                     <th scope="col">Purchase Order</th>
                     <th scope="col" class="hidden-column" class="hidden-column">Invoice #</th>
                     <th scope="col" class="hidden-column">Run Details</th>
+                    <th scope="col">Status</th>
                     <th scope="col"></th>
                 </thead>
                 <tbody>
@@ -44,6 +45,11 @@
                         <td scope="row" class="hidden-column">{{ run.vendor_invoice }}</td>
                         <td scope="row" class="hidden-column">
                             {{ run.run_details }}
+                        </td>
+                        <td scope="row">
+                            <div class="alert alert-success run-status" role="alert">
+                                {{ run.run_status }}
+                            </div>
                         </td>
                         <td>
                             <a class="btn btn-secondary" href="{% url 'view_run' run.id %}">View</a>

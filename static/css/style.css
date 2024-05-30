@@ -56,6 +56,13 @@ td, th {
     text-align: center;
 }
 
+.run-status {
+    border-radius: 50px;
+    font-size: medium;
+    scale: 70%;
+
+}
+
 @media (max-width: 575.98px) {
     .hidden-column {
         display: none; /* Hide on extra small devices */
