@@ -9,8 +9,8 @@
     </ol>
 </nav>
 <main>
-    <div class="container run-request-container">
-        <h1>New Run Request</h1>
+    <div class="container shadow-md col-12 col-md-6 col-lg-6 col-xl-4">
+        <h1 class="text-center">New Run Request</h1>
         <form method="POST" action="{% url 'new_run' %}">
             {% csrf_token %}
             <!-- Contact information taken from the user data -->

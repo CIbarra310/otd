@@ -2,12 +2,12 @@
 
 {% block content %}
     <main>
-        <div class="container p-2">
-            <h3> Welcome, {{user.first_name}} </h3>
-            <hr>
-            <div class="row p-2">
-                <div class="col-3 text-center">
-                    <div class="card border-dark dashboard-icon">
+        <h3 class="p-1"> Welcome, {{user.first_name}} </h3>
+        <hr>
+        <div class="container">
+            <div class="row p-1">
+                <div class="col-3 justify-content-center d-flex" style="border: 1px solid red;">
+                    <div class="card border-dark bg-dark dashboard-icon mx-auto">
                         <a href="{% url 'new_run' %}">
                             <div class="card-body text-center">
                                 <p class="card-text text-center dash-p">
@@ -16,10 +16,10 @@
                             </div>  
                         </a>
                     </div>
-                    <p>New Run</p>
+                    <p class="text-center">New Run</p>
                 </div>
-                <div class="col-3 text-center">
-                    <div class="card border-dark dashboard-icon">
+                <div class="col-3 " style="border: 1px solid red;">
+                    <div class="card border-dark bg-dark dashboard-icon">
                         <a href="{% url 'run_history' %}">
                             <div class="card-body text-center">
                                 <p class="card-text text-center dash-p">
@@ -28,7 +28,7 @@
                             </div>  
                         </a>
                     </div>
-                    <p>All Runs</p>
+                    <p class="text-center">All Runs</p>
                 </div>
             </div>
             <br>

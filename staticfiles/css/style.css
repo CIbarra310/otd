@@ -1,6 +1,22 @@
 /* Dashboard Styling */
+.dashboard-row {
+
+}
+
 .dashboard-icon {
     border-radius: 10px;
+    width: 76px;
+    height: 76px;
+    font-size: 50px;
+    padding: 0;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.dashboard-icon-text {
+    justify-content: center;
+    align-items: center;
 }
 
 /* Run Request Styling */
@@ -45,8 +61,29 @@ td, th {
     text-align: center;
 }
 
+.run-status {
+    border-radius: 50px;
+    font-size: medium;
+    scale: 70%;
+
+}
+
 @media (max-width: 575.98px) {
     .hidden-column {
         display: none; /* Hide on extra small devices */
+    }
+
+    .run-request-container {
+        width: 380px;
+    }
+
+    .dashboard-icon {
+        border-radius: 10px;
+        width: 72px;
+        height: 72px;
+        font-size: 50px;
+        padding: 0;
+        margin: 0;
+        justify-content: center;
     }
 }
