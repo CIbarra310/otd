@@ -7,9 +7,8 @@
         <li class="breadcrumb-item active" aria-current="page">Run {{ run_request.id }}</li>
         </ol>
     </nav>
-    <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-sm btn-secondary">Back</a>
     <div class="container shadow-md col-12 col-md-6 col-lg-6 col-xl-4">
-        <h1>Run {{ run_request.id }}</h1>
+        <h1>Run {{ run_request.id }} - {{ run_request.requester_department }}</h1>
         {% if run_request.run_status == "Open" %}
         <div class="alert alert-primary" role="alert">
             This run is scheduled
