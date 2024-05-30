@@ -145,6 +145,11 @@ def run_history(request):
     return render(request, 'interface/run_history.html', context=context)
 
 @login_required(login_url='login')
+def view_run(request, run_request_id):
+    run_request = get_object_or_404(RunRequest, id=run_request_id)
+    return render(request, 'interface/run.html', {'run_request': run_request})
+
+@login_required(login_url='login')
 def radios(request):
     return render(request, 'interface/radios.html')
 
