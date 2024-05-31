@@ -2,32 +2,33 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon"href="{% static 'img/favicon.png' %}">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-        <title>On The Day</title>
-    </head>
-    <body>
-        <!-- Responsive navbar-->
-        {% include 'interface/navbar.html' %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'img/favicon.png' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-        <!-- Core content block -->
-        {% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <title>On The Day</title>
+</head>
+<body>
+    <!-- Responsive navbar-->
+    {% include 'interface/navbar.html' %}
 
-        {% endblock %}
-        
-        <!-- Footer-->
-        <footer class="py-5 bg-dark footer" hidden>
-            <div class="container px-5"><p class="m-0 text-center text-white">Copyright &copy; On The Day 2024</p></div>
-        </footer>
+    <!-- Core content block -->
+    {% block content %}
 
-        <!-- Bootstrap core JS-->
-        <script src="{% static 'interface/js/scripts.js' %}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+    {% endblock %}
+    
+    <!-- Footer-->
+    <footer class="py-5 bg-dark footer" hidden>
+        <div class="container px-5"><p class="m-0 text-center text-white">Copyright &copy; On The Day 2024</p></div>
+    </footer>
+
+    <!-- Bootstrap core JS-->
+    <script src="{% static 'interface/js/scripts.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
