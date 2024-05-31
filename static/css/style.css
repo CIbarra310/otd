@@ -79,5 +79,19 @@ td, th {
     th {
         white-space: nowrap;
     }
+    table {
+        width: 80%
+    }
+
+}
+
+@media (max-width: 1024px) {
+    .medium-hidden-column {
+        display: none;
+    }
+
+    th {
+        white-space: nowrap;
+    }
 
 }

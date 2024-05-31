@@ -67,6 +67,8 @@ td, th {
     }
 
     .dashboard-icon {
+        width: 76px;
+        height: 76px;
         border-radius: 10px;
         font-size: 50px;
         padding: 0;
@@ -76,6 +78,13 @@ td, th {
 
     th {
         white-space: nowrap;
+    }
+
+}
+
+@media (max-width: 768px) {
+    .medium-hidden-column {
+        display: none;
     }
 
 }
