@@ -13,12 +13,45 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 col-md-3 pb-2">
+                    <div class="card border-primary bg-dark dashboard-icon">
+                        <a href="{% url 'new_run' %}">
+                            <div class="card-body text-center">
+                                <p class="card-text text-center dash-p">
+                                    <i class="fa fa-plus"></i>
+                                </p>
+                            </div>  
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 col-md-3 pb-2">
                     <div class="card border-primary bg-dark dashboard-icon">
                         <a href="{% url 'run_history' %}">
                             <div class="card-body text-center">
                                 <p class="card-text text-center dash-p">
-                                    <i class="fa fa-plus"></i>
+                                    <i class="fa fa-history"></i>
+                                </p>
+                            </div>  
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 col-md-3 pb-2">
+                    <div class="card border-primary bg-dark dashboard-icon">
+                        <a href="{% url 'run_history' %}">
+                            <div class="card-body text-center">
+                                <p class="card-text text-center dash-p">
+                                    <i class="fa fa-question"></i>
+                                </p>
+                            </div>  
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 col-md-3 pb-2">
+                    <div class="card border-primary bg-dark dashboard-icon">
+                        <a href="{% url 'run_history' %}">
+                            <div class="card-body text-center">
+                                <p class="card-text text-center dash-p">
+                                    <i class="fa fa-question"></i>
                                 </p>
                             </div>  
                         </a>
