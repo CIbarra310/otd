@@ -14,8 +14,8 @@
             <h1>Run History</h1>
         </div>
         <div class="container" style="overflow-x:auto">
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Email search" aria-label="Search">
+            <form id="runSearch" class="d-flex" role="search">
+                <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
             <br>
@@ -62,5 +62,21 @@
         </div>
     </main>
 
-
+    <script>
+        $(document).ready(function() {
+            $('#runSearch').submit(function(event) {
+                event.preventDefault(); // Prevent default form submission
+                var searchText = $('#searchInput').val().toLowerCase(); // Get search input value
+                // Loop through each table row
+                $('#runHistory tbody tr').each(function() {
+                    var rowText = $(this).text().toLowerCase(); // Get text content of row
+                    if (rowText.indexOf(searchText) === -1) { // Check if row contains search text
+                        $(this).hide(); // Hide row if not a match
+                    } else {
+                        $(this).show(); // Show row if a match
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
