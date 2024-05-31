@@ -4,13 +4,23 @@
 
 {% block content %}
     <main>
-        <div class="container run-request-container">
-            <h1>Driver Roster</h1>
+        <div class="container">
+            <h1>Add New Driver</h1>
             <hr>
+
+            <!-- Search for a driver that may already have a user account -->
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Email search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            <br>
+
+            <!-- If no driver is found, add the driver-->
             <form action="" method="POST">
                 {% csrf_token %}
-                {{ driver.as_p }}
-                <button class=" btn btn-primary" type="submit">submit</button>
+                {{ driver|crispy }}
+                <br>
+                <button class=" btn btn-primary" type="submit">Add Driver</button>
                 <br>
             </form>
     </main>
