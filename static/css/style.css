@@ -1,17 +1,6 @@
 /* Dashboard Styling */
-.dashboard-row {
-
-}
-
 .dashboard-icon {
     border-radius: 10px;
-    width: 76px;
-    height: 76px;
-    font-size: 50px;
-    padding: 0;
-    margin: 0;
-    align-items: center;
-    justify-content: center;
 }
 
 .dashboard-icon-text {
@@ -79,8 +68,6 @@ td, th {
 
     .dashboard-icon {
         border-radius: 10px;
-        width: 72px;
-        height: 72px;
         font-size: 50px;
         padding: 0;
         margin: 0;
