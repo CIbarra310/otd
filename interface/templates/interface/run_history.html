@@ -18,13 +18,13 @@
             <table class="table">
                 <thead>
                     <th scope="col">#</th>
-                    <th scope="col">Date</th>
+                    <th scope="col" class="hidden-column">Date</th>
                     <th scope="col">Dept.</th>
                     <th scope="col" class="hidden-column">Contact</th>
                     <th scope="col">Pick Up</th>
                     <th scope="col" class="hidden-column">Drop Off</th>
-                    <th scope="col">Purchase Order</th>
-                    <th scope="col" class="hidden-column" class="hidden-column">Invoice #</th>
+                    <th scope="col" class="hidden-column">Purchase Order</th>
+                    <th scope="col" class="hidden-column">Invoice #</th>
                     <th scope="col" class="hidden-column">Run Details</th>
                     <th scope="col">Status</th>
                     <th scope="col"></th>
@@ -32,7 +32,7 @@
                 <tbody>
                     {% for run in runs %}
                         <td scope="row">{{ run.id }}</td>
-                        <td scope="row">{{ run.run_date }}</td>
+                        <td scope="row" class="hidden-column">{{ run.run_date }}</td>
                         <td scope="row">{{ run.requester_department }}</td>
                         <td scope="row" class="hidden-column">{{ run.requester_name }}</td>
                         <td scope="row">

@@ -73,4 +73,9 @@ td, th {
         margin: 0;
         justify-content: center;
     }
+
+    th {
+        white-space: nowrap;
+    }
+
 }
