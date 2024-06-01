@@ -5,14 +5,15 @@
 {% block content %}
     <main>
         <div class="container">
-            <h1>Add New Driver</h1>
+            <div class="row">
+                <h1>Add New Driver</h1>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Email search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
             <hr>
-
             <!-- Search for a driver that may already have a user account -->
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Email search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
             <br>
 
             <!-- If no driver is found, add the driver-->

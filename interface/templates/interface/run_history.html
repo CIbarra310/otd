@@ -18,14 +18,14 @@
                 <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
-            <br>
+            <br><br>
             <table class="table run-history" id="runHistory">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col" class="hidden-column">Date</th>
                         <th scope="col">Dept.</th>
-                        <th scope="col" class="hidden-column">Contact</th>
+                        <th scope="col" class="hidden-column medium-hidden-column">Contact</th>
                         <th scope="col">Pick Up</th>
                         <th scope="col" class="hidden-column">Drop Off</th>
                         <th scope="col" class="hidden-column">P.O.</th>
@@ -41,16 +41,30 @@
                             <td scope="row">{{ run.id }}</td>
                             <td scope="row" class="hidden-column">{{ run.run_date }}</td>
                             <td scope="row">{{ run.requester_department }}</td>
-                            <td scope="row" class="hidden-column">{{ run.requester_name }}</td>
+                            <td scope="row" class="hidden-column medium-hidden-column">{{ run.requester_name }}</td>
                             <td scope="row">{{ run.pickup_name }}</td>
                             <td scope="row" class="hidden-column">{{ run.dropoff_name }}</td>
                             <td scope="row" class="hidden-column">{{ run.purchase_order }}</td>
                             <td scope="row" class="hidden-column medium-hidden-column">{{ run.vendor_invoice }}</td>
                             <td scope="row" class="hidden-column medium-hidden-column">{{ run.run_details }}</td>
                             <td scope="row">
-                                <div class="alert alert-success run-status" role="alert">
-                                    {{ run.run_status }}
-                                </div>
+                                {% if run.run_status == "Completed" %}
+                                    <div class="alert alert-success run-status" role="alert">
+                                        {{ run.run_status }}
+                                    </div>
+                                {% elif run.run_status == "Open" %}
+                                    <div class="alert alert-primary run-status" role="alert">
+                                        {{ run.run_status }}
+                                    </div>
+                                {% elif run.run_status == "In Progress" %}
+                                    <div class="alert alert-warning run-status" role="alert">
+                                        {{ run.run_status }}
+                                    </div>
+                                {% elif run.run_status == "Cancelled" %}
+                                    <div class="alert alert-danger run-status" role="alert">
+                                        {{ run.run_status }}
+                                    </div>
+                                {% endif %}
                             </td>
                             <td>
                                 <a class="btn btn-secondary" href="{% url 'view_run' run.id %}">View</a>
@@ -60,10 +74,28 @@
                 </tbody>
             </table>
         </div>
+        <br>
     </main>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Initialize DataTable
+            $('#runHistory').DataTable({
+                searching: false, // Disable DataTables search feature
+                paging: true, // Enable pagination
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]], // Control number of records per page
+                language: {
+                    paginate: {
+                        next: '<i class="fa fa-chevron-right"></i>',
+                        previous: '<i class="fa fa-chevron-left"></i>'
+                    }
+                },
+                responsive: true // Enable responsive design
+            });
+            
+            // Add search functionality
             $('#runSearch').submit(function(event) {
                 event.preventDefault(); // Prevent default form submission
                 var searchText = $('#searchInput').val().toLowerCase(); // Get search input value
