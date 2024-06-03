@@ -52,9 +52,12 @@ td, th {
 
 .run-status {
     border-radius: 50px;
-    font-size: medium;
-    scale: 70%;
-
+    font-size: smaller;
+    size: 40%;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @media (max-width: 575.98px) {

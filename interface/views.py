@@ -109,6 +109,26 @@ def add_driver(request):
     context = {'driver': driver}
     return render(request, 'interface/add_driver.html', context=context)
 
+
+@login_required(login_url='login')
+def activate_driver(request, driver_id):
+    driver = get_object_or_404(Driver, id=driver_id)
+    driver.is_active = True
+    driver.save()
+    return redirect('driver_roster')
+
+@login_required(login_url='login')
+def deactivate_driver(request, driver_id):
+    driver = get_object_or_404(Driver, id=driver_id)
+    driver.is_active = False
+    driver.save()
+    return redirect('driver_roster')
+
+@login_required(login_url='login')
+def driver_rundown(request):
+
+    return render(request, 'interface/driver_rundown.html')
+
 # - Create a new run
 @login_required(login_url=login)
 def new_run(request):

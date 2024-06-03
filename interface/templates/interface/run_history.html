@@ -18,7 +18,7 @@
                 <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
-            <br><br>
+
             <table class="table run-history" id="runHistory">
                 <thead>
                     <tr>
@@ -30,7 +30,6 @@
                         <th scope="col" class="hidden-column">Drop Off</th>
                         <th scope="col" class="hidden-column">P.O.</th>
                         <th scope="col" class="hidden-column medium-hidden-column">Invoice</th>
-                        <th scope="col" class="hidden-column medium-hidden-column">Run Details</th>
                         <th scope="col">Status</th>
                         <th scope="col"></th>
                     </tr>
@@ -46,7 +45,6 @@
                             <td scope="row" class="hidden-column">{{ run.dropoff_name }}</td>
                             <td scope="row" class="hidden-column">{{ run.purchase_order }}</td>
                             <td scope="row" class="hidden-column medium-hidden-column">{{ run.vendor_invoice }}</td>
-                            <td scope="row" class="hidden-column medium-hidden-column">{{ run.run_details }}</td>
                             <td scope="row">
                                 {% if run.run_status == "Completed" %}
                                     <div class="alert alert-success run-status" role="alert">
@@ -67,7 +65,9 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <a class="btn btn-secondary" href="{% url 'view_run' run.id %}">View</a>
+                                <a class="btn btn-secondary" href="{% url 'view_run' run.id %}"><i class="fa fa-eye"></i></a>
+                                <a class="btn btn-success" href="{% url 'view_run' run.id %}"><i class="fa fa-check"></i></a>
+                                <a class="btn btn-danger" href="{% url 'view_run' run.id %}"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -92,7 +92,7 @@
                         previous: '<i class="fa fa-chevron-left"></i>'
                     }
                 },
-                responsive: true // Enable responsive design
+                responsive: true, // Enable responsive design
             });
             
             // Add search functionality
