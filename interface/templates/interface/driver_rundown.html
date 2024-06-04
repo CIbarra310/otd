@@ -5,78 +5,109 @@
 {% block content %}
     <main>
         <div class="container">
+            <div>
+                <h1>Driver Rundown</h1>
+            </div>
+        </div>
+        <div class="container">
+            <div name="information">
+                <div class="row" style="border: 1px solid black;">
+                    <div class="col-4" style='border: 1px solid black;'>
+                        <h5>Dreamquil</h5>
+                        <strong>Quixote Studios - Sylmar</strong>
+                        <p>13207 Bradley Ave<br>
+                        Sylmar, CA 91342</p>
+                    </div>
+                    <div class="col-4" style='border: 1px solid black;'>
+                        <h5>Shoot Day 20</h5>
+                        <strong>Tuesday</strong>
+                        <p>June 6th, 2024</p>
+                    </div>
+                    <div class="col-4" style='border: 1px solid black;'>
+                        <h5>Location</h5>
+                        <strong>Quixote Studios - Sylmar</strong>
+                        <p>13207 Bradley Ave<br>
+                        Sylmar, CA 91342</p>
+                    </div>
+                </div>
+            </div>
             <br>
-            <div class="d-flex justify-content-between">
-              <h1>Driver Rundown</h1>
-            </div>
-            <div class="row">
-                <div class="col-4" style='border: 1px solid black;'>
-                    <h5>Dreamquil</h5>
-                    <strong>Quixote Studios - Sylmar</strong>
-                    <p>13207 Bradley Ave<br>
-                    Sylmar, CA 91342</p>
+            <div name="on-production">
+                <div class="d-flex justify-content-between">
+                    <h2>On Production</h2>
                 </div>
-                <div class="col-4" style='border: 1px solid black;'>
-                    <h5>Shoot Day 20</h5>
-                    <strong>Tuesday</strong>
-                    <p>June 6th, 2024</p>
+                <table class="table border">
+                    <thead>
+                        <tr>
+                            <th>Driver Name</th>
+                            <th>Phone</th>
+                            <th>Group</th>
+                            <th>Equipment Type</th>
+                            <th>Tows</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Chasen Ibarra</td>
+                            <td>3105690869</td>
+                            <td>2</td>
+                            <td>Stakebed</td>
+                            <td>5-Room Cast Trailer</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div name="on-production">
+                <div class="d-flex justify-content-between">
+                    <h2>Off Production</h2>
                 </div>
-                <div class="col-4" style='border: 1px solid black;'>
-                    <h5>Location</h5>
-                    <strong>Quixote Studios - Sylmar</strong>
-                    <p>13207 Bradley Ave<br>
-                    Sylmar, CA 91342</p>
+                <table class="table border">
+                    <thead>
+                        <tr>
+                            <th>Driver Name</th>
+                            <th>Phone</th>
+                            <th>Group</th>
+                            <th>Equipment Type</th>
+                            <th>Tows</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Chasen Ibarra</td>
+                            <td>3105690869</td>
+                            <td>2</td>
+                            <td>Stakebed</td>
+                            <td>5-Room Cast Trailer</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div name="equipment-only">
+                <div class="d-flex justify-content-between">
+                    <h2>Equpiment Only</h2>
                 </div>
-            </div>
-            <hr>
-            <div class="d-flex justify-content-between">
-                <h2>On Production</h2>
-            </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Driver Name</th>
-                        <th>Phone</th>
-                        <th>Group</th>
-                        <th>Equipment Type</th>
-                        <th>Tows</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Chasen Ibarra</td>
-                        <td>3105690869</td>
-                        <td>2</td>
-                        <td>Stakebed</td>
-                        <td>5-Room Cast Trailer</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="d-flex justify-content-between">
-                <h2>Off Production</h2>
-            </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Driver Name</th>
-                        <th>Phone</th>
-                        <th>Group</th>
-                        <th>Equipment Type</th>
-                        <th>Tows</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Chasen Ibarra</td>
-                        <td>3105690869</td>
-                        <td>2</td>
-                        <td>Stakebed</td>
-                        <td>5-Room Cast Trailer</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="d-flex justify-content-between">
-                <h2>Equpiment Only</h2>
+                <table class="table border">
+                    <thead>
+                        <tr>
+                            <th>Equipment Type</th>
+                            <th>Vendor</th>
+                            <th>Unit #</th>
+                            <th>P.O.</th>
+                            <th>Vendor Invoice</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Trailer - 5 Room Cast</td>
+                            <td>Quixote</td>
+                            <td>5k123</td>
+                            <td>1234</td>
+                            <td>189238472</td>
+                            <td>For background</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </main>
