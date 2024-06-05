@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import Select
 from datetime import datetime
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -9,6 +10,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
 # - Create new run
+
 class NewRunRequest(forms.ModelForm):
     TRUCK_SIZE_CHOICES = [
         ('Please Select Vehicle Size', "Please Select Vehicle Size"),
@@ -20,10 +22,69 @@ class NewRunRequest(forms.ModelForm):
         ('Tractor', 'Tractor'),
     ]
 
-    run_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'min': datetime.now().date()}))
-    ready_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
-    need_by_this_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
-    truck_size = forms.ChoiceField(choices=TRUCK_SIZE_CHOICES)
+    run_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date', 'min': datetime.now().date()}),
+        label=''  # Remove label
+    )
+    ready_time = forms.TimeField(
+        widget=forms.TimeInput(attrs={'type': 'time'}),
+        label=''
+    )
+    need_by_this_time = forms.TimeField(
+        widget=forms.TimeInput(attrs={'type': 'time'}),
+        label=''
+    )
+    pickup_name = forms.CharField(
+        label=''
+    )
+    pickup_address_1 = forms.CharField(
+        label=''
+    )
+    pickup_address_2 = forms.CharField(
+        label=''
+    )
+    pickup_city = forms.CharField(
+        label=''
+    )
+    pickup_state = forms.CharField(
+        label=''
+    )
+    pickup_zip = forms.CharField(
+        label=''
+    )
+    run_details = forms.CharField(
+        widget=forms.Textarea(attrs={'placeholder': 'Enter run details'}),
+        label=''  # Remove label
+    )
+    dropoff_name = forms.CharField(
+        label=''
+    )
+    dropoff_address_1 = forms.CharField(
+        label=''
+    )
+    dropoff_address_2 = forms.CharField(
+        label=''
+    )
+    dropoff_city = forms.CharField(
+        label=''
+    )
+    dropoff_state = forms.CharField(
+        label=''
+    )
+    dropoff_zip = forms.CharField(
+        label=''
+    )
+    purchase_order = forms.CharField(
+        label=''
+    )
+    vendor_invoice = forms.CharField(
+        label=''
+    )
+    truck_size = forms.ChoiceField(
+        choices=TRUCK_SIZE_CHOICES,
+        widget=Select(attrs={'class': 'form-control'}),
+        label=''
+    )
 
     class Meta:
         model = RunRequest
@@ -56,71 +117,45 @@ class NewRunRequest(forms.ModelForm):
             'purchase_order',
             'vendor_invoice',
         ]
-        labels = {
-            'production_title': False,
-            'requester_name': False,
-            'requester_phone': False,
-            'requester_email': False,
-            'requester_department': False,
-            'run_date': False,
-            'ready_time': False,
-            'need_by_this_time': False,
-            'pickup_name': False,
-            'pickup_phone': False,
-            'pickup_address_1': False,
-            'pickup_address_2': False,
-            'pickup_city': False,
-            'pickup_state': False,
-            'pickup_zip': False,
-            'dropoff_name': False,
-            'dropoff_phone': False,
-            'dropoff_address_1': False,
-            'dropoff_address_2': False,
-            'dropoff_city': False,
-            'dropoff_state': False,
-            'dropoff_zip': False,
-            'truck_size': False,
-            'run_details': False,
-            'assigned_driver': False,
-            'purchase_order': False,
-            'vendor_invoice': False,
-        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper = FormHelper(self)
-        self.helper.form_action = reverse_lazy('dashboard')
-        self.helper.form_method = 'POST'
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
         self.helper.layout = Layout(
-            Field('production_title', label=False),
-            Field('requester_name', label=False),
-            Field('requester_phone', label=False),
-            Field('requester_email', label=False),
-            Field('requester_department', label=False),
-            Field('run_date', css_class='run-request-input', label=False),
-            Field('ready_time', css_class='run-request-input', label=False),
-            Field('need_by_this_time', css_class='run-request-input', label=False),
-            Field('pickup_name', label=False),
-            Field('pickup_phone', label=False),
-            Field('pickup_address_1', label=False),
-            Field('pickup_address_2', label=False),
-            Field('pickup_city', label=False),
-            Field('pickup_state', label=False),
-            Field('pickup_zip', label=False),
-            Field('dropoff_name', label=False),
-            Field('dropoff_phone', label=False),
-            Field('dropoff_address_1', label=False),
-            Field('dropoff_address_2', label=False),
-            Field('dropoff_city', label=False),
-            Field('dropoff_state', label=False),
-            Field('dropoff_zip', label=False),
-            Field('truck_size', label=False),
-            Field('run_details', label=False),
-            Field('assigned_driver', label=False),
-            Field('purchase_order', label=False),
-            Field('vendor_invoice', label=False),
-            Submit('submit', 'Submit')
+            Field('production_title', label=''),
+            Field('requester_name', label='Requester Name'),
+            Field('requester_phone', label=''),
+            Field('requester_email', label='Email'),
+            Field('requester_department', label='Department'),
+            Field('run_date', label=''),
+            Field('ready_time', label='Ready Time'),
+            Field('need_by_this_time', label='Need by Time'),
+            Field('pickup_name', label=''),
+            Field('pickup_phone', label='Pickup Phone'),
+            Field('pickup_address_1', label='Pickup Address 1'),
+            Field('pickup_address_2', label='Pickup Address 2'),
+            Field('pickup_city', label='City'),
+            Field('pickup_state', label='State'),
+            Field('pickup_zip', label='Zip Code'),
+            Field('dropoff_name', label='Dropoff Name'),
+            Field('dropoff_phone', label='Dropoff Phone'),
+            Field('dropoff_address_1', label='Dropoff Address 1'),
+            Field('dropoff_address_2', label='Dropoff Address 2'),
+            Field('dropoff_city', label='City'),
+            Field('dropoff_state', label='State'),
+            Field('dropoff_zip', label='Zip Code'),
+            Field('truck_size', label='Truck Size'),
+            Field('run_details', label='Details'),
+            Field('assigned_driver', label='Driver'),
+            Field('purchase_order', label='PO'),
+            Field('vendor_invoice', label='Invoice'),
+            ButtonHolder(
+                Submit('submit', 'Submit', css_class='btn-primary')
+            )
         )
+
+
 # - Create new driver
 class NewDriver(forms.ModelForm):
     class Meta:
