@@ -144,9 +144,10 @@ def new_run(request):
     if request.method == "POST":
         run = NewRunRequest(request.POST)
         if run.is_valid():
-            run.save(commit=False)
-            run.run_status = "Open"
-            run.save()
+        # Save the form data to the database
+            instance = run.save(commit=False)
+            instance.run_status = "Open"
+            instance.save()
             return redirect("dashboard")
     else:
         run = NewRunRequest(initial=initial_data)
