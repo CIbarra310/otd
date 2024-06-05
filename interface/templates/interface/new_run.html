@@ -4,35 +4,36 @@
 {% block content %}
 <nav class="p-2" aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-      <li class="breadcrumb-item active" aria-current="page">New Run</li>
+        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">New Run</li>
     </ol>
 </nav>
 <main>
+    <!-- Custom Form -->
     <div class="container shadow-md col-12 col-md-6 col-lg-6 col-xl-4">
         <h1 class="text-center">New Run Request</h1>
         <form method="POST" action="{% url 'new_run' %}">
             {% csrf_token %}
             <!-- Contact information taken from the user data -->
-            <div class="container p-2" hidden>
-                <input type="text" class="form-control" value="{{ run.requester_name.value}}" disabled>
-                <input type="text" class="form-control" value="{{ run.requester_email.value}}" disabled>
-                <input type="text" class="form-control" value="{{ run.requester_phone.value}}" disabled>
-                <input type="text" class="form-control" value="{{ run.requester_department.value}}" disabled>
+            <div class="container p-2" >
+                <input type="hidden" name="requester_name" value="{{ run.requester_name.value }}">
+                <input type="hidden" name="requester_email" value="{{ run.requester_email.value }}">
+                <input type="hidden" name="requester_phone" value="{{ run.requester_phone.value }}">
+                <input type="hidden" name="requester_department" value="{{ run.requester_department.value }}">
             </div>
             <!-- Date and time information for the run-->
             <div class="container p-1" id="step1">
                 <div class="p-3">
                     <strong>Date:</strong>
-                    <input type="date" class="form-control run-request-input" name="run_date">
+                    {{ run.run_date|as_crispy_field }}
                 </div>
                 <div class="p-3">
                     <strong>When will it be ready?</strong>
-            <input type="time" class="form-control run-request-input" name="ready_time">
+                    {{ run.ready_time }}
                 </div>
                 <div class="p-3">
                     <strong>When do you need it by?</strong>
-                    <input type="time" class="form-control run-request-input" name="need_by_this_time">
+                    {{ run.need_by_this_time }}
                 </div>
                 <div class="next-button-box">
                     <br>
@@ -41,18 +42,24 @@
             </div>
             <div class="container p-1" id="step2" hidden>
                 <h3>Where are we going?</h3>
-                <input type="text" class="form-control run-request-input" placeholder="Vendor Name" name="pickup_name">
-                <input type="text" class="form-control run-request-input" placeholder="123 Main St" name="pickup_address_1">
-                <input type="text" class="form-control run-request-input" placeholder="Unit/Suite/Stage" name="pickup_address_2">
+                <strong>Vendor/Location</strong>
+                {{ run.pickup_name }}
+                <strong>Address 1</strong>
+                {{ run.pickup_address_1 }}
+                <strong>Address 2</strong>
+                {{ run.pickup_address_2 }}
                 <div class="row">
                     <div class="col-5">
-                        <input type="text" class="form-control run-request-input" placeholder="Los Angeles" name="pickup_city">
+                        <strong>City</strong>
+                        {{ run.pickup_city }}
                     </div>
                     <div class="col-3">
-                        <input type="text" class="form-control run-request-input" placeholder="CA" name="pickup_state">
+                        <strong>State</strong>
+                        {{ run.pickup_state }}
                     </div>
                     <div class="col-4">
-                        <input type="text" class="form-control run-request-input" placeholder="90066" name="pickup_zip">
+                        <strong>Zip</strong>
+                        {{ run.pickup_zip }}
                     </div>
                 </div>
                 <div class="next-button-box">
@@ -63,7 +70,7 @@
             </div>
             <div class="container p-1" id="step3" hidden>
                 <h3>What are we getting?</h3>
-                <textarea class="form-control run-request-details" name="run_details" rows="6" placeholder="Run details here"></textarea>
+                {{ run.run_details}}
                 <div class="next-button-box">
                     <br>
                     <button type="button" class="btn btn-secondary back-button">Back</button>
@@ -72,18 +79,24 @@
             </div>
             <div class="container p-1" id="step4" hidden>
                 <h3>Where are we taking it?</h3>
-                <input type="text" class="form-control run-request-input" placeholder="Vendor Name" name="dropoff_name">
-                <input type="text" class="form-control run-request-input" placeholder="123 Main St" name="dropoff_address_1">
-                <input type="text" class="form-control run-request-input" placeholder="Unit/Suite/Stage" name="dropoff_address_2">
+                <strong>Vendor/Location</strong>
+                {{ run.dropoff_name }}
+                <strong>Address 1</strong>
+                {{ run.dropoff_address_1 }}
+                <strong>Address 2</strong>
+                {{ run.dropoff_address_2 }}
                 <div class="row">
                     <div class="col-5">
-                        <input type="text" class="form-control run-request-input" placeholder="Los Angeles" name="dropoff_city">
+                        <strong>City</strong>
+                        {{ run.dropoff_city }}
                     </div>
                     <div class="col-3">
-                        <input type="text" class="form-control run-request-input" placeholder="CA" name="dropoff_state">
+                        <strong>State</strong>
+                        {{ run.dropoff_state }}
                     </div>
                     <div class="col-4">
-                        <input type="text" class="form-control run-request-input" placeholder="90066" name="dropoff_zip">
+                        <strong>Zip</strong>
+                        {{ run.dropoff_zip }}
                     </div>
                 </div>
                 <div class="next-button-box">
@@ -93,22 +106,23 @@
                 </div>
             </div>
             <div class="container p-1" id="step5" hidden>
-                <h3>Other Information</h3>
-                <input type="text" class="form-control run-request-input" placeholder="Vehicle Size" name="truck_size" list="truck_size">
-                <datalist id="truck_size">
-                    <option value="Van">
-                    <option value="Stakebed">
-                    <option value="Box Truck">
-                    <option value="5-Ton">
-                    <option value="10-Ton">
-                    <option value="Tractor">
-                </datalist>
-                <input type="text" class="form-control run-request-input" placeholder="Purchase Order" name="purchase_order">
-                <input type="text" class="form-control run-request-input" placeholder="Invoice #" name="vendor_invoice">
+                <h3>Additional Information</h3>
+                <strong>Vehicle Size</strong>
+                {{ run.truck_size }}
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Purchase Order (Optional) </strong>
+                        {{ run.purchase_order }}
+                    </div>
+                    <div class="col-6">
+                        <strong>Invoice # (Optional) </strong>
+                        {{ run.vendor_invoice }}
+                    </div>
+                </div>
                 <div class="next-button-box">
                     <br>
                     <button type="button" class="btn btn-secondary back-button">Back</button>
-                    <button type="submit" class="btn btn-primary next-button">Submit</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
         </form>
@@ -116,46 +130,35 @@
     <br>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            function showStep(step) {
+                const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+                steps.forEach(s => document.getElementById(s).hidden = s !== step);
+            }
             document.querySelector('#step1 .next-button').addEventListener('click', function() {
-                document.getElementById('step1').hidden = true;
-                document.getElementById('step2').hidden = false;
+                showStep('step2');
             });
-
             document.querySelector('#step2 .back-button').addEventListener('click', function() {
-                document.getElementById('step2').hidden = true;
-                document.getElementById('step1').hidden = false;
+                showStep('step1');
             });
             document.querySelector('#step2 .next-button').addEventListener('click', function() {
-                document.getElementById('step1').hidden = true;
-                document.getElementById('step2').hidden = true;
-                document.getElementById('step3').hidden = false;
+                showStep('step3');
             });
             document.querySelector('#step3 .back-button').addEventListener('click', function() {
-                document.getElementById('step1').hidden = true;
-                document.getElementById('step2').hidden = false;
-                document.getElementById('step3').hidden = true;
+                showStep('step2');
             });
             document.querySelector('#step3 .next-button').addEventListener('click', function() {
-                document.getElementById('step1').hidden = true;
-                document.getElementById('step2').hidden = true;
-                document.getElementById('step3').hidden = true;
-                document.getElementById('step4').hidden = false;
+                showStep('step4');
             });
             document.querySelector('#step4 .back-button').addEventListener('click', function() {
-                document.getElementById('step1').hidden = true;
-                document.getElementById('step2').hidden = true;
-                document.getElementById('step3').hidden = false;
-                document.getElementById('step4').hidden = true;
+                showStep('step3');
             });
             document.querySelector('#step4 .next-button').addEventListener('click', function() {
-                document.getElementById('step1').hidden = true;
-                document.getElementById('step2').hidden = true;
-                document.getElementById('step3').hidden = true;
-                document.getElementById('step4').hidden = true;
-                document.getElementById('step5').hidden = false;
+                showStep('step5');
+            });
+            document.querySelector('#step5 .back-button').addEventListener('click', function() {
+                showStep('step4');
             });
         });
     </script>
-    </div>
 </main>
 {% endblock %}

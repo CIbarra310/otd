@@ -86,18 +86,41 @@ class NewRunRequest(forms.ModelForm):
             'vendor_invoice': False,
         }
 
-    def __init__(self,*args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.form_action = reverse_lazy('dashboard')
         self.helper.form_method = 'POST'
-        self.helper.add_input(Submit('submit','Submit'))
-        self.fields['requester_name'].disabled = True
-        self.fields['requester_phone'].disabled = True
-        self.fields['requester_email'].disabled = True
-        self.fields['requester_department'].disabled = True
-        self.fields['production_title'].disabled = True
-
+        self.helper.layout = Layout(
+            Field('production_title', label=False),
+            Field('requester_name', label=False),
+            Field('requester_phone', label=False),
+            Field('requester_email', label=False),
+            Field('requester_department', label=False),
+            Field('run_date', css_class='run-request-input', label=False),
+            Field('ready_time', css_class='run-request-input', label=False),
+            Field('need_by_this_time', css_class='run-request-input', label=False),
+            Field('pickup_name', label=False),
+            Field('pickup_phone', label=False),
+            Field('pickup_address_1', label=False),
+            Field('pickup_address_2', label=False),
+            Field('pickup_city', label=False),
+            Field('pickup_state', label=False),
+            Field('pickup_zip', label=False),
+            Field('dropoff_name', label=False),
+            Field('dropoff_phone', label=False),
+            Field('dropoff_address_1', label=False),
+            Field('dropoff_address_2', label=False),
+            Field('dropoff_city', label=False),
+            Field('dropoff_state', label=False),
+            Field('dropoff_zip', label=False),
+            Field('truck_size', label=False),
+            Field('run_details', label=False),
+            Field('assigned_driver', label=False),
+            Field('purchase_order', label=False),
+            Field('vendor_invoice', label=False),
+            Submit('submit', 'Submit')
+        )
 # - Create new driver
 class NewDriver(forms.ModelForm):
     class Meta:

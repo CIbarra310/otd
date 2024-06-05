@@ -144,6 +144,8 @@ def new_run(request):
     if request.method == "POST":
         run = NewRunRequest(request.POST)
         if run.is_valid():
+            run.save(commit=False)
+            run.run_status = "Open"
             run.save()
             return redirect("dashboard")
     else:
