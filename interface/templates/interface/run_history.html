@@ -13,20 +13,20 @@
         <div class="container">
             <h1>Run History</h1>
         </div>
-        <div class="container" style="overflow-x:auto">
+        <div class="container">
             <form id="runSearch" class="d-flex" role="search">
                 <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
 
-            <table class="table run-history" id="runHistory">
+            <table class="table" id="runHistory" style="font-size: 14px;">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col" class="hidden-column">Date</th>
                         <th scope="col">Dept.</th>
                         <th scope="col" class="hidden-column medium-hidden-column">Contact</th>
-                        <th scope="col">Pick Up</th>
+                        <th scope="col" class="hidden-column">Pick Up</th>
                         <th scope="col" class="hidden-column">Drop Off</th>
                         <th scope="col" class="hidden-column">P.O.</th>
                         <th scope="col" class="hidden-column medium-hidden-column">Invoice</th>
@@ -37,11 +37,11 @@
                 <tbody>
                     {% for run in runs %}
                         <tr>
-                            <td scope="row">{{ run.id }}</td>
+                            <td scope="row" style="width: 20px;">{{ run.id }}</td>
                             <td scope="row" class="hidden-column">{{ run.run_date }}</td>
                             <td scope="row">{{ run.requester_department }}</td>
                             <td scope="row" class="hidden-column medium-hidden-column">{{ run.requester_name }}</td>
-                            <td scope="row">{{ run.pickup_name }}</td>
+                            <td scope="row" class="hidden-column">{{ run.pickup_name }}</td>
                             <td scope="row" class="hidden-column">{{ run.dropoff_name }}</td>
                             <td scope="row" class="hidden-column">{{ run.purchase_order }}</td>
                             <td scope="row" class="hidden-column medium-hidden-column">{{ run.vendor_invoice }}</td>
@@ -64,7 +64,7 @@
                                     </div>
                                 {% endif %}
                             </td>
-                            <td>
+                            <td style="width: 180px;">
                                 <a class="btn btn-secondary" href="{% url 'view_run' run.id %}"><i class="fa fa-eye"></i></a>
                                 <a class="btn btn-success" href="{% url 'complete_run' run.id %}"><i class="fa fa-check"></i></a>
                                 <a class="btn btn-danger" href="{% url 'cancel_run' run.id %}"><i class="fa fa-trash"></i></a>
