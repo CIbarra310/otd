@@ -1,4 +1,5 @@
 from .forms import LoginForm, CreateUserForm
+from collections import defaultdict
 from transportation.forms import NewRunRequest, RunRequest, NewDriver, Driver
 from production.forms import RadioForm
 from django.contrib import messages
@@ -182,6 +183,18 @@ def run_history(request):
         'runs': runs
     }
     return render(request, 'interface/run_history.html', context=context)
+
+# Run History
+@login_required(login_url='login')
+def run_queue(request):
+    # Fetch RunRequest data model
+    runs = RunRequest.objects.exclude(run_status__in=["Completed","Cancelled"]).order_by('run_date', 'need_by_this_time')
+
+    # Pass the object to the template context
+    context = {
+        'runs': runs
+    }
+    return render(request, 'interface/run_queue.html', context=context)
 
 @login_required(login_url='login')
 def view_run(request, run_request_id):

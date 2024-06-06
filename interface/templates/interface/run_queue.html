@@ -1,0 +1,149 @@
+{% extends 'interface/layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <nav class="p-2" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Run Queue</li>
+        </ol>
+    </nav>
+    <main>
+        <br>
+        <div class="container">
+            <h1>Run Queue</h1>
+        </div>
+        <div class="container">
+            <form id="runSearch" class="d-flex" role="search">
+                <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            <br>
+            {% regroup runs by run_date as date_groups %}
+            {% for date_group in date_groups %}
+                <div class="date-group mb-4">
+                    <h3 class="date-label">{{ date_group.grouper }}</h3>
+                    {% for run in date_group.list %}
+                        <details class="border p-3 rounded mb-3">
+                            <summary class="font-weight-bold">Run #{{ run.id }} - {{ run.requester_department }}</summary>
+                            <div class="mt-3">
+                                <div class="row">
+                                    <div class="col-9">
+                                        <strong>Date:</strong> {{ run.run_date }}<br>
+                                        <strong>Ready Time:</strong> {{ run.ready_time }}<br>
+                                        <strong>Need By:</strong> {{ run.need_by_this_time }}
+                                    </div>
+                                    <div class="col-3">
+                                        <p><strong>Pick Up:</strong> {{ run.pickup_name }}</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-9">
+                                        <strong>Go To:</strong><br>
+                                        {{ run.pickup_name }}<br>
+                                        {{ run.pickup_address_1 }}<br>
+
+                                        {% if run_request.pickup_address_2 %}
+                                            {{ run.pickup_address_2}}<br>
+                                        {% endif %}
+
+                                        {{ run.pickup_city }}, {{ run.pickup_state }} {{ run.pickup_zip }}
+                                    </div>
+                                    <div class="col-3">
+                                        <a  class="btn btn-outline-primary" href="https://maps.apple.com/?address={{ run.pickup_address_1 }},+{{ run.pickup_city }},+{{ run.pickup_state }}+{{ run.pickup_zip }}">
+                                            Open in Apple Maps
+                                        </a>
+                                    </div>
+                                </div>
+                                <p><strong>Drop Off:</strong> {{ run.dropoff_name }}</p>
+                                <p><strong>Purchase Order:</strong> {{ run.purchase_order }}</p>
+                                <p><strong>Invoice:</strong> {{ run.vendor_invoice }}</p>
+                                <p><strong>Status:</strong> {{ run.run_status }}</p>
+                            </div>
+                        </details>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+
+            <table class="table" id="runHistory">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col" class="hidden-column">Date</th>
+                        <th scope="col">Dept.</th>
+                        <th scope="col" class="hidden-column medium-hidden-column">Contact</th>
+                        <th scope="col" class="hidden-column">Pick Up</th>
+                        <th scope="col" class="hidden-column">Drop Off</th>
+                        <th scope="col" class="hidden-column">P.O.</th>
+                        <th scope="col" class="hidden-column medium-hidden-column">Invoice</th>
+                        <th scope="col">Status</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for run in runs %}
+                        {% if run.run_status != "Completed" and run.run_status != "Cancelled" %}
+                            <tr>
+                                <td scope="row" style="width: 20px;">{{ run.id }}</td>
+                                <td scope="row" class="hidden-column">{{ run.run_date }}</td>
+                                <td scope="row">{{ run.requester_department }}</td>
+                                <td scope="row" class="hidden-column medium-hidden-column">{{ run.requester_name }}</td>
+                                <td scope="row" class="hidden-column">{{ run.pickup_name }}</td>
+                                <td scope="row" class="hidden-column">{{ run.dropoff_name }}</td>
+                                <td scope="row" class="hidden-column">{{ run.purchase_order }}</td>
+                                <td scope="row" class="hidden-column medium-hidden-column">{{ run.vendor_invoice }}</td>
+                                <td scope="row">
+                                    {% if run.run_status == "Completed" %}
+                                        <div class="alert alert-success run-status" role="alert">
+                                            {{ run.run_status }}
+                                        </div>
+                                    {% elif run.run_status == "Open" %}
+                                        <div class="alert alert-primary run-status" role="alert">
+                                            {{ run.run_status }}
+                                        </div>
+                                    {% elif run.run_status == "In Progress" %}
+                                        <div class="alert alert-warning run-status" role="alert">
+                                            {{ run.run_status }}
+                                        </div>
+                                    {% elif run.run_status == "Cancelled" %}
+                                        <div class="alert alert-danger run-status" role="alert">
+                                            {{ run.run_status }}
+                                        </div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a class="btn btn-secondary" href="{% url 'view_run' run.id %}"><i class="fa fa-eye"></i></a>
+                                    <a class="btn btn-success" href="{% url 'complete_run' run.id %}"><i class="fa fa-check"></i></a>
+                                    <a class="btn btn-danger" href="{% url 'cancel_run' run.id %}"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <br>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() { 
+            // Add search functionality
+            $('#runSearch').submit(function(event) {
+                event.preventDefault(); // Prevent default form submission
+                var searchText = $('#searchInput').val().toLowerCase(); // Get search input value
+                // Loop through each table row
+                $('#runHistory tbody tr').each(function() {
+                    var rowText = $(this).text().toLowerCase(); // Get text content of row
+                    if (rowText.indexOf(searchText) === -1) { // Check if row contains search text
+                        $(this).hide(); // Hide row if not a match
+                    } else {
+                        $(this).show(); // Show row if a match
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
