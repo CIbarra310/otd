@@ -19,7 +19,7 @@
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
 
-            <table class="table" id="runHistory" style="font-size: 14px;">
+            <table class="table" id="runHistory">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -64,7 +64,7 @@
                                     </div>
                                 {% endif %}
                             </td>
-                            <td style="width: 180px;">
+                            <td>
                                 <a class="btn btn-secondary" href="{% url 'view_run' run.id %}"><i class="fa fa-eye"></i></a>
                                 <a class="btn btn-success" href="{% url 'complete_run' run.id %}"><i class="fa fa-check"></i></a>
                                 <a class="btn btn-danger" href="{% url 'cancel_run' run.id %}"><i class="fa fa-trash"></i></a>
