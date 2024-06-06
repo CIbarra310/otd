@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <br>
-                <div class="row">
+                <div class="row" id="step1">
                     <h5>Date/Time Information</h5>
                     <div class="col-12">
                         <label>Date:</label>
@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <br>
-                <div class="row" id="pickup">
+                <div class="row" id="step2" hidden>
                     <h5>Where are we going?</h5>
                     <div class="col-12">
                         <label>Pick Up From</label>
@@ -89,7 +89,7 @@
                     </div>
                 </div>
                 <br>
-                <div class="row">
+                <div class="row" id="step3" hidden>
                     <h5>What are we getting?</h5>
                     <div class="col-12 mb-3">
                         <label for="run_details" class="form-label">Run Details</label>
@@ -101,7 +101,7 @@
                         <button type="button" class="btn btn-primary next-button">Next</button>
                     </div>
                 </div>
-                <div class="row" id="dropoff">
+                <div class="row" id="step4" hidden>
                     <h5>Where are we taking the item(s)?</h5>
                     <div class="col-12">
                         <label>Drop Off</label>
@@ -134,7 +134,7 @@
                     </div>
                 </div>           
                 <br>
-                <div class="row">
+                <div class="row" id="step5" hidden>
                     <h5>Additonal Information</h5>
                     <div class="col-12">
                         <div class="col-12 mb-3">
@@ -157,16 +157,51 @@
                         <label>Vendor Order #</label>
                         <input type="text" class="form-control" name="vendor_invoice" placeholder="1234">
                     </div>
-                    
+                    <div class="col-12 mb-3">
+                        <label for="formFileSm" class="form-label">Supporting Documents</label>
+                        <input class="form-control form-control-sm" id="formFileSm" type="file">
+                    </div>
+                    <div class="next-button-box">
+                        <br>
+                        <button type="button" class="btn btn-secondary back-button">Back</button>
+                        <button type="submit" class="btn btn-primary next-button">Submit Run Request</button>
+                    </div>
                 </div>
-                <div class="col-12 mb-3">
-                    <label for="formFileSm" class="form-label">Supporting Documents</label>
-                    <input class="form-control form-control-sm" id="formFileSm" type="file">
-                  </div>
                 <br>
-                <button type="submit" class="btn btn-primary w-100 p-2 btn-block">Submit Run Request</button>
             </form>
-
+        </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function showStep(step) {
+                const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+                steps.forEach(s => document.getElementById(s).hidden = s !== step);
+            }
+            document.querySelector('#step1 .next-button').addEventListener('click', function() {
+                showStep('step2');
+            });
+            document.querySelector('#step2 .back-button').addEventListener('click', function() {
+                showStep('step1');
+            });
+            document.querySelector('#step2 .next-button').addEventListener('click', function() {
+                showStep('step3');
+            });
+            document.querySelector('#step3 .back-button').addEventListener('click', function() {
+                showStep('step2');
+            });
+            document.querySelector('#step3 .next-button').addEventListener('click', function() {
+                showStep('step4');
+            });
+            document.querySelector('#step4 .back-button').addEventListener('click', function() {
+                showStep('step3');
+            });
+            document.querySelector('#step4 .next-button').addEventListener('click', function() {
+                showStep('step5');
+            });
+            document.querySelector('#step5 .back-button').addEventListener('click', function() {
+                showStep('step4');
+            });
+        });
+    </script>
 </main>
 {% endblock %}
