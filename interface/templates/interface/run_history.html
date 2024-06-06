@@ -80,20 +80,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script>
-        $(document).ready(function() {
-            // Initialize DataTable
-            $('#runHistory').DataTable({
-                searching: false, // Disable DataTables search feature
-                paging: true, // Enable pagination
-                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]], // Control number of records per page
-                language: {
-                    paginate: {
-                        next: '<i class="fa fa-chevron-right"></i>',
-                        previous: '<i class="fa fa-chevron-left"></i>'
-                    }
-                },
-                responsive: true, // Enable responsive design
-            });
+
             
             // Add search functionality
             $('#runSearch').submit(function(event) {
