@@ -79,9 +79,6 @@ td, th {
         justify-content: center;
     }
 
-    .run-history {
-        font-size: 8px;
-    }
 
     th {
         white-space: nowrap;
