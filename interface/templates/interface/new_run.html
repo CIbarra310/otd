@@ -15,7 +15,8 @@
             <hr>
             <form method="POST" autocomplete="off" action="{% url 'new_run' %}" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="row">
+                <!-- Hidden contact information -->
+                <div class="row" hidden>
                     <h5>Contact Information</h5>
                     <div class="col-6">
                         <label>Name</label>
@@ -35,21 +36,24 @@
                     </div>
                 </div>
                 <br>
-            </div>
-            <div class="row">
-                <h5>Date/Time Information</h5>
-                <div class="col-12">
-                    <label>Name</label>
-                    <input type="date" class="form-control" name="run_date">
-                </div>
-                <div class="col-6">
-                    <label>Department</label>
-                    <input type="time" class="form-control" name="ready_time">
-                </div>
-                <div class="col-6">
-                    <label>Email</label>
-                    <input type="time" class="form-control" name="need_by_this_time">
-                </div>
+                <div class="row">
+                    <h5>Date/Time Information</h5>
+                    <div class="col-12">
+                        <label>Date:</label>
+                        <input type="date" class="form-control" name="run_date">
+                    </div>
+                    <div class="col-6">
+                        <label>Ready Time:</label>
+                        <input type="time" class="form-control" name="ready_time">
+                    </div>
+                    <div class="col-6">
+                        <label>Need By:</label>
+                        <input type="time" class="form-control" name="need_by_this_time">
+                    </div>
+                    <div class="next-button-box">
+                        <br>
+                        <button type="button" class="btn btn-primary next-button">Next</button>
+                    </div>
                 </div>
                 <br>
                 <div class="row" id="pickup">
@@ -78,8 +82,25 @@
                         <label>Zip</label>
                         <input type="text" class="form-control" name="pickup_zip" placeholder="90232">
                     </div>
+                    <div class="next-button-box">
+                        <br>
+                        <button type="button" class="btn btn-secondary back-button">Back</button>
+                        <button type="button" class="btn btn-primary next-button">Next</button>
+                    </div>
                 </div>
                 <br>
+                <div class="row">
+                    <h5>What are we getting?</h5>
+                    <div class="col-12 mb-3">
+                        <label for="run_details" class="form-label">Run Details</label>
+                        <textarea class="form-control" name="run_details" id="run_details" rows="6"></textarea>
+                    </div>
+                    <div class="next-button-box">
+                        <br>
+                        <button type="button" class="btn btn-secondary back-button">Back</button>
+                        <button type="button" class="btn btn-primary next-button">Next</button>
+                    </div>
+                </div>
                 <div class="row" id="dropoff">
                     <h5>Where are we taking the item(s)?</h5>
                     <div class="col-12">
@@ -106,10 +127,28 @@
                         <label>Zip</label>
                         <input type="text" class="form-control" name="dropoff_zip" placeholder="90232">
                     </div>
+                    <div class="next-button-box">
+                        <br>
+                        <button type="button" class="btn btn-secondary back-button">Back</button>
+                        <button type="button" class="btn btn-primary next-button">Next</button>
+                    </div>
                 </div>           
                 <br>
                 <div class="row">
-                    <h5>What are we getting?</h5>
+                    <h5>Additonal Information</h5>
+                    <div class="col-12">
+                        <div class="col-12 mb-3">
+                            <label for="truck_size">Truck Size</label>
+                            <select class="form-control" name="truck_size" id="truck_size">
+                                <option value="" disabled selected>Select a truck size</option>
+                                <option value="Passenger Van">Passenger Van</option>
+                                <option value="Stakebed">Stakebed</option>
+                                <option value="Cube Truck">Cube Truck</option>
+                                <option value="5-Ton">5-Ton</option>
+                                <option value="10-Ton">10-Ton</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="col-6 mb-3">
                         <label>P.O. #</label>
                         <input type="text" class="form-control" name="purchase_order" placeholder="1234">
@@ -118,10 +157,7 @@
                         <label>Vendor Order #</label>
                         <input type="text" class="form-control" name="vendor_invoice" placeholder="1234">
                     </div>
-                    <div class="col-12 mb-3">
-                        <label for="run_details" class="form-label">Run Details</label>
-                        <textarea class="form-control" name="run_details" id="run_details" rows="3"></textarea>
-                      </div>
+                    
                 </div>
                 <div class="col-12 mb-3">
                     <label for="formFileSm" class="form-label">Supporting Documents</label>

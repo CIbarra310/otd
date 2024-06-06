@@ -10,9 +10,18 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Field
 
 # - Create new run
-
 class NewRunRequest(forms.ModelForm):
+    TRUCK_SIZE_CHOICES = [
+        ('', 'Select a truck size'),  # Prompt option
+        ('Passenger Van', 'Passenger Van'),
+        ('Stakebed', 'Stakebed'),
+        ('Cube Truck', 'Cube Truck'),
+        ('5-Ton', '5-Ton'),
+        ('10-Ton', '10-Ton'),
+    ]
 
+    truck_size = forms.ChoiceField(choices=TRUCK_SIZE_CHOICES)
+    
     class Meta:
         model = RunRequest
         fields = [
