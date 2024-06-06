@@ -130,7 +130,7 @@ def driver_rundown(request):
     return render(request, 'interface/driver_rundown.html')
 
 # - Create a new run
-@login_required(login_url=login)
+@login_required(login_url='login')
 def new_run(request):
     user = request.user
     initial_data = {
@@ -142,18 +142,20 @@ def new_run(request):
     }
 
     if request.method == "POST":
-        run = NewRunRequest(request.POST)
+        run = NewRunRequest(request.POST, request.FILES)
         if run.is_valid():
-        # Save the form data to the database
             instance = run.save(commit=False)
             instance.run_status = "Open"
             instance.save()
             return redirect("dashboard")
+        else:
+            print(run.errors)  # Debugging line to print form errors
+
     else:
         run = NewRunRequest(initial=initial_data)
 
     context = {'run': run}
-    return render(request, 'interface/new_run.html', context=context)
+    return render(request, 'interface/new_run.html', context)
 
 # Run History
 @login_required(login_url='login')

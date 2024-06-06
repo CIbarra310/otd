@@ -9,159 +9,128 @@
     </ol>
 </nav>
 <main>
-
-        {% crispy run %}
-
-    <!-- Custom Form -->
-    <div class="container shadow-md col-12 col-md-6 col-lg-6 col-xl-4">
-        <h1 class="text-center">New Run Request</h1>
-        <form method="POST" action="{% url 'new_run' %}">
-            {% csrf_token %}
-            <!-- Contact information taken from the user data -->
-            <div class="container p-2" >
-                <input type="hidden" name="requester_name" value="{{ run.requester_name.value }}">
-                <input type="hidden" name="requester_email" value="{{ run.requester_email.value }}">
-                <input type="hidden" name="requester_phone" value="{{ run.requester_phone.value }}">
-                <input type="hidden" name="requester_department" value="{{ run.requester_department.value }}">
-            </div>
-            <!-- Date and time information for the run-->
-            <div class="container p-1" id="step1">
-                <div class="p-3">
-                    <strong>Date:</strong>
-                    {{ run.run_date|as_crispy_field }}
-                </div>
-                <div class="p-3">
-                    <strong>When will it be ready?</strong>
-                    {{ run.ready_time|as_crispy_field }}
-                </div>
-                <div class="p-3">
-                    <strong>When do you need it by?</strong>
-                    {{ run.need_by_this_time|as_crispy_field }}
-                </div>
-                <div class="next-button-box">
-                    <br>
-                    <button type="button" class="btn btn-primary next-button">Next</button>
-                </div>
-            </div>
-            <div class="container p-1" id="step2" hidden>
-                <h3>Where are we going?</h3>
-                <strong>Vendor/Location</strong>
-                {{ run.pickup_name|as_crispy_field }}
-                <strong>Address 1</strong>
-                {{ run.pickup_address_1|as_crispy_field }}
-                <strong>Address 2</strong>
-                {{ run.pickup_address_2|as_crispy_field }}
+    <div class="container">
+        <div class="container shadow-md col-12 col-md-6 col-lg-6 col-xl-4">
+            <h2 class="text-center">Create New Run</h2>
+            <hr>
+            <form method="POST" autocomplete="off" action="{% url 'new_run' %}" enctype="multipart/form-data">
+                {% csrf_token %}
                 <div class="row">
-                    <div class="col-5">
-                        <strong>City</strong>
-                        {{ run.pickup_city|as_crispy_field }}
-                    </div>
-                    <div class="col-3">
-                        <strong>State</strong>
-                        {{ run.pickup_state|as_crispy_field }}
-                    </div>
-                    <div class="col-4">
-                        <strong>Zip</strong>
-                        {{ run.pickup_zip|as_crispy_field }}
-                    </div>
-                </div>
-                <div class="next-button-box">
-                    <br>
-                    <button type="button" class="btn btn-secondary back-button">Back</button>
-                    <button type="button" class="btn btn-primary next-button">Next</button>
-                </div>
-            </div>
-            <div class="container p-1" id="step3" hidden>
-                <h3>What are we getting?</h3>
-                {{ run.run_details|as_crispy_field }}
-                <div class="next-button-box">
-                    <br>
-                    <button type="button" class="btn btn-secondary back-button">Back</button>
-                    <button type="button" class="btn btn-primary next-button">Next</button>
-                </div>
-            </div>
-            <div class="container p-1" id="step4" hidden>
-                <h3>Where are we taking it?</h3>
-                <strong>Vendor/Location</strong>
-                {{ run.dropoff_name|as_crispy_field }}
-                <strong>Address 1</strong>
-                {{ run.dropoff_address_1|as_crispy_field }}
-                <strong>Address 2</strong>
-                {{ run.dropoff_address_2|as_crispy_field }}
-                <div class="row">
-                    <div class="col-5">
-                        <strong>City</strong>
-                        {{ run.dropoff_city|as_crispy_field }}
-                    </div>
-                    <div class="col-3">
-                        <strong>State</strong>
-                        {{ run.dropoff_state|as_crispy_field }}
-                    </div>
-                    <div class="col-4">
-                        <strong>Zip</strong>
-                        {{ run.dropoff_zip|as_crispy_field }}
-                    </div>
-                </div>
-                <div class="next-button-box">
-                    <br>
-                    <button type="button" class="btn btn-secondary back-button">Back</button>
-                    <button type="button" class="btn btn-primary next-button">Next</button>
-                </div>
-            </div>
-            <div class="container p-1" id="step5" hidden>
-                <h3>Additional Information</h3>
-                <strong>Vehicle Size</strong>
-                {{ run.truck_size|as_crispy_field }}
-                <div class="row">
+                    <h5>Contact Information</h5>
                     <div class="col-6">
-                        <strong>Purchase Order (Optional) </strong>
-                        {{ run.purchase_order|as_crispy_field }}
+                        <label>Name</label>
+                        <input type="text" class="form-control" name="requester_name" value="{{ run.requester_name.value }}">
                     </div>
                     <div class="col-6">
-                        <strong>Invoice # (Optional) </strong>
-                        {{ run.vendor_invoice|as_crispy_field }}
+                        <label>Department</label>
+                        <input type="text" class="form-control" name="requester_department" value="{{ run.requester_department.value }}">
+                    </div>
+                    <div class="col-6">
+                        <label>Email</label>
+                        <input type="text" class="form-control" name="requester_email" value="{{ run.requester_email.value }}">
+                    </div>
+                    <div class="col-6">
+                        <label>Phone</label>
+                        <input type="text" class="form-control" name="requester_phone" value="{{ run.requester_phone.value }}">
                     </div>
                 </div>
-                <div class="next-button-box">
-                    <br>
-                    <button type="button" class="btn btn-secondary back-button">Back</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
+                <br>
             </div>
-        </form>
+            <div class="row">
+                <h5>Date/Time Information</h5>
+                <div class="col-12">
+                    <label>Name</label>
+                    <input type="date" class="form-control" name="run_date">
+                </div>
+                <div class="col-6">
+                    <label>Department</label>
+                    <input type="time" class="form-control" name="ready_time">
+                </div>
+                <div class="col-6">
+                    <label>Email</label>
+                    <input type="time" class="form-control" name="need_by_this_time">
+                </div>
+                </div>
+                <br>
+                <div class="row" id="pickup">
+                    <h5>Where are we going?</h5>
+                    <div class="col-12">
+                        <label>Pick Up From</label>
+                        <input type="text" class="form-control" name="pickup_name" placeholder="Keslow Camera" >
+                    </div>
+                    <div class="col-12">
+                        <label>Address 1</label>
+                        <input type="text" class="form-control" name="pickup_address_1" placeholder="5900 Blackwelder St.">
+                    </div>
+                    <div class="col-12">
+                        <label>Address 2</label>
+                        <input type="text" class="form-control" name="pickup_address_2" placeholder="Unit/Ste.">
+                    </div>
+                    <div class="col-5">
+                        <label>City</label>
+                        <input type="text" class="form-control" name="pickup_city" placeholder="Culver City">
+                    </div>
+                    <div class="col-3">
+                        <label>State</label>
+                        <input type="text" class="form-control" name="pickup_state" placeholder="CA">
+                    </div>
+                    <div class="col-4">
+                        <label>Zip</label>
+                        <input type="text" class="form-control" name="pickup_zip" placeholder="90232">
+                    </div>
+                </div>
+                <br>
+                <div class="row" id="dropoff">
+                    <h5>Where are we taking the item(s)?</h5>
+                    <div class="col-12">
+                        <label>Drop Off</label>
+                        <input type="text" class="form-control" name="dropoff_name" placeholder="Sony Pictures Studios">
+                    </div>
+                    <div class="col-12">
+                        <label>Address 1</label>
+                        <input type="text" class="form-control" name="dropoff_address_1" placeholder="10202 Washington Blvd">
+                    </div>
+                    <div class="col-12">
+                        <label>Address 2</label>
+                        <input type="text" class="form-control" name="dropoff_address_2" placeholder="Stage 21">
+                    </div>
+                    <div class="col-5">
+                        <label>City</label>
+                        <input type="text" class="form-control" name="dropoff_city" placeholder="Culver City">
+                    </div>
+                    <div class="col-3">
+                        <label>State</label>
+                        <input type="text" class="form-control" name="dropoff_state" placeholder="CA">
+                    </div>
+                    <div class="col-4">
+                        <label>Zip</label>
+                        <input type="text" class="form-control" name="dropoff_zip" placeholder="90232">
+                    </div>
+                </div>           
+                <br>
+                <div class="row">
+                    <h5>What are we getting?</h5>
+                    <div class="col-6 mb-3">
+                        <label>P.O. #</label>
+                        <input type="text" class="form-control" name="purchase_order" placeholder="1234">
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label>Vendor Order #</label>
+                        <input type="text" class="form-control" name="vendor_invoice" placeholder="1234">
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label for="run_details" class="form-label">Run Details</label>
+                        <textarea class="form-control" name="run_details" id="run_details" rows="3"></textarea>
+                      </div>
+                </div>
+                <div class="col-12 mb-3">
+                    <label for="formFileSm" class="form-label">Supporting Documents</label>
+                    <input class="form-control form-control-sm" id="formFileSm" type="file">
+                  </div>
+                <br>
+                <button type="submit" class="btn btn-primary w-100 p-2 btn-block">Submit Run Request</button>
+            </form>
+
     </div>
-    <br>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            function showStep(step) {
-                const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
-                steps.forEach(s => document.getElementById(s).hidden = s !== step);
-            }
-            document.querySelector('#step1 .next-button').addEventListener('click', function() {
-                showStep('step2');
-            });
-            document.querySelector('#step2 .back-button').addEventListener('click', function() {
-                showStep('step1');
-            });
-            document.querySelector('#step2 .next-button').addEventListener('click', function() {
-                showStep('step3');
-            });
-            document.querySelector('#step3 .back-button').addEventListener('click', function() {
-                showStep('step2');
-            });
-            document.querySelector('#step3 .next-button').addEventListener('click', function() {
-                showStep('step4');
-            });
-            document.querySelector('#step4 .back-button').addEventListener('click', function() {
-                showStep('step3');
-            });
-            document.querySelector('#step4 .next-button').addEventListener('click', function() {
-                showStep('step5');
-            });
-            document.querySelector('#step5 .back-button').addEventListener('click', function() {
-                showStep('step4');
-            });
-        });
-    </script>
 </main>
 {% endblock %}
