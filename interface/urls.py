@@ -17,6 +17,8 @@ urlpatterns = [
     path('new_run', views.new_run, name="new_run"),
     path('run_history', views.run_history, name="run_history"),
     path('run/<int:run_request_id>/', views.view_run, name='view_run'),
+    path('complete_run/<int:run_request_id>/', views.complete_run, name="complete_run"),
+    path('cancel_run/<int:run_request_id>/', views.cancel_run, name="cancel_run"),
     path('radios', views.radios, name="radios"),
     path('radio_scan', views.radio_scan, name="radio_scan"),
 ]

@@ -157,6 +157,20 @@ def new_run(request):
     context = {'run': run}
     return render(request, 'interface/new_run.html', context)
 
+@login_required(login_url='login')
+def complete_run(request, run_request_id):
+    run = get_object_or_404(RunRequest, id=run_request_id)
+    run.run_status = "Completed"
+    run.save()
+    return redirect('run_history')
+
+@login_required(login_url='login')
+def cancel_run(request, run_request_id):
+    run = get_object_or_404(RunRequest, id=run_request_id)
+    run.run_status = "Cancelled"
+    run.save()
+    return redirect('run_history')
+
 # Run History
 @login_required(login_url='login')
 def run_history(request):
