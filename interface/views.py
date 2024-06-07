@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import auth
 from django.db.models.functions import Lower
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from core.models import Production, NewUser
 import json
@@ -163,14 +163,30 @@ def complete_run(request, run_request_id):
     run = get_object_or_404(RunRequest, id=run_request_id)
     run.run_status = "Completed"
     run.save()
-    return redirect('run_history')
+    
+    # Get the referer URL
+    referer = request.META.get('HTTP_REFERER')
+    
+    # Redirect to the referer if it's present, otherwise fallback to a default page
+    if referer:
+        return HttpResponseRedirect(referer)
+    else:
+        return redirect('dashboard')
 
 @login_required(login_url='login')
 def cancel_run(request, run_request_id):
     run = get_object_or_404(RunRequest, id=run_request_id)
     run.run_status = "Cancelled"
     run.save()
-    return redirect('run_history')
+    
+    # Get the referer URL
+    referer = request.META.get('HTTP_REFERER')
+    
+    # Redirect to the referer if it's present, otherwise fallback to a default page
+    if referer:
+        return HttpResponseRedirect(referer)
+    else:
+        return redirect('dashboard')
 
 # Run History
 @login_required(login_url='login')
