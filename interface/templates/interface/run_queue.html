@@ -38,7 +38,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-9">
+                                    <div class="col-8">
                                         <strong>Go To:</strong><br>
                                         {{ run.pickup_name }}<br>
                                         {{ run.pickup_address_1 }}<br>
@@ -49,9 +49,15 @@
 
                                         {{ run.pickup_city }}, {{ run.pickup_state }} {{ run.pickup_zip }}
                                     </div>
-                                    <div class="col-3">
+                                    <div class="col-4">
                                         <a  class="btn btn-outline-primary" href="https://maps.apple.com/?address={{ run.pickup_address_1 }},+{{ run.pickup_city }},+{{ run.pickup_state }}+{{ run.pickup_zip }}">
-                                            Open in Apple Maps
+                                            <i class="fa fa-apple"></i>
+                                        </a>
+                                        <a  class="btn btn-outline-primary" href="https://www.google.com/maps/search/?api=1&query={{ run.pickup_address_1 }},+{{ run.pickup_city }},+{{ run.pickup_state }}" target="_blank">
+                                            <i class="fa fa-google"></i>
+                                        </a>
+                                                <a  class="btn btn-outline-primary" href="https://truckmap.com/place/{{ run.pickup_address_1 }}{{ run.pickup_city }}{{ run.pickup_state }}{{ run.pickup_zip }}" target="_blank">
+                                            <i class="fa fa-truck"></i>
                                         </a>
                                     </div>
                                 </div>
