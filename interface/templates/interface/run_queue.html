@@ -14,10 +14,6 @@
             <h1>Run Queue</h1>
         </div>
         <div class="container">
-            <form id="runSearch" class="d-flex" role="search">
-                <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
             <br>
             {% regroup runs by run_date as date_groups %}
             {% for date_group in date_groups %}
@@ -28,17 +24,17 @@
                             <summary class="font-weight-bold">Run #{{ run.id }} - {{ run.requester_department }}</summary>
                             <div class="mt-3">
                                 <div class="row">
-                                    <div class="col-9">
-                                        <strong>Date:</strong> {{ run.run_date }}<br>
+                                    <div class="col-7">
                                         <strong>Ready Time:</strong> {{ run.ready_time }}<br>
                                         <strong>Need By:</strong> {{ run.need_by_this_time }}
                                     </div>
-                                    <div class="col-3">
-                                        <p><strong>Pick Up:</strong> {{ run.pickup_name }}</p>
+                                    <div class="col-5">
+                                        <button class="btn btn-primary">Acknowledge</button>
                                     </div>
                                 </div>
+                                <br>
                                 <div class="row">
-                                    <div class="col-8">
+                                    <div class="col-7">
                                         <strong>Go To:</strong><br>
                                         {{ run.pickup_name }}<br>
                                         {{ run.pickup_address_1 }}<br>
@@ -49,7 +45,7 @@
 
                                         {{ run.pickup_city }}, {{ run.pickup_state }} {{ run.pickup_zip }}
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-5">
                                         <a  class="btn btn-outline-primary" href="https://maps.apple.com/?address={{ run.pickup_address_1 }},+{{ run.pickup_city }},+{{ run.pickup_state }}+{{ run.pickup_zip }}">
                                             <i class="fa fa-apple"></i>
                                         </a>
@@ -61,10 +57,35 @@
                                         </a>
                                     </div>
                                 </div>
-                                <p><strong>Drop Off:</strong> {{ run.dropoff_name }}</p>
-                                <p><strong>Purchase Order:</strong> {{ run.purchase_order }}</p>
-                                <p><strong>Invoice:</strong> {{ run.vendor_invoice }}</p>
-                                <p><strong>Status:</strong> {{ run.run_status }}</p>
+                                <br>
+                                <div class="row">
+                                    <div class="col-7">
+                                        <strong>Go To:</strong><br>
+                                        {{ run.pickup_name }}<br>
+                                        {{ run.pickup_address_1 }}<br>
+
+                                        {% if run_request.pickup_address_2 %}
+                                            {{ run.pickup_address_2}}<br>
+                                        {% endif %}
+
+                                        {{ run.pickup_city }}, {{ run.pickup_state }} {{ run.pickup_zip }}
+                                    </div>
+                                    <div class="col-5">
+                                        <a  class="btn btn-outline-primary" href="https://maps.apple.com/?address={{ run.pickup_address_1 }},+{{ run.pickup_city }},+{{ run.pickup_state }}+{{ run.pickup_zip }}">
+                                            <i class="fa fa-apple"></i>
+                                        </a>
+                                        <a  class="btn btn-outline-primary" href="https://www.google.com/maps/search/?api=1&query={{ run.pickup_address_1 }},+{{ run.pickup_city }},+{{ run.pickup_state }}" target="_blank">
+                                            <i class="fa fa-google"></i>
+                                        </a>
+                                                <a  class="btn btn-outline-primary" href="https://truckmap.com/place/{{ run.pickup_address_1|urlencode }}{{ run.pickup_city|urlencode }}{{ run.pickup_state|urlencode }}{{ run.pickup_zip|urlencode }}" target="_blank">
+                                            <i class="fa fa-truck"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <br>
+                                <strong>Run Details:</strong><br> 
+                                {{ run.run_details }}<br>
+                                <br>
                                 <div class="row">
                                     <div class="col-4">
                                         <a class="btn btn-secondary" href="{% url 'view_run' run.id %}" style="width: 100%;">View</a>
