@@ -7,126 +7,131 @@
         <li class="breadcrumb-item active" aria-current="page">Run {{ run_request.id }}</li>
         </ol>
     </nav>
-    <div class="container shadow-md col-12 col-md-6 col-lg-6 col-xl-4">
-        <h1>Run {{ run_request.id }} - {{ run_request.requester_department }}</h1>
-        {% if run_request.run_status == "Open" %}
-        <div class="alert alert-primary  text-center" role="alert">
-            This run is scheduled
-        </div>
-        {% elif run_request.run_status == "In Progress" %}
-        <div class="alert alert-warning  text-center" role="alert">
-            This run is currently in progress
-        </div>
-        {% elif run_request.run_status == "Cancelled" %}
-        <div class="alert alert-danger  text-center" role="alert">
-            This run has been cancelled
-        </div>
-        {% elif run_request.run_status == "Completed" %}
-        <div class="alert alert-success text-center" role="alert">
-            This run has been completed
-        </div>
-        {% endif %}
-        <div class="row" >
-            <h5>Requested By</h5>
-            <div class="col-6">
-                <label>Name</label>
-                <input type="text" class="form-control" value="{{ run_request.requester_name }}" disabled>
+    <form action="" method="post">
+        <div class="container shadow-md col-12 col-md-6 col-lg-6 col-xl-4">
+            <h1>Run {{ run_request.id }} - {{ run_request.requester_department }}</h1>
+            {% if run_request.run_status == "Open" %}
+            <div class="alert alert-primary  text-center" role="alert">
+                This run is scheduled
             </div>
-            <div class="col-6">
-                <label>Department</label>
-                <input type="text" class="form-control" value="{{ run_request.requester_department }}" disabled>
+            {% elif run_request.run_status == "In Progress" %}
+            <div class="alert alert-warning  text-center" role="alert">
+                This run is currently in progress
             </div>
-            <div class="col-6">
-                <label>Email</label>
-                <input type="text" class="form-control" value="{{ run_request.requester_email }}" disabled>
+            {% elif run_request.run_status == "Cancelled" %}
+            <div class="alert alert-danger  text-center" role="alert">
+                This run has been cancelled
             </div>
-            <div class="col-6">
-                <label>Phone</label>
-                <input type="text" class="form-control" value="{{ run_request.requester_phone }}" disabled>
+            {% elif run_request.run_status == "Completed" %}
+            <div class="alert alert-success text-center" role="alert">
+                This run has been completed
             </div>
-        </div>
-        <br>
-        <div class="row">
-            <h5>Pick Up Information</h5>
-            <div class="col-12">
-                <label>Pick Up From</label>
-                <input type="text" class="form-control" value="{{ run_request.pickup_name }}">
+            {% endif %}
+            <div class="row" >
+                <h5>Requested By</h5>
+                <div class="col-6">
+                    <label>Name</label>
+                    <input type="text" class="form-control" value="{{ run_request.requester_name }}" readonly>
+                </div>
+                <div class="col-6">
+                    <label>Department</label>
+                    <input type="text" class="form-control" value="{{ run_request.requester_department }}" readonly>
+                </div>
+                <div class="col-6">
+                    <label>Email</label>
+                    <input type="text" class="form-control" value="{{ run_request.requester_email }}" readonly>
+                </div>
+                <div class="col-6">
+                    <label>Phone</label>
+                    <input type="text" class="form-control" value="{{ run_request.requester_phone }}" readonly>
+                </div>
             </div>
-            <div class="col-12">
-                <label>Address 1</label>
-                <input type="text" class="form-control" value="{{ run_request.pickup_address_1 }}">
+            <br>
+            <div class="row">
+                <h5>Pick Up Information</h5>
+                <div class="col-12">
+                    <label>Pick Up From</label>
+                    <input type="text" class="form-control" value="{{ run_request.pickup_name }}">
+                </div>
+                <div class="col-12">
+                    <label>Address 1</label>
+                    <input type="text" class="form-control" value="{{ run_request.pickup_address_1 }}">
+                </div>
+                <div class="col-12">
+                    <label>Address 2</label>
+                    {% if run_request.pickup_address_2 %}
+                        <input type="text" class="form-control" value="{{ run_request.pickup_address_2 }}">
+                    {% else %}
+                        <input type="text" class="form-control" value="">
+                    {% endif %}
+                </div>
+                <div class="col-5">
+                    <label>City</label>
+                    <input type="text" class="form-control" value="{{ run_request.pickup_city }}">
+                </div>
+                <div class="col-3">
+                    <label>State</label>
+                    <input type="text" class="form-control" value="{{ run_request.pickup_state }}">
+                </div>
+                <div class="col-4">
+                    <label>Zip</label>
+                    <input type="text" class="form-control" value="{{ run_request.pickup_zip }}">
+                </div>
             </div>
-            <div class="col-12">
-                <label>Address 2</label>
-                {% if run_request.pickup_address_2 %}
-                    <input type="text" class="form-control" value="{{ run_request.pickup_address_2 }}">
-                {% else %}
-                    <input type="text" class="form-control" value="">
-                {% endif %}
-            </div>
-            <div class="col-5">
-                <label>City</label>
-                <input type="text" class="form-control" value="{{ run_request.pickup_city }}">
-            </div>
-            <div class="col-3">
-                <label>State</label>
-                <input type="text" class="form-control" value="{{ run_request.pickup_state }}">
-            </div>
-            <div class="col-4">
-                <label>Zip</label>
-                <input type="text" class="form-control" value="{{ run_request.pickup_zip }}">
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <h5>Drop Off Information</h5>
-            <div class="col-12">
-                <label>Pick Up From</label>
-                <input type="text" class="form-control" value="{{ run_request.dropoff_name }}">
-            </div>
-            <div class="col-12">
-                <label>Address 1</label>
-                <input type="text" class="form-control" value="{{ run_request.dropoff_address_1 }}">
-            </div>
-            <div class="col-12">
-                <label>Address 2</label>
-                {% if run_request.dropoff_address_2 %}
-                    <input type="text" class="form-control" value="{{ run_request.dropoff_address_2 }}">
-                {% else %}
-                    <input type="text" class="form-control" value="">
-                {% endif %}
-            <div class="col-5">
-                <label>City</label>
-                <input type="text" class="form-control" value="{{ run_request.dropoff_city }}">
-            </div>
-            <div class="col-3">
-                <label>State</label>
-                <input type="text" class="form-control" value="{{ run_request.dropoff_state }}">
-            </div>
-            <div class="col-4">
-                <label>Zip</label>
-                <input type="text" class="form-control" value="{{ run_request.dropoff_zip }}">
-            </div>
-        </div>           
-        <br>
-        <div class="row">
-            <h5>Run Information</h5>
-            <div class="col-6 mb-3">
-                <label>P.O. #</label>
-                <input type="text" class="form-control" value="{{ run_request.purchase_order }}">
-            </div>
-            <div class="col-6 mb-3">
-                <label>Vendor Order #</label>
-                <input type="text" class="form-control" value="{{ run_request.vendor_invoice }}">
+            <br>
+            <div class="row">
+                <h5>Drop Off Information</h5>
+                <div class="col-12">
+                    <label>Pick Up From</label>
+                    <input type="text" class="form-control" value="{{ run_request.dropoff_name }}">
+                </div>
+                <div class="col-12">
+                    <label>Address 1</label>
+                    <input type="text" class="form-control" value="{{ run_request.dropoff_address_1 }}">
+                </div>
+                <div class="col-12">
+                    <label>Address 2</label>
+                    {% if run_request.dropoff_address_2 %}
+                        <input type="text" class="form-control" value="{{ run_request.dropoff_address_2 }}">
+                    {% else %}
+                        <input type="text" class="form-control" value="">
+                    {% endif %}
+                </div>
+                <div class="col-5">
+                    <label>City</label>
+                    <input type="text" class="form-control" value="{{ run_request.dropoff_city }}">
+                </div>
+                <div class="col-3">
+                    <label>State</label>
+                    <input type="text" class="form-control" value="{{ run_request.dropoff_state }}">
+                </div>
+                <div class="col-4">
+                    <label>Zip</label>
+                    <input type="text" class="form-control" value="{{ run_request.dropoff_zip }}">
+                </div>
+            </div>           
+            <br>
+            <div class="row">
+                <h5>Run Information</h5>
+                <div class="col-6 mb-3">
+                    <label>P.O. #</label>
+                    <input type="text" class="form-control" value="{{ run_request.purchase_order }}">
+                </div>
+                <div class="col-6 mb-3">
+                    <label>Vendor Order #</label>
+                    <input type="text" class="form-control" value="{{ run_request.vendor_invoice }}">
+                </div>
+                <div class="col-12 mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Run Details</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" value="{{ run_request.run_details }}"></textarea>
+                    </div>
             </div>
             <div class="col-12 mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">Run Details</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" value="{{ run_request.run_details }}"></textarea>
-                </div>
+                <label for="formFileSm" class="form-label">Supporting Documents</label>
+                <input class="form-control form-control-sm" id="formFileSm" type="file">
+            </div>
         </div>
-        <div class="col-12 mb-3">
-            <label for="formFileSm" class="form-label">Supporting Documents</label>
-            <input class="form-control form-control-sm" id="formFileSm" type="file">
-        </div>
-    </div>
+        <button class="btn btn-primary" type="submit">Update Run</button>
+    </form>
+    <br>
 {% endblock %}
