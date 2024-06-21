@@ -127,8 +127,10 @@ def deactivate_driver(request, driver_id):
 
 @login_required(login_url='login')
 def driver_rundown(request):
+	drivers = Driver.objects.all()
 
-    return render(request, 'interface/driver_rundown.html')
+    context = {'drivers': drivers}
+    return render(request, 'interface/driver_rundown.html', context=context)
 
 # - Create a new run
 @login_required(login_url='login')
