@@ -30,59 +30,59 @@
             <div class="row" >
                 <h5>Requested By</h5>
                 <div class="col-6">
-                    <label>Name</label>
-                    <input type="text" class="form-control" value="{{ run_request.requester_name }}" readonly>
+                    <label for="requester_name">Name</label>
+                    <input type="text" class="form-control" name="requester_name" id="requester_name" value="{{ run_request.requester_name }}" readonly>
                 </div>
                 <div class="col-6">
-                    <label>Department</label>
-                    <input type="text" class="form-control" value="{{ run_request.requester_department }}" readonly>
+                    <label for="requester_department">Department</label>
+                    <input type="text" class="form-control" name="requester_department" id="requester_department" value="{{ run_request.requester_department }}" readonly>
                 </div>
                 <div class="col-6">
-                    <label>Email</label>
-                    <input type="text" class="form-control" value="{{ run_request.requester_email }}" readonly>
+                    <label for="requester_email">Email</label>
+                    <input type="text" class="form-control" name="requester_email" id="requester_email" value="{{ run_request.requester_email }}" readonly>
                 </div>
                 <div class="col-6">
-                    <label>Phone</label>
-                    <input type="text" class="form-control" value="{{ run_request.requester_phone }}" readonly>
+                    <label for="requester_phone">Phone</label>
+                    <input type="text" class="form-control" name="requester_phone" id="requester_phone" value="{{ run_request.requester_phone }}" readonly>
                 </div>
             </div>
             <br>
             <div class="row">
                 <h5>Pick Up Information</h5>
                 <div class="col-12">
-                    <label>Pick Up From</label>
-                    <input type="text" class="form-control" value="{{ run_request.pickup_name }}">
+                    <label for="pickup_name">Pick Up From</label>
+                    <input type="text" class="form-control" name="pickup_name" id="pickup_name" value="{{ run_request.pickup_name }}">
                 </div>
                 <div class="col-12">
-                    <label>Address 1</label>
-                    <input type="text" class="form-control" value="{{ run_request.pickup_address_1 }}">
+                    <label for="pickup_address_1">Address 1</label>
+                    <input type="text" class="form-control" name="pickup_address_1" id="pickup_address_1" value="{{ run_request.pickup_address_1 }}">
                 </div>
                 <div class="col-12">
-                    <label>Address 2</label>
+                    <label for="pickup_address_2">Address 2</label>
                     {% if run_request.pickup_address_2 %}
-                        <input type="text" class="form-control" value="{{ run_request.pickup_address_2 }}">
+                        <input type="text" class="form-control" name="pickup_address_2" id="pickup_address_2" value="{{ run_request.pickup_address_2 }}">
                     {% else %}
                         <input type="text" class="form-control" value="">
                     {% endif %}
                 </div>
                 <div class="col-5">
-                    <label>City</label>
-                    <input type="text" class="form-control" value="{{ run_request.pickup_city }}">
+                    <label for="pickup_city">City</label>
+                    <input type="text" class="form-control" name="pickup_city" id="pickup_city" value="{{ run_request.pickup_city }}">
                 </div>
                 <div class="col-3">
-                    <label>State</label>
-                    <input type="text" class="form-control" value="{{ run_request.pickup_state }}">
+                    <label for="pickup_state">State</label>
+                    <input type="text" class="form-control" name="pickup_name" id="pickup_state" value="{{ run_request.pickup_state }}">
                 </div>
                 <div class="col-4">
-                    <label>Zip</label>
-                    <input type="text" class="form-control" value="{{ run_request.pickup_zip }}">
+                    <label for="pickup_zip">Zip</label>
+                    <input type="text" class="form-control" name="pickup_zip" id="pickup_zip" value="{{ run_request.pickup_zip }}">
                 </div>
             </div>
             <br>
             <div class="row">
                 <h5>Drop Off Information</h5>
                 <div class="col-12">
-                    <label>Pick Up From</label>
+                    <label>Drop Off From</label>
                     <input type="text" class="form-control" value="{{ run_request.dropoff_name }}">
                 </div>
                 <div class="col-12">
