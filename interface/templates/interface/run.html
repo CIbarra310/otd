@@ -62,7 +62,7 @@
                     {% if run_request.pickup_address_2 %}
                         <input type="text" class="form-control" name="pickup_address_2" id="pickup_address_2" value="{{ run_request.pickup_address_2 }}">
                     {% else %}
-                        <input type="text" class="form-control" value="">
+                        <input type="text" class="form-control" name="pickup_address_2" id="pickup_address_2" value="">
                     {% endif %}
                 </div>
                 <div class="col-5">
@@ -82,44 +82,44 @@
             <div class="row">
                 <h5>Drop Off Information</h5>
                 <div class="col-12">
-                    <label>Drop Off From</label>
-                    <input type="text" class="form-control" value="{{ run_request.dropoff_name }}">
+                    <label for="dropoff_name">Drop Off From</label>
+                    <input type="text" class="form-control" name="dropoff_name" id="dropoff_name" value="{{ run_request.dropoff_name }}">
                 </div>
                 <div class="col-12">
-                    <label>Address 1</label>
-                    <input type="text" class="form-control" value="{{ run_request.dropoff_address_1 }}">
+                    <label for="dropoff_address_1">Address 1</label>
+                    <input type="text" class="form-control" name="dropoff_address_1" id="dropoff_address_1" value="{{ run_request.dropoff_address_1 }}">
                 </div>
                 <div class="col-12">
-                    <label>Address 2</label>
+                    <label for="dropoff_address_2">Address 2</label>
                     {% if run_request.dropoff_address_2 %}
-                        <input type="text" class="form-control" value="{{ run_request.dropoff_address_2 }}">
+                        <input type="text" class="form-control" name="dropoff_address_2" id="dropoff_address_2" value="{{ run_request.dropoff_address_2 }}">
                     {% else %}
-                        <input type="text" class="form-control" value="">
+                        <input type="text" class="form-control" name="dropoff_address_2" id="dropoff_address_2" value="">
                     {% endif %}
                 </div>
                 <div class="col-5">
-                    <label>City</label>
-                    <input type="text" class="form-control" value="{{ run_request.dropoff_city }}">
+                    <label for="dropoff_city">City</label>
+                    <input type="text" class="form-control" name="dropoff_city" id="dropoff_city" value="{{ run_request.dropoff_city }}">
                 </div>
                 <div class="col-3">
-                    <label>State</label>
-                    <input type="text" class="form-control" value="{{ run_request.dropoff_state }}">
+                    <label for="dropoff_state">State</label>
+                    <input type="text" class="form-control" name="dropoff_state" id="dropoff_state" value="{{ run_request.dropoff_state }}">
                 </div>
                 <div class="col-4">
-                    <label>Zip</label>
-                    <input type="text" class="form-control" value="{{ run_request.dropoff_zip }}">
+                    <label for="dropoff_zip">Zip</label>
+                    <input type="text" class="form-control" name="dropoff_zip" id="dropoff_zip" value="{{ run_request.dropoff_zip }}">
                 </div>
             </div>           
             <br>
             <div class="row">
                 <h5>Run Information</h5>
                 <div class="col-6 mb-3">
-                    <label>P.O. #</label>
-                    <input type="text" class="form-control" value="{{ run_request.purchase_order }}">
+                    <label for="purchase_order">P.O. #</label>
+                    <input type="text" class="form-control" name="purchase_order" id="purchase_order" value="{{ run_request.purchase_order }}">
                 </div>
                 <div class="col-6 mb-3">
-                    <label>Vendor Order #</label>
-                    <input type="text" class="form-control" value="{{ run_request.vendor_invoice }}">
+                    <label for="vendor_invoice">Vendor Order #</label>
+                    <input type="text" class="form-control" name="vendor_invoice" id="vendor_invoice" value="{{ run_request.vendor_invoice }}">
                 </div>
                 <div class="col-12 mb-3">
                     <label for="exampleFormControlTextarea1" class="form-label">Run Details</label>
