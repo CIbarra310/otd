@@ -65,9 +65,9 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <a class="btn btn-secondary" href="{% url 'view_run' run.id %}"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-success" href="{% url 'complete_run' run.id %}"><i class="fa fa-check"></i></a>
-                                <a class="btn btn-danger" href="{% url 'cancel_run' run.id %}"><i class="fa fa-trash"></i></a>
+                                <a class="btn btn-secondary" href="{% url 'view_run' run.id %}" title="view_run"><i class="fa fa-eye"></i></a>
+                                <a class="btn btn-success" href="{% url 'complete_run' run.id %}" title="complete_run"><i class="fa fa-check"></i></a>
+                                <a class="btn btn-danger" href="{% url 'cancel_run' run.id %}" title="cancel_run"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                     {% endfor %}

@@ -39,8 +39,8 @@
                                 <td>{{ driver.grouping }}</td>
                                 <td>Stakebed</td>
                                 <td>
-                                    <button class="btn btn-secondary" name="view-driver"><i class="fa fa-eye"></i></button>
-                                    <a class="btn btn-danger" href="{% url 'deactivate_driver' driver.id %}"><i class="fa fa-arrow-down"></i></a>
+                                    <button class="btn btn-secondary" name="view-driver" title="view"><i class="fa fa-eye"></i></button>
+                                    <a class="btn btn-danger" href="{% url 'deactivate_driver' driver.id %}" title="deactivate_driver"><i class="fa fa-arrow-down"></i></a>
                                 </td>
                             </tr>
                           {% endif %}
@@ -76,8 +76,8 @@
                                     <td>{{ driver.grouping }}</td>
                                     <td>Stakebed</td>
                                     <td>
-                                      <button class="btn btn-secondary" name="view-driver"><i class="fa fa-eye"></i></button>
-                                      <a class="btn btn-success" href="{% url 'activate_driver' driver.id %}"><i class="fa fa-arrow-up"></i></a>
+                                      <button class="btn btn-secondary" name="view-driver" title="view"><i class="fa fa-eye"></i></button>
+                                      <a class="btn btn-success" href="{% url 'activate_driver' driver.id %}" title="activate_driver"><i class="fa fa-arrow-up"></i></a>
                                     </td>
                                 </tr>
                             {% endif %}
