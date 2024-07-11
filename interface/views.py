@@ -80,13 +80,13 @@ def user_admin(request):
 @login_required(login_url=login)
 def dashboard(request):
     # Fetch RunRequest data model
-    # runs = RunRequest.objects.all()
+    runs = RunRequest.objects.all().order_by('-run_date')
 
     # Pass the object to the template context
-    # context = {
-    #    'runs': runs
-    #}
-    return render(request, 'interface/dashboard.html') #context=context
+    context = {
+        'runs': runs
+    }
+    return render(request, 'interface/dashboard.html', context=context)
 
 # - Driver roster page
 @login_required(login_url='login')

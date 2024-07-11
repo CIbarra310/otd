@@ -19,30 +19,30 @@
                     <div class="card-body">
                         <table class="table">
                             <thead>
-                              <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Pick Up</th>
-                                <th scope="col">Status</th>
-                              </tr>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Vendor</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col"></th>
+                                </tr>
                             </thead>
                             <tbody>
-                              <tr>
-                                <th scope="row">1</th>
-                                <td>Keslow Camera</td>
-                                <td>Open</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">2</th>
-                                <td>Alternative Rentals</td>
-                                <td>Open</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">3</th>
-                                <td>Panavision</td>
-                                <td>Open</td>
-                              </tr>
+                            {% for run in runs %}
+                                {% if run.run_status == "Open" %}
+                                        <tr>
+                                            <th scope="row">{{ run.id }}</th>
+                                            <td>{{ run.pickup_name }}</td>
+                                            <td scope="row">
+                                                    {{ run.run_date }}                 
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-secondary" href="{% url 'view_run' run.id %}" title="view_run"><i class="fa fa-eye"></i></a>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
                             </tbody>
-                          </table>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -50,35 +50,35 @@
             <div class="row">
                 <div class="card">
                     <div class="card-header bg-dark text-white">
-                      Completed Runs
+                      <h4>Recently Completed Runs</h4>
                     </div>
                     <div class="card-body">
                         <table class="table">
                             <thead>
-                              <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Pick Up</th>
-                                <th scope="col">Status</th>
-                              </tr>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Vendor</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col"></th>
+                                </tr>
                             </thead>
                             <tbody>
-                              <tr>
-                                <th scope="row">1</th>
-                                <td>Keslow Camera</td>
-                                <td>Open</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">2</th>
-                                <td>Alternative Rentals</td>
-                                <td>Open</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">3</th>
-                                <td>Panavision</td>
-                                <td>Open</td>
-                              </tr>
+                            {% for run in runs %}
+                                {% if run.run_status == "Completed" %}
+                                        <tr>
+                                            <th scope="row">{{ run.id }}</th>
+                                            <td>{{ run.pickup_name }}</td>
+                                            <td scope="row">
+                                                {{ run.run_date }}                 
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-secondary" href="{% url 'view_run' run.id %}" title="view_run"><i class="fa fa-eye"></i></a>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
                             </tbody>
-                          </table>
+                        </table>
                     </div>
                 </div>
             </div>
