@@ -2,19 +2,21 @@
 
 {% block content %}
     <main>
-        <h3 class="p-1"> Welcome, {{user.first_name}} </h3>
+        <h1 class="mx-3 pt-3"> Welcome, {{user.first_name}} </h1>
         <hr>
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <button class="btn btn-primary">New Run</button>
+                    <a href="{% url 'new_run' %}" title="new_run">
+                        <button class="btn btn-primary">New Run</button>
+                    </a>
                     <br><br>
                 </div>
             </div>
             <div class="row">
                 <div class="card">
                     <div class="card-header bg-dark text-white">
-                      Open Runs
+                        <h4>Open Runs</h4>
                     </div>
                     <div class="card-body">
                         <table class="table">
@@ -84,4 +86,5 @@
             </div>
         </div>
     </main>
+
 {% endblock %}
