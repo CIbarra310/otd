@@ -151,6 +151,7 @@ def new_run(request):
             instance = run.save(commit=False)
             instance.run_status = "Open"
             instance.save()
+            
             return redirect("dashboard")
         else:
             print(run.errors)  # Debugging line to print form errors
