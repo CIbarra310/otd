@@ -2,11 +2,23 @@
 
 {% block content %}
     <main>
-        <h1 class="mx-3 pt-3"> Welcome, {{user.first_name}} </h1>
+        <div class="mx-3 pt-3 dashboard-user-info">
+            <h1>{{ user.first_name }} {{ user.last_name }} </h1>
+            <p>{{ request.session.department }} - {{ request.session.job_title }} | {{ request.session.production_title }}</p>
+        </div>
+        <div class="row">
+            <div class="col-12" hidden>
+                <p><strong>Email:</strong> {{ request.session.user_email }}</p>
+                <p><strong>Production ID:</strong> {{ request.session.current_production_id }}</p>
+                <p><strong>Production Title:</strong> {{ request.session.production_title }}</p>
+                <p><strong>Job Title:</strong> {{ request.session.job_title }}</p>
+                <p><strong>Department:</strong> {{ request.session.department }}</p>
+            </div>
+        </div>
         <hr>
         <div class="container">
             <div class="row">
-                <div class="col-12">
+                <div class=" col-12">
                     <a href="{% url 'new_run' %}" title="new_run">
                         <button class="btn btn-primary">New Run</button>
                     </a>
@@ -14,11 +26,11 @@
                 </div>
             </div>
             <div class="row">
-                <div class="card">
-                    <div class="card-header bg-dark text-white">
-                        <h4>Open Runs</h4>
-                    </div>
+                <div class=" col-12 col-lg-6 px-2 mb-2">
                     <div class="card-body">
+                        <div class="card-title">
+                            <h4>Open Runs</h4>
+                        </div>
                         <table class="table">
                             <thead>
                                 <tr>
@@ -29,8 +41,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            {% for run in runs %}
-                                {% if run.run_status == "Open" %}
+                                {% for run in runs %}
+                                    {% if run.run_status == "Open" %}
                                         <tr>
                                             <th scope="row">{{ run.id }}</th>
                                             <td>{{ run.pickup_name }}</td>
@@ -47,14 +59,11 @@
                         </table>
                     </div>
                 </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="card">
-                    <div class="card-header bg-dark text-white">
-                      <h4>Recently Completed Runs</h4>
-                    </div>
+                <div class="col-12 col-lg-6 px-2 mb-2">
                     <div class="card-body">
+                        <div class="card-title">
+                          <h4>Recently Completed Runs</h4>
+                        </div>
                         <table class="table">
                             <thead>
                                 <tr>
@@ -65,8 +74,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            {% for run in runs %}
-                                {% if run.run_status == "Completed" %}
+                                {% for run in runs %}
+                                    {% if run.run_status == "Completed" %}
                                         <tr>
                                             <th scope="row">{{ run.id }}</th>
                                             <td>{{ run.pickup_name }}</td>
@@ -84,6 +93,7 @@
                     </div>
                 </div>
             </div>
+            <br>
         </div>
     </main>
 

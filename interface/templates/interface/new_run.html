@@ -9,14 +9,14 @@
     </ol>
 </nav>
 <main>
-    <div class="container shadow-md col-8 col-md-6 col-lg-6 col-xl-4">
-        <div>
+    <div class="run-request-container shadow-md col-8 col-md-6 col-lg-6 col-xl-4">
+        <div class="card-body">
             <h2 class="text-center">Create New Run</h2>
             <hr>
             <form method="POST" autocomplete="off" action="{% url 'new_run' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <!-- Hidden contact information -->
-                <div class="row" hidden>
+                <div class="row">
                     <h5>Contact Information</h5>
                     <div class="col-6">
                         <label>Name</label>
@@ -24,15 +24,19 @@
                     </div>
                     <div class="col-6">
                         <label>Department</label>
-                        <input type="text" class="form-control" name="requester_department" value="{{ run.requester_department.value }}">
+                        <input type="text" class="form-control" name="requester_department" value="{{ request.session.department }}">
                     </div>
                     <div class="col-6">
                         <label>Email</label>
-                        <input type="text" class="form-control" name="requester_email" value="{{ run.requester_email.value }}">
+                        <input type="text" class="form-control" name="requester_email" value="{{ request.session.email }}">
                     </div>
                     <div class="col-6">
                         <label>Phone</label>
-                        <input type="text" class="form-control" name="requester_phone" value="{{ run.requester_phone.value }}">
+                        <input type="text" class="form-control" name="requester_phone" value="{{ request.session.phone_number }}">
+                    </div>
+                    <div class="col-6">
+                        <label>Production</label>
+                        <input type="text" class="form-control" name="production_title" value="{{ request.session.production_title }}">
                     </div>
                 </div>
                 <div class="row" id="step1">

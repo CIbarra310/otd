@@ -22,7 +22,15 @@
                     <p>Need an account? <br><a type="button" href="{% url 'register' %}">Register here</a></p>
                 </div>
             </div>
+
+            <!-- Session data to confirm the session is flushed out -->
+            <div class="col-12" hidden>
+                <p><strong>Email:</strong> {{ request.session.user_email }}</p>
+                <p><strong>Production ID:</strong> {{ request.session.current_production_id }}</p>
+                <p><strong>Production Title:</strong> {{ request.session.production_title }}</p>
+                <p><strong>Job Title:</strong> {{ request.session.job_title }}</p>
+                <p><strong>Department:</strong> {{ request.session.department }}</p>
+            </div>
         </section>
     </main>
-
 {% endblock %}

@@ -1,0 +1,48 @@
+<nav class="bg-dark sidebar" id="sidebar">
+    <div class="container">
+        <strong class="text-white">Switch Production</strong>
+        <div class="row">
+            <form action="{% url 'change_production' %}" method="post">
+                {% csrf_token %}
+                <div class="col-9">
+                    <select class="form-select form-select-sm mb-3" aria-label=".form-select-lg example" name="production_title">
+                        {% for production in user_productions %}
+                            <option>{{ production.production_title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary btn-sm" type="submit">Go</button>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+    <br>
+    <ul>
+        <strong class="text-white">Runs</strong>
+        <li><a class="dropdown-item" href="{% url 'new_run' %}"><i class="fa fa-truck"></i> Run Request</a></li>
+        <li><a class="dropdown-item" href="{% url 'run_queue' %}"><i class="fa fa-list-ul"></i> Run Queue</a></li>
+        <li><a class="dropdown-item" href="{% url 'run_history' %}"><i class="fa fa-clock"></i> Run History</a></li>
+    </ul>
+    <br>
+    <ul>
+        <strong class="text-white">Transportation</strong>
+        <li><a class="dropdown-item" href="{% url 'driver_roster' %}">
+            <i class="fa fa-user"></i> Driver Roster</a>
+        </li>
+        <li><a class="dropdown-item" href="{% url 'driver_rundown' %}" hidden>
+            <i class="fa fa-users"></i> Driver Rundown</a>
+        </li>
+        <li><a class="dropdown-item" href="{% url 'run_history' %}" hidden>
+            <i class="fa fa-gear"></i> Equipment</a>
+        </li>
+    </ul>
+    <br>
+    <ul>
+        <strong class="text-white">Admin</strong>
+        <li><a class="dropdown-item" href="{% url 'user_admin' %}"><i class="fa fa-user"></i> User Admin</a></li>
+        <li><a class="dropdown-item" href="{% url 'production_admin' %}"><i class="fa fa-film"></i> Production Admin</a></li>
+    </ul>
+    <br>
+</nav>

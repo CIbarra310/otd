@@ -8,7 +8,8 @@
         </ol>
     </nav>
     <form action="" method="post">
-        <div class="container shadow-md col-12 col-md-6 col-lg-6 col-xl-4">
+        {% csrf_token %}
+        <div class="container shadow-md col-10 pt-2">
             <h1>Run {{ run_request.id }} - {{ run_request.requester_department }}</h1>
             {% if run_request.run_status == "Open" %}
             <div class="alert alert-primary  text-center" role="alert">
@@ -131,7 +132,19 @@
                 <input class="form-control form-control-sm" id="formFileSm" type="file">
             </div>
         </div>
-        <button class="btn btn-primary" type="submit">Update Run</button>
+        <br>
+        <!-- Buttons -->
+        <div class="row pb-5">
+            <div class="col-4 text-center">
+                <a class="btn btn-success" href="{% url 'complete_run' run_request.id %}" title="view_run">Complete Run</a>
+            </div>
+            <div class="col-4 text-center">
+                <button class="btn btn-secondary" type="submit">Update Run</button>
+            </div>
+            <div class="col-4 text-center">
+                <a class="btn btn-danger" href="{% url 'cancel_run' run_request.id %}" title="view_run">Cancel Run</a>
+            </div>
+        </div>
     </form>
     <br>
 {% endblock %}

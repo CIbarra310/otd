@@ -7,6 +7,7 @@ class Driver(models.Model):
     first_name = models.CharField(max_length=150, null=True, blank=True)
     last_name = models.CharField(max_length=150, null=True, blank=True)
     driver_email = models.EmailField(_('email address'), null=True, blank=True)
+    driver_phone = models.CharField(max_length=15, null=True, blank=True)
     occupation_code = models.CharField(max_length=4, null=True, blank=True)
     rate = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
     grouping = models.IntegerField(null=True, blank=True)

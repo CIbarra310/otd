@@ -11,7 +11,7 @@
     <main>
         <br>
         <div class="container">
-            <h1>Run Queue</h1>
+            <h1>Run Queue | {{ request.session.production_title }}</h1>
         </div>
         <div class="container">
             <br>
@@ -77,7 +77,7 @@
                                         <a class="btn btn-outline-primary" href="https://www.google.com/maps/search/?api=1&query={{ run.pickup_address_1 }},+{{ run.pickup_city }},+{{ run.pickup_state }}">
                                             <i class="fa fa-google"></i>
                                         </a>
-                                                <a class="btn btn-outline-primary" href="https://truckmap.com/place/{{ run.pickup_address_1|urlencode }}{{ run.pickup_city|urlencode }}{{ run.pickup_state|urlencode }}{{ run.pickup_zip|urlencode }}">
+                                        <a class="btn btn-outline-primary" href="https://truckmap.com/place/{{ run.pickup_address_1 }}-{{ run.pickup_city }}-{{ run.pickup_state }}">
                                             <i class="fa fa-truck"></i>
                                         </a>
                                     </div>

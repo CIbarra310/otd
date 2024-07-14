@@ -1,11 +1,84 @@
-/* Dashboard Styling */
-.dashboard-icon {
-    border-radius: 10px;
+body {
+    padding: 0;
+    margin: 0;
+    background-color: white;
 }
 
-.dashboard-icon-text {
-    justify-content: center;
-    align-items: center;
+main {
+    margin: 0;
+    padding: 0;
+}
+
+.index-page {
+    padding-top: 60px;
+}
+
+.header-bar {
+    background-color: #343a40;
+    color: white;
+    position: fixed;
+    top: 0;
+    border: 1px solid #343a40;
+    width: 100%;
+}
+
+.sidebar {
+    display: none;
+    padding: 0;
+    margin: 0;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    margin-top: 60px;
+    padding-top: 20px;
+    border: none;
+    background-color: #343a40;
+    font-size: small;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    padding-left: 10px;
+    margin: 0;
+
+}
+
+.sidebar li {
+    padding-top: 5px;
+    padding-left: 20px;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: white;
+    display: block;
+}
+
+.sidebar a:hover {
+    background-color: #343a40;
+    color: white;
+}
+
+.content {
+    margin-top: 60px;
+}
+
+.card-body {
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    background-color: white;
+}
+
+.dashboard-user-info p {
+    padding: 0;
+    margin: 0;
+    font-size: small;
+    font-weight: thin;
 }
 
 /* Run Request Styling */
@@ -52,12 +125,21 @@ td, th {
 
 .run-status {
     border-radius: 50px;
-    font-size: medium;
-    scale: 70%;
-
+    font-size: smaller;
+    size: 40%;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 768px) {
+    .content {
+        margin-left: 0 !important;
+    }
+    .sidebar {
+        display: none !important;
+    }
     .hidden-column {
         display: none; /* Hide on extra small devices */
     }
@@ -66,15 +148,6 @@ td, th {
         width: 380px;
     }
 
-    .dashboard-icon {
-        width: 76px;
-        height: 76px;
-        border-radius: 10px;
-        font-size: 50px;
-        padding: 0;
-        margin: 0;
-        justify-content: center;
-    }
 
     th {
         white-space: nowrap;
@@ -82,7 +155,21 @@ td, th {
 
 }
 
-@media (max-width: 1024px) {
+@media (min-width: 768px) {
+    .card-body {
+        padding: 10px;
+        margin: 10px;
+        font-size: small;
+
+    }
+
+    .run-request-container {
+        width: 80%;
+    
+    }
+}
+
+@media (min-width: 994px) {
     .medium-hidden-column {
         display: none;
     }

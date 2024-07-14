@@ -25,7 +25,7 @@ class NewRunRequest(forms.ModelForm):
     class Meta:
         model = RunRequest
         fields = [
-            #'production_title',
+            'production_title',
             'requester_name',
             'requester_phone',
             'requester_email',

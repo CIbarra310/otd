@@ -39,7 +39,7 @@
                                 <td>{{ driver.grouping }}</td>
                                 <td>Stakebed</td>
                                 <td>
-                                    <button class="btn btn-secondary" name="view-driver" title="view"><i class="fa fa-eye"></i></button>
+                                  <a class="btn btn-secondary" href="{% url 'view_driver' driver.id %}" title="deactivate_driver"><i class="fa fa-eye"></i></a>
                                     <a class="btn btn-danger" href="{% url 'deactivate_driver' driver.id %}" title="deactivate_driver"><i class="fa fa-arrow-down"></i></a>
                                 </td>
                             </tr>

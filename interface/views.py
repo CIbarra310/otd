@@ -17,7 +17,11 @@ import json
 
 # - Home Page
 def home(request):
-    return render(request, 'interface/index.html')
+    if request.user.is_authenticated:
+        return redirect('dashboard')  # You can use the name of the URL pattern for the dashboard page
+    else:
+        return render(request, 'interface/index.html')
+
 
 # - Register a new user
 def register(request):
@@ -50,7 +54,34 @@ def login(request):
 
             if user is not None:
                 auth.login(request, user)
-                return redirect("login")
+
+                 # Retrieve user's first production ID
+                current_production_id = user.productions.first().id if user.productions.exists() else None
+
+                # Initialize production_title as None (or handle default case)
+                production_title = None
+
+                if current_production_id:
+                    try:
+                        # Query Production model to get the production title
+                        production = Production.objects.get(id=current_production_id)
+                        production_title = production.production_title
+                    except Production.DoesNotExist:
+                        production_title = "Production Not Found"  # Handle case where production is not found
+
+                # Set session variables
+                request.session['user_id'] = user.id
+                request.session['user_name'] = user.user_name
+                request.session['first_name'] = user.first_name
+                request.session['last_name'] = user.last_name
+                request.session['email'] = user.email
+                request.session['phone_number'] = user.phone_number
+                request.session['current_production_id'] = current_production_id
+                request.session['production_title'] = production_title
+                request.session['job_title'] = user.job_title
+                request.session['department'] = user.department
+
+                return redirect("login")  # Redirect to dashboard or another view
     
     context = {'form':form}
     return render(request, 'interface/login.html', context=context)
@@ -58,6 +89,10 @@ def login(request):
 # - Logout a user
 def logout(request):
     auth.logout(request)
+
+    # Clear session variables
+    request.session.flush()
+
     messages.success(request, "You have been logged out")
     return redirect("login")
 
@@ -80,14 +115,23 @@ def user_admin(request):
     return render(request, 'interface/user_admin.html', context = context)
 
 # - Dashboard Page
-@login_required(login_url=login)
 def dashboard(request):
-    # Fetch RunRequest data model
+    # Fetch RunRequest data model filtered by production_title in session
     runs = RunRequest.objects.all().order_by('-run_date')
 
-    # Pass the object to the template context
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.all()
+
+    # Filter runs by production_title in session
+    production_title_in_session = request.session.get('production_title')
+    if production_title_in_session:
+        runs = runs.filter(production_title=production_title_in_session)
+
+    # Pass the objects to the template context
     context = {
-        'runs': runs
+        'runs': runs,
+        'user_productions': user_productions,
     }
     return render(request, 'interface/dashboard.html', context=context)
 
@@ -96,7 +140,14 @@ def dashboard(request):
 def driver_roster(request):
     drivers = Driver.objects.all()
 
-    context = {'drivers': drivers}
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.all()
+
+    context = {
+        'drivers': drivers,
+        'user_productions': user_productions,
+    }
     return render(request, 'interface/driver_roster.html', context=context)
 
 @login_required(login_url=login)
@@ -113,7 +164,7 @@ def add_driver(request):
     context = {'driver': driver}
     return render(request, 'interface/add_driver.html', context=context)
 
-
+# - Activate Driver
 @login_required(login_url='login')
 def activate_driver(request, driver_id):
     driver = get_object_or_404(Driver, id=driver_id)
@@ -121,6 +172,7 @@ def activate_driver(request, driver_id):
     driver.save()
     return redirect('driver_roster')
 
+# - Deactivate Driver
 @login_required(login_url='login')
 def deactivate_driver(request, driver_id):
     driver = get_object_or_404(Driver, id=driver_id)
@@ -128,22 +180,34 @@ def deactivate_driver(request, driver_id):
     driver.save()
     return redirect('driver_roster')
 
+# - Driver Rundown
 @login_required(login_url='login')
 def driver_rundown(request):
 	
     return render(request, 'interface/driver_rundown.html')
 
+# - View Driver
+@login_required(login_url='login')
+def view_driver(request, driver_id):
+    driver = get_object_or_404(Driver, id=driver_id)
+    return render(request, 'interface/driver.html', {'driver': driver})
+
 # - Create a new run
 @login_required(login_url='login')
 def new_run(request):
     user = request.user
+
     initial_data = {
-        'requester_name': f"{user.first_name} {user.last_name}",
-        'requester_phone': user.phone_number,
-        'requester_email': user.email,
-        'requester_department': user.department,
-        'production_title': user.production_title,
+        'requester_name': f"{request.session.get('first_name')} {request.session.get('last_name')}",
+        'requester_phone': request.session.get('phone_number'),
+        'requester_email': request.session.get('user_email'),
+        'requester_department': request.session.get('department'),
+        'production_title': request.session.get('production_title'),
     }
+
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.all()
 
     if request.method == "POST":
         run = NewRunRequest(request.POST, request.FILES)
@@ -159,7 +223,10 @@ def new_run(request):
     else:
         run = NewRunRequest(initial=initial_data)
 
-    context = {'run': run}
+    context = {
+        'run': run,
+        'user_productions': user_productions,
+    }
     return render(request, 'interface/new_run.html', context)
 
 @login_required(login_url='login')
@@ -198,9 +265,19 @@ def run_history(request):
     # Fetch RunRequest data model
     runs = RunRequest.objects.all()
 
-    # Pass the object to the template context
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.all()
+
+    # Filter runs by production_title in session
+    production_title_in_session = request.session.get('production_title')
+    if production_title_in_session:
+        runs = runs.filter(production_title=production_title_in_session)
+
+    # Pass the objects to the template context
     context = {
-        'runs': runs
+        'runs': runs,
+        'user_productions': user_productions,
     }
     return render(request, 'interface/run_history.html', context=context)
 
@@ -210,21 +287,42 @@ def run_queue(request):
     # Fetch RunRequest data model
     runs = RunRequest.objects.exclude(run_status__in=["Completed","Cancelled"]).order_by('run_date', 'need_by_this_time')
 
-    # Pass the object to the template context
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.all()
+
+    # Filter runs by production_title in session
+    production_title_in_session = request.session.get('production_title')
+    if production_title_in_session:
+        runs = runs.filter(production_title=production_title_in_session)
+
+    # Pass the objects to the template context
     context = {
-        'runs': runs
+        'runs': runs,
+        'user_productions': user_productions,
     }
     return render(request, 'interface/run_queue.html', context=context)
 
 @login_required(login_url='login')
 def view_run(request, run_request_id):
     run_request = get_object_or_404(RunRequest, id=run_request_id)
-    return render(request, 'interface/run.html', {'run_request': run_request})
+
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.all()
+
+    context = {
+        'run_request': run_request,
+        'user_productions': user_productions,
+    }
+
+    return render(request, 'interface/run.html', context=context)
 
 @login_required(login_url='login')
 def radios(request):
     return render(request, 'interface/radios.html')
 
+@login_required(login_url='login')
 def radio_scan(request):
     if request.method == 'POST':
         form = RadioForm(request.POST)
@@ -234,3 +332,21 @@ def radio_scan(request):
     else:
         form = RadioForm()
     return render(request, 'interface/radios.html', {'form': form})
+
+@login_required(login_url='login')
+def change_production(request):
+    if request.method == 'POST':
+        production_title = request.POST.get('production_title')
+
+        # Query the Production object based on the selected production_title
+        production = get_object_or_404(Production, production_title=production_title)
+
+        # Set session variables
+        request.session['current_production_id'] = production.id
+        request.session['production_title'] = production.production_title
+
+        return redirect('dashboard')
+
+    # If GET request or form submission failed, handle accordingly (optional)
+
+    return redirect('dashboard')

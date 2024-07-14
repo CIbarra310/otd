@@ -1,0 +1,70 @@
+{% extends 'interface/layout.html' %}
+
+{% block content %}
+    <nav class="p-2" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'driver_roster' %}">Driver Roster</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Driver {{ driver.id }}</li>
+        </ol>
+    </nav>
+
+    <div class="card-body">
+        <h4>{{ driver.first_name }} {{ driver.last_name }}</h4>
+        <p>Group {{ driver.grouping }}</p>
+        <hr>
+        <form action="" method="post">
+            <div class="row pb-2">
+                <div class="col-6">
+                    <label for="" class="form-group">First Name</label>
+                    <input type="text" class="form-control" name="first_name" value="{{ driver.first_name }}">
+                </div>
+                <div class="col-6">
+                    <label for="" class="form-group">Last Name</label>
+                    <input type="text" class="form-control" name="last_name" value="{{ driver.last_name }}">
+                </div>
+            </div>
+            <div class="row pb-2">
+                <div class="col-6">
+                    <label for="" class="form-group">Email</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="fa fa-at"></i></span>
+                        <input type="text" class="form-control" name="email" aria-label="Email address" value="{{ driver.driver_email }}">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label for="" class="form-group">Phone</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                        <input type="text" class="form-control" name="phone" aria-label="Contact phone number" value="{{ driver.driver_phone }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-2">
+                <div class="col-6">
+                    <label for="" class="form-group">OCC</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="fa fa-id-badge"></i></span>
+                        <input type="text" class="form-control" name="occupation_code" aria-label="Occupation Code" value="{{ driver.occupation_code }}">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label for="" class="form-group">Rate</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="fa fa-dollar-sign"></i></span>
+                        <input type="text" class="form-control" name="rate" aria-label="Amount (to the nearest dollar)" value="{{ driver.rate }}">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-6">
+                    <button class="btn btn-outline-success">Update Driver</button>
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-outline-danger">Delete Driver</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
