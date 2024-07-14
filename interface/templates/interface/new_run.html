@@ -16,7 +16,7 @@
             <form method="POST" autocomplete="off" action="{% url 'new_run' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <!-- Hidden contact information -->
-                <div class="row">
+                <div class="row" hidden>
                     <h5>Contact Information</h5>
                     <div class="col-6">
                         <label>Name</label>
