@@ -1,21 +1,15 @@
 <nav class="bg-dark sidebar" id="sidebar">
     <div class="container">
-        <strong class="text-white">Switch Production</strong>
         <div class="row">
-            <form action="{% url 'change_production' %}" method="post">
+            <form id="production-form" action="{% url 'change_production' %}" method="post">
                 {% csrf_token %}
-                <div class="col-9">
-                    <select class="form-select form-select-sm mb-3" aria-label=".form-select-lg example" name="production_title">
-                        {% for production in user_productions %}
-                            <option>{{ production.production_title }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-2">
-                    <button class="btn btn-primary btn-sm" type="submit">Go</button>
-                </div>
+                <!-- Add the select element -->
+                <select id="production-select" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example" name="production_title">
+                    {% for production in user_productions %}
+                    <option value="{{ production.production_title }}">{{ production.production_title }}</option>
+                    {% endfor %}
+                </select>
             </form>
-            
         </div>
     </div>
     <br>
@@ -46,3 +40,12 @@
     </ul>
     <br>
 </nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var selectElement = document.getElementById('production-select');
+        selectElement.addEventListener('change', function() {
+            document.getElementById('production-form').submit();
+        });
+    });
+</script>

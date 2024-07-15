@@ -9,6 +9,10 @@ main {
     padding: 0;
 }
 
+.otd-header {
+    z-index: 1100;
+}
+
 .index-page {
     padding-top: 60px;
 }
@@ -20,6 +24,16 @@ main {
     top: 0;
     border: 1px solid #343a40;
     width: 100%;
+}
+
+.production-select {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: small;
+}
+
+.production-select option {
+    font-size: 8px;
 }
 
 .sidebar {
@@ -133,12 +147,9 @@ td, th {
     align-items: center;
     justify-content: center;
     color: black;
+    z-index: 1050;
 }
 
-.rounded-pill {
-    size: 35%;
-    font-size: x-small;
-}
 
 @media (max-width: 768px) {
     .content {
