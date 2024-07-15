@@ -140,3 +140,12 @@ AUTH_USER_MODEL = 'core.NewUser'
 CSRF_TRUSTED_ORIGINS = [
     'https://on-the-day-6d3c5e11e0df.herokuapp.com',  # Replace with your actual domain
 ]
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mail.hover.com'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'admin@ontheday.app'
+EMAIL_HOST_PASSWORD = 'hetvej-jigcuj-0qodDi'
+DEFAULT_FROM_EMAIL = 'admin@ontheday.app'

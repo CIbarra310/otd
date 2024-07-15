@@ -36,6 +36,7 @@ main {
     border: none;
     background-color: #343a40;
     font-size: small;
+    z-index: 9999; /* Make sure it’s above other content */
 }
 
 .sidebar ul {
@@ -125,12 +126,18 @@ td, th {
 
 .run-status {
     border-radius: 50px;
-    font-size: smaller;
+    font-size: x-small;
     size: 40%;
     height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: black;
+}
+
+.rounded-pill {
+    size: 35%;
+    font-size: x-small;
 }
 
 @media (max-width: 768px) {
@@ -138,8 +145,13 @@ td, th {
         margin-left: 0 !important;
     }
     .sidebar {
-        display: none !important;
+        left: -250px; /* Hidden position */
+        transition: left 0.3s ease;
     }
+    .sidebar.active {
+        left: 0; /* Visible position */
+    }
+
     .hidden-column {
         display: none; /* Hide on extra small devices */
     }

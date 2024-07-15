@@ -24,4 +24,5 @@ urlpatterns = [
     path('radios', views.radios, name="radios"),
     path('radio_scan', views.radio_scan, name="radio_scan"),
     path('change_production', views.change_production, name="change_production"),
+    path('search_locations/', views.search_locations, name='search_locations'),
 ]

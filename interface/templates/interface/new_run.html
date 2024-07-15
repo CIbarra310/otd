@@ -9,7 +9,7 @@
     </ol>
 </nav>
 <main>
-    <div class="run-request-container shadow-md col-8 col-md-6 col-lg-6 col-xl-4">
+    <div class="run-request-container shadow-md col-6 col-md-6 col-lg-4 col-xl-4">
         <div class="card-body">
             <h2 class="text-center">Create New Run</h2>
             <hr>
@@ -39,6 +39,7 @@
                         <input type="text" class="form-control" name="production_title" value="{{ request.session.production_title }}">
                     </div>
                 </div>
+                <!-- Date/Time Information -->
                 <div class="row" id="step1">
                     <h5>Date/Time Information</h5>
                     <div class="col-12">
@@ -58,15 +59,17 @@
                         <button type="button" class="btn btn-primary next-button">Next</button>
                     </div>
                 </div>
+                <!-- Get pickup location -->
                 <div class="row" id="step2" hidden>
                     <h5>Where are we going?</h5>
                     <div class="col-12">
                         <label>Pick Up From</label>
-                        <input type="text" class="form-control run-request-input" name="pickup_name" placeholder="Keslow Camera" >
+                        <input type="text" class="form-control run-request-input" name="pickup_name" id="pickup-search-input" placeholder="Search for location">
+                        <ul id="pickup-search-results" class="list-group"></ul>
                     </div>
                     <div class="col-12">
                         <label>Address 1</label>
-                        <input type="text" class="form-control run-request-input" name="pickup_address_1" placeholder="5900 Blackwelder St.">
+                        <input type="text" class="form-control run-request-input" name="pickup_address_1" placeholder="123 Main St.">
                     </div>
                     <div class="col-12">
                         <label>Address 2</label>
@@ -90,6 +93,7 @@
                         <button type="button" class="btn btn-primary next-button">Next</button>
                     </div>
                 </div>
+                <!-- Get run details -->
                 <div class="row" id="step3" hidden>
                     <h5>What are we getting?</h5>
                     <div class="col-12 mb-3">
@@ -102,11 +106,13 @@
                         <button type="button" class="btn btn-primary next-button">Next</button>
                     </div>
                 </div>
+                <!-- Get drop off location -->
                 <div class="row" id="step4" hidden>
                     <h5>Where are we taking the item(s)?</h5>
                     <div class="col-12">
                         <label>Drop Off</label>
-                        <input type="text" class="form-control run-request-input" name="dropoff_name" placeholder="Sony Pictures Studios">
+                        <input type="text" class="form-control run-request-input" name="dropoff_name" id="dropoff-search-input" placeholder="Search for location">
+                        <ul id="dropoff-search-results" class="list-group"></ul>
                     </div>
                     <div class="col-12">
                         <label>Address 1</label>
@@ -133,7 +139,8 @@
                         <button type="button" class="btn btn-secondary back-button">Back</button>
                         <button type="button" class="btn btn-primary next-button">Next</button>
                     </div>
-                </div>           
+                </div>   
+                <!-- Additional information -->        
                 <div class="row" id="step5" hidden>
                     <h5>Additonal Information</h5>
                     <div class="col-12">
@@ -203,4 +210,94 @@
         });
     </script>
 </main>
+
+<!-- Script for the live search -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const pickupSearchInput = document.getElementById('pickup-search-input');
+    const dropoffSearchInput = document.getElementById('dropoff-search-input');
+    const pickupSearchResults = document.getElementById('pickup-search-results');
+    const dropoffSearchResults = document.getElementById('dropoff-search-results');
+
+    pickupSearchInput.addEventListener('input', function() {
+        const inputValue = pickupSearchInput.value.trim();
+        if (inputValue.length > 0) {
+            fetchLocations(inputValue, 'pickup');
+        } else {
+            pickupSearchResults.innerHTML = ''; // Clear results if input is empty
+        }
+    });
+
+    dropoffSearchInput.addEventListener('input', function() {
+        const inputValue = dropoffSearchInput.value.trim();
+        if (inputValue.length > 0) {
+            fetchLocations(inputValue, 'dropoff');
+        } else {
+            dropoffSearchResults.innerHTML = ''; // Clear results if input is empty
+        }
+    });
+
+    pickupSearchResults.addEventListener('click', function(event) {
+        if (event.target && event.target.nodeName === 'LI') {
+            const selectedData = JSON.parse(event.target.getAttribute('data-item'));
+            populateFormFields(selectedData);
+            pickupSearchResults.innerHTML = ''; // Clear results after selection
+        }
+    });
+
+    dropoffSearchResults.addEventListener('click', function(event) {
+        if (event.target && event.target.nodeName === 'LI') {
+            const selectedData = JSON.parse(event.target.getAttribute('data-item'));
+            populateFormFields(selectedData);
+            dropoffSearchResults.innerHTML = ''; // Clear results after selection
+        }
+    });
+
+    function fetchLocations(query, type) {
+        fetch(`/search_locations/?query=${query}&type=${type}`)
+        .then(response => response.json())
+        .then(data => {
+            if (type === 'pickup') {
+                displaySearchResults(data, pickupSearchResults);
+            } else if (type === 'dropoff') {
+                displaySearchResults(data, dropoffSearchResults);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching locations:', error);
+        });
+    }
+
+    function displaySearchResults(data, resultElement) {
+        resultElement.innerHTML = '';
+        data.forEach(item => {
+            const li = document.createElement('li');
+            li.classList.add('list-group-item');
+            li.textContent = `${item.type === 'vendor' ? 'Vendor: ' : 'Location: '}${item.name}`;
+            li.setAttribute('data-item', JSON.stringify(item));
+            resultElement.appendChild(li);
+        });
+    }
+
+    function populateFormFields(data) {
+        if (data.search_type === 'pickup') {
+            document.querySelector('input[name="pickup_name"]').value = data.name;
+            document.querySelector('input[name="pickup_address_1"]').value = data.address_1;
+            document.querySelector('input[name="pickup_address_2"]').value = data.address_2 || '';
+            document.querySelector('input[name="pickup_city"]').value = data.city;
+            document.querySelector('input[name="pickup_state"]').value = data.state;
+            document.querySelector('input[name="pickup_zip"]').value = data.zip;
+        } else if (data.search_type === 'dropoff') {
+            document.querySelector('input[name="dropoff_name"]').value = data.name;
+            document.querySelector('input[name="dropoff_address_1"]').value = data.address_1;
+            document.querySelector('input[name="dropoff_address_2"]').value = data.address_2 || '';
+            document.querySelector('input[name="dropoff_city"]').value = data.city;
+            document.querySelector('input[name="dropoff_state"]').value = data.state;
+            document.querySelector('input[name="dropoff_zip"]').value = data.zip;
+        }
+    }
+});
+
+</script>
+    
 {% endblock %}

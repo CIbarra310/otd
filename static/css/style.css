@@ -9,6 +9,10 @@ main {
     padding: 0;
 }
 
+.otd-header {
+    z-index: 1100;
+}
+
 .index-page {
     padding-top: 60px;
 }
@@ -126,13 +130,16 @@ td, th {
 
 .run-status {
     border-radius: 50px;
-    font-size: smaller;
+    font-size: x-small;
     size: 40%;
     height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: black;
+    z-index: 1050;
 }
+
 
 @media (max-width: 768px) {
     .content {
@@ -145,7 +152,7 @@ td, th {
     .sidebar.active {
         left: 0; /* Visible position */
     }
-    
+
     .hidden-column {
         display: none; /* Hide on extra small devices */
     }

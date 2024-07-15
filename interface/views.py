@@ -1,4 +1,5 @@
 from .forms import LoginForm, CreateUserForm
+from core.models import Production, Vendor, Location
 from collections import defaultdict
 from transportation.forms import NewRunRequest, RunRequest, NewDriver, Driver
 from production.forms import RadioForm
@@ -115,6 +116,7 @@ def user_admin(request):
     return render(request, 'interface/user_admin.html', context = context)
 
 # - Dashboard Page
+@login_required(login_url=login)
 def dashboard(request):
     # Fetch RunRequest data model filtered by production_title in session
     runs = RunRequest.objects.all().order_by('-run_date')
@@ -215,6 +217,20 @@ def new_run(request):
             instance = run.save(commit=False)
             instance.run_status = "Open"
             instance.save()
+
+            # Send confirmation emails
+            subject = 'Run Request #{instance.id} to {instance.pickup_name} Submitted'
+            message = f'Thank you for submitting a run request, {instance.requester_name}. Your request is now open.'
+            from_email = 'admin@ontheday.app'
+            recipient_list = [instance.requester_email]
+
+            #send_mail(
+            #   subject,
+            #    message,
+            #    from_email,
+            #    recipient_list,
+            #    fail_silently=False,
+            #)
             
             return redirect("dashboard")
         else:
@@ -350,3 +366,45 @@ def change_production(request):
     # If GET request or form submission failed, handle accordingly (optional)
 
     return redirect('dashboard')
+
+def search_locations(request):
+    query = request.GET.get('query', '')
+    search_type = request.GET.get('type', 'pickup')  # 'pickup' or 'dropoff'
+    production_title_in_session = request.session.get('production_title', '')
+
+    if query:
+        vendor_results = Vendor.objects.filter(vendor_name__icontains=query)[:5]
+        location_results = Location.objects.filter(
+            location_name__icontains=query,
+            production_title=production_title_in_session
+        )[:5]
+
+        data = []
+        
+        for vendor in vendor_results:
+            data.append({
+                'type': 'vendor',
+                'name': vendor.vendor_name,
+                'address_1': vendor.vendor_address_1,
+                'address_2': vendor.vendor_address_2,
+                'city': vendor.vendor_city,
+                'state': vendor.vendor_state,
+                'zip': vendor.vendor_zip,
+                'search_type': search_type
+            })
+        
+        for location in location_results:
+            data.append({
+                'type': 'location',
+                'name': location.location_name,
+                'address_1': location.location_address_1,
+                'address_2': location.location_address_2,
+                'city': location.location_city,
+                'state': location.location_state,
+                'zip': location.location_zip,
+                'search_type': search_type
+            })
+        
+        return JsonResponse(data, safe=False)
+    else:
+        return JsonResponse([], safe=False)
