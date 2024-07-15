@@ -91,9 +91,10 @@ class Vendor(models.Model):
 class Location(models.Model):
     production_title = models.CharField(max_length=150, null=True)
     location_name = models.CharField(max_length=100)
-    location_contact = models.CharField(max_length=15)
+    location_contact = models.CharField(max_length=15, blank=True)
+    location_phone = models.CharField(max_length=15, blank=True)
     location_address_1 = models.CharField(max_length=100)
-    location_address_2 = models.CharField(max_length=100, null=True)
+    location_address_2 = models.CharField(max_length=100, null=True, blank=True)
     location_city = models.CharField(max_length=100)
     location_state = models.CharField(max_length=2)
     location_zip = models.CharField(max_length=10) 

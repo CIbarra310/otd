@@ -102,7 +102,14 @@ def logout(request):
 def production_admin(request):
     productions = Production.objects.all()
 
-    context = {'productions': productions}
+     # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
+    context = {
+        'productions': productions,
+        'user_productions': user_productions,    
+    }
 
     return render(request, 'interface/production_admin.html', context = context)
 
@@ -111,7 +118,14 @@ def production_admin(request):
 def user_admin(request):
     users = NewUser.objects.all()
 
-    context = {'users': users}
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
+    context = {
+        'users': users,
+        'user_productions': user_productions,
+    }
 
     return render(request, 'interface/user_admin.html', context = context)
 
@@ -123,7 +137,7 @@ def dashboard(request):
 
     # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
-    user_productions = user.productions.all()
+    user_productions = user.productions.filter(is_active=True)
 
     # Filter runs by production_title in session
     production_title_in_session = request.session.get('production_title')
@@ -144,7 +158,7 @@ def driver_roster(request):
 
     # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
-    user_productions = user.productions.all()
+    user_productions = user.productions.filter(is_active=True)
 
     context = {
         'drivers': drivers,
@@ -209,7 +223,7 @@ def new_run(request):
 
     # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
-    user_productions = user.productions.all()
+    user_productions = user.productions.filter(is_active=True)
 
     if request.method == "POST":
         run = NewRunRequest(request.POST, request.FILES)
@@ -283,7 +297,7 @@ def run_history(request):
 
     # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
-    user_productions = user.productions.all()
+    user_productions = user.productions.filter(is_active=True)
 
     # Filter runs by production_title in session
     production_title_in_session = request.session.get('production_title')
@@ -305,7 +319,7 @@ def run_queue(request):
 
     # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
-    user_productions = user.productions.all()
+    user_productions = user.productions.filter(is_active=True)
 
     # Filter runs by production_title in session
     production_title_in_session = request.session.get('production_title')
@@ -325,7 +339,7 @@ def view_run(request, run_request_id):
 
     # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
-    user_productions = user.productions.all()
+    user_productions = user.productions.filter(is_active=True)
 
     context = {
         'run_request': run_request,

@@ -24,7 +24,13 @@
                                 <td>{{ production.production_title }}</td>
                                 <td >{{ production.production_studio }}</td>
                                 <td class="hidden-column">{{ production.purchase_order }}</td>
-                                <td>{{ production.is_active }}</td>
+                                <td>
+                                    {% if production.is_active %}
+                                        In Production
+                                    {% else %}
+                                        Wrapped
+                                    {% endif %}
+                                </td>
                                 <td>
                                     <button class="btn btn-secondary">View</button>
                                 </td>
