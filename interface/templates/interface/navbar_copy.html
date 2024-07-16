@@ -3,12 +3,13 @@
         <div class="row">
             <form id="production-form" action="{% url 'change_production' %}" method="post">
                 {% csrf_token %}
-                <!-- Add the select element -->
-                <select id="production-select" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example" name="production_title">
-                    {% for production in user_productions %}
-                    <option value="{{ production.production_title }}">{{ production.production_title }}</option>
-                    {% endfor %}
-                </select>
+                <div class="production-select">
+                    <select id="production-select" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example" name="production_title">
+                        {% for production in user_productions %}
+                            <option value="{{ production.production_title }}" {% if production.production_title == selected_production.production_title %} selected {% endif %}>{{ production.production_title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
             </form>
         </div>
     </div>

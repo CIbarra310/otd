@@ -379,7 +379,22 @@ def change_production(request):
 
     # If GET request or form submission failed, handle accordingly (optional)
 
-    return redirect('dashboard')
+    # Retrieve all productions
+    user_productions = Production.objects.all()
+
+    # Check if there is an active production in session
+    current_production_id = request.session.get('current_production_id')
+    if current_production_id:
+        production = get_object_or_404(Production, id=current_production_id)
+    else:
+        # If no active production in session, select the first production in the list
+        production = user_productions.first()  # You might want to order this query if needed
+
+        # Set session variables for the default production
+        request.session['current_production_id'] = production.id
+        request.session['production_title'] = production.production_title
+
+    return render(request, 'your_template.html', {'user_productions': user_productions, 'selected_production': production})
 
 def search_locations(request):
     query = request.GET.get('query', '')
