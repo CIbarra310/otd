@@ -273,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
         data.forEach(item => {
             const li = document.createElement('li');
             li.classList.add('list-group-item');
-            li.textContent = `${item.type === 'vendor' ? 'Vendor: ' : 'Location: '}${item.name}`;
+            li.textContent = `${item.type === 'vendor' ? '' : 'Production Location: '}${item.name}`;
             li.setAttribute('data-item', JSON.stringify(item));
             resultElement.appendChild(li);
         });

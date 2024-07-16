@@ -32,10 +32,54 @@ class ProductionAdmin(admin.ModelAdmin):
         }),
     )
 
+class VendorAdmin(admin.ModelAdmin):
+    ordering = ('vendor_name',)
+    list_display = ('vendor_name', 'vendor_address_1', 'vendor_address_2', 'vendor_city', 'vendor_state', 'vendor_zip', 'vendor_phone')
+    search_fields = ('vendor_name', 'vendor_address_1', 'vendor_address_2', 'vendor_city', 'vendor_state', 'vendor_zip', 'vendor_phone')
+    list_filter = ('vendor_name', 'vendor_state')
+    fieldsets = (
+        (None, {
+            'fields': ('vendor_name', 'vendor_address_1', 'vendor_address_2', 'vendor_city', 'vendor_state', 'vendor_zip', 'vendor_phone')
+        }),
+    )
+
+class LocationAdmin(admin.ModelAdmin):
+    ordering = ('location_name',)
+    list_display = ('location_name', 'location_address_1', 'location_address_2', 'location_city', 'location_state', 'location_zip', 'location_phone')
+    search_fields = ('location_name', 'location_address_1','location_address_2', 'location_city', 'location_state', 'location_zip', 'location_phone')
+    list_filter = ('location_name', 'location_state')
+    fieldsets = (
+        (None, {
+            'fields': ('location_name', 'location_address', 'location_city', 'location_state', 'location_zip', 'location_phone', 'location_email', 'is_active')
+        }),
+    )
+
+class DepartmentAdmin(admin.ModelAdmin):
+    ordering = ('department_title',)
+    list_display = ('department_title',)
+    search_fields = ('department_title',)
+    list_filter = ('department_title',)
+    fieldsets = (
+        (None, {
+            'fields': ('department_title',)
+        }),
+    )
+
+class JobTitleAdmin(admin.ModelAdmin):
+    ordering = ('job_title',)
+    list_display = ('job_title', 'department_title')
+    search_fields = ('job_title', 'department_title')
+    list_filter = ('job_title',)
+    fieldsets = (
+        (None, {
+            'fields': ('job_title', 'department_title')
+        }),
+    )
+
 # Register your models here.
 admin.site.register(Production, ProductionAdmin)
-admin.site.register(Vendor)
-admin.site.register(Location)
-admin.site.register(Department)
-admin.site.register(JobTitle)
+admin.site.register(Vendor, VendorAdmin)
+admin.site.register(Location, LocationAdmin)
+admin.site.register(Department, DepartmentAdmin)
+admin.site.register(JobTitle, JobTitleAdmin)
 admin.site.register(NewUser, UserAdminConfig)

@@ -6,7 +6,7 @@
                 <div class="production-select">
                     <select id="production-select" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example" name="production_title">
                         {% for production in user_productions %}
-                            <option value="{{ production.production_title }}" {% if production.production_title == selected_production.production_title %} selected {% endif %}>{{ production.production_title }}</option>
+                            <option value="{{ production.production_title }}" {% if production.production_title == request.session.production_title %} selected {% endif %}>{{ production.production_title }}</option>
                         {% endfor %}
                     </select>
                 </div>
