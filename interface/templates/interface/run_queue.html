@@ -19,6 +19,7 @@
             {% for date_group in date_groups %}
                 <div class="date-group mb-4">
                     <h3 class="date-label">{{ date_group.grouper }}</h3>
+                    <hr>
                     {% for run in date_group.list %}
                         <details class="border p-3 rounded mb-3">
                             <summary class="font-weight-bold">Run #{{ run.id }} - {{ run.requester_department }}</summary>
