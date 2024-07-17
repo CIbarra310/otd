@@ -40,10 +40,10 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     
     production_title = models.CharField(max_length=150)
     phone_number = models.CharField(max_length=20)
-    department = models.CharField(max_length=150)
-    job_title = models.CharField(max_length=150)
+    department = models.CharField(max_length=150, blank=True)
+    job_title = models.CharField(max_length=150, blank=True)
 
-    productions = models.ManyToManyField('Production', related_name='users')
+    productions = models.ManyToManyField('Production', related_name='users', blank=True)
 
     objects = CustomAccountManager()
 

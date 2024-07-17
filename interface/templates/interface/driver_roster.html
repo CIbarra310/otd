@@ -4,86 +4,90 @@
 
 {% block content %}
     <main>
-        <div class="container">
-            <br>
-            <div class="d-flex justify-content-between">
-              <h1>Driver Roster</h1>
-            </div>
-            <hr>
-            <a class="btn btn-outline-primary p-2" href="{% url 'add_driver' %}">New Driver</a>
-            <br><br>
-            <h3>Active Drivers</h3>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Name</th>
-                        <th class="hidden-column" scope="col">Email</th>
-                        <th class="hidden-column" scope="col">OCC</th>
-                        <th class="hidden-column" scope="col">Rate</th>
-                        <th class="hidden-column" scope="col">SSN</th>
-                        <th scope="col">Group</th>
-                        <th scope="col">Vehicle</th>
-                        <th scope="col"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                        {% for driver in drivers %}
-                          {% if driver.is_active %}
-                            <tr>
-                                <td scope="row"> {{driver.first_name}} {{driver.last_name}}</td>
-                                <td class="hidden-column" >{{ driver.driver_email }}</td>
-                                <td class="hidden-column" >{{ driver.occupation_code }}</td>
-                                <td class="hidden-column" >{{ driver.rate }}</td>
-                                <td class="hidden-column" >{{ driver.last_4 }}</td>
-                                <td>{{ driver.grouping }}</td>
-                                <td>Stakebed</td>
-                                <td>
-                                  <a class="btn btn-secondary" href="{% url 'view_driver' driver.id %}" title="deactivate_driver"><i class="fa fa-eye"></i></a>
-                                    <a class="btn btn-danger" href="{% url 'deactivate_driver' driver.id %}" title="deactivate_driver"><i class="fa fa-arrow-down"></i></a>
-                                </td>
-                            </tr>
-                          {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>   
-            </div>
-            <br><br>
-            <h3>Inactive Drivers</h3>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Name</th>
-                        <th class="hidden-column" scope="col">Email</th>
-                        <th class="hidden-column" scope="col">OCC</th>
-                        <th class="hidden-column" scope="col">Rate</th>
-                        <th class="hidden-column" scope="col">SSN</th>
-                        <th scope="col">Group</th>
-                        <th scope="col">Vehicle</th>
-                        <th scope="col"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
+      <br>
+      <div class="container">
+        <div class="card-body">
+          <br>
+          <div class="card-title d-flex justify-content-between">
+            <h1>Driver Roster</h1>
+          </div>
+          <hr>
+          <a class="btn btn-outline-primary p-2" href="{% url 'add_driver' %}">New Driver</a>
+          <br><br>
+          <h3>Active Drivers</h3>
+          <div class="table-responsive">
+              <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th class="hidden-column" scope="col">Email</th>
+                      <th class="hidden-column" scope="col">OCC</th>
+                      <th class="hidden-column" scope="col">Rate</th>
+                      <th class="hidden-column" scope="col">SSN</th>
+                      <th scope="col">Group</th>
+                      <th scope="col">Vehicle</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
                       {% for driver in drivers %}
-                            {% if not driver.is_active %}
-                                <tr>
-                                    <td scope="row">{{ driver.first_name }} {{ driver.last_name }}</td>
-                                    <td class="hidden-column">{{ driver.driver_email }}</td>
-                                    <td class="hidden-column">{{ driver.occupation_code }}</td>
-                                    <td class="hidden-column">{{ driver.rate }}</td>
-                                    <td class="hidden-column">{{ driver.last_4 }}</td>
-                                    <td>{{ driver.grouping }}</td>
-                                    <td>Stakebed</td>
-                                    <td>
-                                      <button class="btn btn-secondary" name="view-driver" title="view"><i class="fa fa-eye"></i></button>
-                                      <a class="btn btn-success" href="{% url 'activate_driver' driver.id %}" title="activate_driver"><i class="fa fa-arrow-up"></i></a>
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>   
-            </div>
+                        {% if driver.is_active %}
+                          <tr>
+                              <td scope="row"> {{driver.first_name}} {{driver.last_name}}</td>
+                              <td class="hidden-column" >{{ driver.driver_email }}</td>
+                              <td class="hidden-column" >{{ driver.occupation_code }}</td>
+                              <td class="hidden-column" >{{ driver.rate }}</td>
+                              <td class="hidden-column" >{{ driver.last_4 }}</td>
+                              <td>{{ driver.grouping }}</td>
+                              <td>Stakebed</td>
+                              <td>
+                                <a class="btn btn-secondary" href="{% url 'view_driver' driver.id %}" title="deactivate_driver"><i class="fa fa-eye"></i></a>
+                                  <a class="btn btn-danger" href="{% url 'deactivate_driver' driver.id %}" title="deactivate_driver"><i class="fa fa-arrow-down"></i></a>
+                              </td>
+                          </tr>
+                        {% endif %}
+                      {% endfor %}
+                  </tbody>
+              </table>   
+          </div>
+          <br><br>
+          <h3>Inactive Drivers</h3>
+          <div class="table-responsive">
+              <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th class="hidden-column" scope="col">Email</th>
+                      <th class="hidden-column" scope="col">OCC</th>
+                      <th class="hidden-column" scope="col">Rate</th>
+                      <th class="hidden-column" scope="col">SSN</th>
+                      <th scope="col">Group</th>
+                      <th scope="col">Vehicle</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for driver in drivers %}
+                          {% if not driver.is_active %}
+                              <tr>
+                                  <td scope="row">{{ driver.first_name }} {{ driver.last_name }}</td>
+                                  <td class="hidden-column">{{ driver.driver_email }}</td>
+                                  <td class="hidden-column">{{ driver.occupation_code }}</td>
+                                  <td class="hidden-column">{{ driver.rate }}</td>
+                                  <td class="hidden-column">{{ driver.last_4 }}</td>
+                                  <td>{{ driver.grouping }}</td>
+                                  <td>Stakebed</td>
+                                  <td>
+                                    <button class="btn btn-secondary" name="view-driver" title="view"><i class="fa fa-eye"></i></button>
+                                    <a class="btn btn-success" href="{% url 'activate_driver' driver.id %}" title="activate_driver"><i class="fa fa-arrow-up"></i></a>
+                                  </td>
+                              </tr>
+                          {% endif %}
+                      {% endfor %}
+                  </tbody>
+              </table>   
+          </div>
+        </div>
+      </div>
     </main>
 {% endblock %}

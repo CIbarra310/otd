@@ -3,12 +3,12 @@ from .models import Driver, Vehicle, RunRequest
 # Register your models here.
 
 class DriverAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'driver_email', 'driver_phone')
-    search_fields = ('first_name', 'last_name', 'driver_email')
+    list_display = ('production_title', 'first_name', 'last_name', 'driver_email', 'driver_phone', 'grouping')
+    search_fields = ('production_title', 'first_name', 'last_name', 'driver_email', 'driver_phone', 'grouping')
     list_filter = ('is_active',)
     fieldsets = (
         (None, {
-            'fields': ('first_name', 'last_name', 'driver_email', 'driver_phone')
+            'fields': ('production_title', 'first_name', 'last_name', 'driver_email', 'driver_phone', 'occupation_code', 'rate', 'grouping', 'last_4')
         }),
     )
 

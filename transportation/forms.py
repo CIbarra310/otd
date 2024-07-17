@@ -63,6 +63,7 @@ class NewDriver(forms.ModelForm):
             'first_name',
             'last_name',
             'driver_email',
+            'driver_phone',
             'occupation_code',
             'rate',
             'grouping',

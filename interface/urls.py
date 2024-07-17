@@ -25,4 +25,6 @@ urlpatterns = [
     path('radio_scan', views.radio_scan, name="radio_scan"),
     path('change_production', views.change_production, name="change_production"),
     path('search_locations/', views.search_locations, name='search_locations'),
+    path('search_user_by_email/', views.search_user_by_email, name='search_user_by_email'),
+    path('get_user_details_by_email/', views.get_user_details_by_email, name='get_user_details_by_email'),
 ]

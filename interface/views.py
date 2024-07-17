@@ -160,6 +160,12 @@ def driver_roster(request):
     user = get_object_or_404(NewUser, id=request.user.id)
     user_productions = user.productions.filter(is_active=True)
 
+    # Filter drivers by production_title in session
+    production_title_in_session = request.session.get('production_title')
+    if production_title_in_session:
+        drivers = drivers.filter(production_title=production_title_in_session)
+
+    # Pass the objects
     context = {
         'drivers': drivers,
         'user_productions': user_productions,
@@ -168,6 +174,11 @@ def driver_roster(request):
 
 @login_required(login_url=login)
 def add_driver(request):
+
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+    
     if request.method == "POST":
         driver = NewDriver(request.POST)
         if driver.is_valid():
@@ -177,7 +188,10 @@ def add_driver(request):
            messages.error(request, "There was an error with your submission. Please check the form for errors.")
 
     driver = NewDriver()
-    context = {'driver': driver}
+    context = {
+        'driver': driver,
+        'user_productions': user_productions,
+    }
     return render(request, 'interface/add_driver.html', context=context)
 
 # - Activate Driver
@@ -206,6 +220,11 @@ def driver_rundown(request):
 @login_required(login_url='login')
 def view_driver(request, driver_id):
     driver = get_object_or_404(Driver, id=driver_id)
+
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
     return render(request, 'interface/driver.html', {'driver': driver})
 
 # - Create a new run
@@ -259,6 +278,7 @@ def new_run(request):
     }
     return render(request, 'interface/new_run.html', context)
 
+# - Complete a run
 @login_required(login_url='login')
 def complete_run(request, run_request_id):
     run = get_object_or_404(RunRequest, id=run_request_id)
@@ -274,6 +294,7 @@ def complete_run(request, run_request_id):
     else:
         return redirect('dashboard')
 
+# - Cancel a run
 @login_required(login_url='login')
 def cancel_run(request, run_request_id):
     run = get_object_or_404(RunRequest, id=run_request_id)
@@ -311,7 +332,7 @@ def run_history(request):
     }
     return render(request, 'interface/run_history.html', context=context)
 
-# Run History
+# Run Queue
 @login_required(login_url='login')
 def run_queue(request):
     # Fetch RunRequest data model
@@ -333,6 +354,7 @@ def run_queue(request):
     }
     return render(request, 'interface/run_queue.html', context=context)
 
+# View Run
 @login_required(login_url='login')
 def view_run(request, run_request_id):
     run_request = get_object_or_404(RunRequest, id=run_request_id)
@@ -363,6 +385,7 @@ def radio_scan(request):
         form = RadioForm()
     return render(request, 'interface/radios.html', {'form': form})
 
+# Change Production
 @login_required(login_url='login')
 def change_production(request):
     if request.method == 'POST':
@@ -375,7 +398,9 @@ def change_production(request):
         request.session['current_production_id'] = production.id
         request.session['production_title'] = production.production_title
 
-        return redirect('dashboard')
+        # Redirect to the 'next' URL if it exists, otherwise redirect to 'dashboard'
+        next_url = request.POST.get('next', 'dashboard')
+        return redirect(next_url)
 
     # If GET request or form submission failed, handle accordingly (optional)
 
@@ -394,8 +419,8 @@ def change_production(request):
         request.session['current_production_id'] = production.id
         request.session['production_title'] = production.production_title
 
-    return render(request, 'your_template.html', {'user_productions': user_productions, 'selected_production': production})
-
+    return render(request, 'interface/dashboard.html', {'user_productions': user_productions, 'selected_production': production})
+# Search Locations
 def search_locations(request):
     query = request.GET.get('query', '')
     search_type = request.GET.get('type', 'pickup')  # 'pickup' or 'dropoff'
@@ -437,3 +462,43 @@ def search_locations(request):
         return JsonResponse(data, safe=False)
     else:
         return JsonResponse([], safe=False)
+
+# Search Users 
+def search_user_by_email(request):
+    email = request.GET.get('email', '')
+    users = NewUser.objects.filter(email__icontains=email)
+    user_list = [{'email': user.email} for user in users]
+    response = {'exists': bool(user_list), 'users': user_list}
+    return JsonResponse(response)
+
+# Get User Details by Email
+def get_user_details_by_email(request):
+    # Get the email from the request
+    email = request.GET.get('email', None)
+    # Get the production_title from the session
+    production_title = request.session.get('production_title', '')
+
+    if email:
+        try:
+            user = NewUser.objects.get(email=email)
+            # Assign the production_title from the session to the user's productions
+            if production_title:
+                production, created = Production.objects.get_or_create(production_title=production_title)
+                user.productions.add(production)
+            response = {
+                'exists': True,
+                'user': {
+                    'production_title': production_title,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'user_name': user.user_name,
+                    'driver_email': user.email,
+                    'driver_phone': user.phone_number,
+                }
+            }
+        except NewUser.DoesNotExist:
+            response = {'exists': False}
+    else:
+        response = {'exists': False}
+    
+    return JsonResponse(response)
