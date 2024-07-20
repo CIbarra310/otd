@@ -55,6 +55,7 @@ class RunRequest(models.Model):
     pickup_city = models.CharField(max_length=100)
     pickup_state = models.CharField(max_length=2)
     pickup_zip = models.CharField(max_length=10)
+    run_details = models.TextField(max_length=500)
 
     # - Stop 2 Information
     dropoff_name = models.CharField(max_length=100, blank=True)
@@ -64,6 +65,7 @@ class RunRequest(models.Model):
     dropoff_city = models.CharField(max_length=100, blank=True)
     dropoff_state = models.CharField(max_length=2, blank=True)
     dropoff_zip = models.CharField(max_length=10, blank=True)
+    run_details_2 = models.TextField(max_length=500, null=True, blank=True)
 
     # - Stop 3 Information
     stop_3_name = models.CharField(max_length=100, blank=True)
@@ -73,6 +75,7 @@ class RunRequest(models.Model):
     stop_3_city = models.CharField(max_length=100, blank=True)
     stop_3_state = models.CharField(max_length=2, blank=True)
     stop_3_zip = models.CharField(max_length=10, blank=True)
+    run_details_3 = models.TextField(max_length=500, null=True, blank=True)
 
     # - Stop 4 Information
     stop_4_name = models.CharField(max_length=100, blank=True)
@@ -82,6 +85,7 @@ class RunRequest(models.Model):
     stop_4_city = models.CharField(max_length=100, blank=True)
     stop_4_state = models.CharField(max_length=2, blank=True)
     stop_4_zip = models.CharField(max_length=10, blank=True)
+    run_details_4 = models.TextField(max_length=500, null=True, blank=True)
 
     # - Stop 5 Information
     stop_5_name = models.CharField(max_length=100, blank=True)
@@ -91,6 +95,7 @@ class RunRequest(models.Model):
     stop_5_city = models.CharField(max_length=100, blank=True)
     stop_5_state = models.CharField(max_length=2, blank=True)
     stop_5_zip = models.CharField(max_length=10, blank=True)
+    run_details_5 = models.TextField(max_length=500, null=True, blank=True)
 
     # - Stop 6 Information
     stop_6_name = models.CharField(max_length=100, blank=True)
@@ -100,13 +105,13 @@ class RunRequest(models.Model):
     stop_6_city = models.CharField(max_length=100, blank=True)
     stop_6_state = models.CharField(max_length=2, blank=True)
     stop_6_zip = models.CharField(max_length=10, blank=True)
+    run_details_6 = models.TextField(max_length=500, null=True, blank=True)
 
     # - Run Details
     purchase_order = models.CharField(max_length=20, null=True, blank=True)
     vendor_invoice  = models.CharField(max_length=20, null=True, blank=True)
     run_status = models.CharField(max_length=20, null=True, blank=True)
     truck_size = models.CharField(max_length=50, null=True, blank=True)
-    run_details = models.TextField(max_length=500)
     assigned_driver = models.CharField(max_length=100, null=True, blank=True)
 
     # - Transportation Notes

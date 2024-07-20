@@ -15,6 +15,7 @@
             <hr>
             <form method="POST" autocomplete="off" action="{% url 'new_run' %}" enctype="multipart/form-data">
                 {% csrf_token %}
+               
                 <!-- Hidden contact information -->
                 <div class="row" hidden>
                     <h5>Contact Information</h5>
@@ -39,9 +40,9 @@
                         <input type="text" class="form-control" name="production_title" value="{{ request.session.production_title }}">
                     </div>
                 </div>
-                <!-- Date/Time Information -->
+               
+                <!-- Step 1: Date/Time Information -->
                 <div class="row" id="step1">
-                    <h5>Date/Time Information</h5>
                     <div class="col-12">
                         <label for="run_date">Date:</label>
                         <input type="date" class="form-control run-request-input" name="run_date" id="run_date">
@@ -56,96 +57,229 @@
                     </div>
                     <div class="next-button-box">
                         <br>
-                        <button type="button" class="btn btn-primary next-button">Next</button>
+                        <button type="button" class="btn btn-primary next-button" onclick="showStep2()">Next</button>
                     </div>
                 </div>
-                <!-- Get pickup location -->
+               
+                <!-- Step 2: Get location 1-->
                 <div class="row" id="step2" hidden>
-                    <h5>Where are we going?</h5>
                     <div class="col-12">
-                        <label>Pick Up From</label>
                         <input type="text" class="form-control run-request-input" name="pickup_name" id="pickup-search-input" placeholder="Search for location">
                         <ul id="pickup-search-results" class="list-group"></ul>
                     </div>
                     <div class="col-12">
-                        <label>Address 1</label>
                         <input type="text" class="form-control run-request-input" name="pickup_address_1" placeholder="123 Main St.">
                     </div>
                     <div class="col-12">
-                        <label>Address 2</label>
                         <input type="text" class="form-control run-request-input" name="pickup_address_2" placeholder="Unit/Ste.">
                     </div>
                     <div class="col-5">
-                        <label>City</label>
                         <input type="text" class="form-control run-request-input" name="pickup_city" placeholder="Culver City">
                     </div>
                     <div class="col-3">
-                        <label>State</label>
                         <input type="text" class="form-control run-request-input" name="pickup_state" placeholder="CA">
                     </div>
                     <div class="col-4">
-                        <label>Zip</label>
                         <input type="text" class="form-control run-request-input" name="pickup_zip" placeholder="90232">
                     </div>
+                    <br>
+                    <div class="col-12 mb-1">
+                        <br>
+                        <textarea class="form-control" name="run_details" id="run_details_3" rows="3" placeholder="Insert details here"></textarea>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="stop_1_switch">
+                            <label class="form-check-label" for="stop_1_switch">Add another stop?</label>
+                        </div>
+                    </div>
                     <div class="next-button-box">
                         <br>
-                        <button type="button" class="btn btn-secondary back-button">Back</button>
-                        <button type="button" class="btn btn-primary next-button">Next</button>
+                        <button type="button" class="btn btn-secondary back-button" onclick="showPreviousStep()">Back</button>
+                        <button type="button" class="btn btn-primary next-button" onclick="showNextStepFrom2()">Next</button>
                     </div>
                 </div>
-                <!-- Get run details -->
+                
+                <!-- Step 3: Get Location 2  -->
                 <div class="row" id="step3" hidden>
-                    <h5>What are we getting?</h5>
-                    <div class="col-12 mb-3">
-                        <label for="run_details" class="form-label">Run Details</label>
-                        <textarea class="form-control" name="run_details" id="run_details" rows="6"></textarea>
-                    </div>
-                    <div class="next-button-box">
-                        <br>
-                        <button type="button" class="btn btn-secondary back-button">Back</button>
-                        <button type="button" class="btn btn-primary next-button">Next</button>
-                    </div>
-                </div>
-                <!-- Get drop off location -->
-                <div class="row" id="step4" hidden>
-                    <h5>Where are we taking the item(s)?</h5>
                     <div class="col-12">
-                        <label>Drop Off</label>
-                        <input type="text" class="form-control run-request-input" name="dropoff_name" id="dropoff-search-input" placeholder="Search for location">
+                        <input type="text" class="form-control run-request-input" name="dropoff_name" id="dropoff-search-input" placeholder="Search for 2nd location">
                         <ul id="dropoff-search-results" class="list-group"></ul>
                     </div>
                     <div class="col-12">
-                        <label>Address 1</label>
                         <input type="text" class="form-control run-request-input" name="dropoff_address_1" placeholder="10202 Washington Blvd">
                     </div>
                     <div class="col-12">
-                        <label>Address 2</label>
                         <input type="text" class="form-control run-request-input" name="dropoff_address_2" placeholder="Stage 21">
                     </div>
                     <div class="col-5">
-                        <label>City</label>
                         <input type="text" class="form-control run-request-input" name="dropoff_city" placeholder="Culver City">
                     </div>
                     <div class="col-3">
-                        <label>State</label>
                         <input type="text" class="form-control run-request-input" name="dropoff_state" placeholder="CA">
                     </div>
                     <div class="col-4">
-                        <label>Zip</label>
                         <input type="text" class="form-control run-request-input" name="dropoff_zip" placeholder="90232">
+                    </div>
+                    <br>
+                    <div class="col-12 mb-1">
+                        <br>
+                        <textarea class="form-control" name="run_details_2" id="run_details_2" rows="3" placeholder="Insert details here"></textarea>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="stop_2_switch">
+                            <label class="form-check-label" for="stop_2_switch">Add another stop?</label>
+                        </div>
                     </div>
                     <div class="next-button-box">
                         <br>
-                        <button type="button" class="btn btn-secondary back-button">Back</button>
-                        <button type="button" class="btn btn-primary next-button">Next</button>
+                        <button type="button" class="btn btn-secondary back-button" onclick="showPreviousStep()">Back</button>
+                        <button type="button" class="btn btn-primary next-button" onclick="showNextStepFrom3()">Next</button>
                     </div>
                 </div>   
-                <!-- Additional information -->        
+
+                <!-- Step 4: Get Location 3 -->
+                <div class="row" id="step4" hidden>
+                    <div class="col-12">
+                        <input type="text" class="form-control run-request-input" name="stop_3_name" id="step-3-search-input" placeholder="Search for 3rd location">
+                        <ul id="step-3-search-results" class="list-group"></ul>
+                    </div>
+                    <div class="col-12">
+                        <input type="text" class="form-control run-request-input" name="stop_3_address_1" placeholder="10202 Washington Blvd">
+                    </div>
+                    <div class="col-12">
+                        <input type="text" class="form-control run-request-input" name="stop_3_address_2" placeholder="Stage 21">
+                    </div>
+                    <div class="col-5">
+                        <input type="text" class="form-control run-request-input" name="stop_3_city" placeholder="Culver City">
+                    </div>
+                    <div class="col-3">
+                        <input type="text" class="form-control run-request-input" name="stop_3_state" placeholder="CA">
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control run-request-input" name="stop_3_zip" placeholder="90232">
+                    </div>
+                    <br>
+                    <div class="col-12 mb-1">
+                        <br>
+                        <textarea class="form-control" name="run_details_3" id="run_details_3" rows="3" placeholder="Insert details here"></textarea>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="stop_3_switch">
+                            <label class="form-check-label" for="stop_3_switch">Add another stop?</label>
+                        </div>
+                    </div>
+                    <div class="next-button-box">
+                        <br>
+                        <button type="button" class="btn btn-secondary back-button" onclick="showPreviousStep()">Back</button>
+                        <button type="button" class="btn btn-primary next-button" onclick="showNextStepFrom4()">Next</button>
+                    </div>
+                </div>  
+
+                <!-- Step 5: Get Location 4 -->
                 <div class="row" id="step5" hidden>
-                    <h5>Additonal Information</h5>
+                    <div class="col-12">
+                        <input type="text" class="form-control run-request-input" name="stop_4_name" id="step-4-search-input" placeholder="Search for 4th location">
+                        <ul id="step-4-search-results" class="list-group"></ul>
+                    </div>
+                    <div class="col-12">
+                        <input type="text" class="form-control run-request-input" name="stop_4_address_1" placeholder="10202 Washington Blvd">
+                    </div>
+                    <div class="col-12">
+                        <input type="text" class="form-control run-request-input" name="stop_4_address_2" placeholder="Stage 21">
+                    </div>
+                    <div class="col-5">
+                        <input type="text" class="form-control run-request-input" name="stop_4_city" placeholder="Culver City">
+                    </div>
+                    <div class="col-3">
+                        <input type="text" class="form-control run-request-input" name="stop_4_state" placeholder="CA">
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control run-request-input" name="stop_4_zip" placeholder="90232">
+                    </div>
+                    <div class="col-12 mb-1">
+                        <br>
+                        <textarea class="form-control" name="run_details_4" id="run_details_4" rows="3" placeholder="Insert details here"></textarea>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="stop_4_switch">
+                            <label class="form-check-label" for="stop_4_switch">Add another stop?</label>
+                        </div>
+                    </div>
+                    <div class="next-button-box">
+                        <br>
+                        <button type="button" class="btn btn-secondary back-button" onclick="showPreviousStep()">Back</button>
+                        <button type="button" class="btn btn-primary next-button" onclick="showNextStepFrom5()">Next</button>
+                    </div>
+                </div>  
+
+                <!-- Step 6: Get Location 5 -->
+                <div class="row" id="step6" hidden>
+                    <div class="col-12">
+                        <input type="text" class="form-control run-request-input" name="stop_5_name" id="stop-5-search-input" placeholder="Search for 5th location">
+                        <ul id="step-5-search-results" class="list-group"></ul>
+                    </div>
+                    <div class="col-12">
+                        <input type="text" class="form-control run-request-input" name="stop_5_address_1" placeholder="10202 Washington Blvd">
+                    </div>
+                    <div class="col-12">
+                        <input type="text" class="form-control run-request-input" name="stop_5_address_2" placeholder="Stage 21">
+                    </div>
+                    <div class="col-5">
+                        <input type="text" class="form-control run-request-input" name="stop_5_city" placeholder="Culver City">
+                    </div>
+                    <div class="col-3">
+                        <input type="text" class="form-control run-request-input" name="stop_5_state" placeholder="CA">
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control run-request-input" name="stop_5_zip" placeholder="90232">
+                    </div>
+                    <div class="col-12 mb-1">
+                        <br>
+                        <textarea class="form-control" name="run_details_5" id="run_details_5" rows="3" placeholder="Insert details here"></textarea>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="stop_5_switch">
+                            <label class="form-check-label" for="stop_5_switch">Add another stop?</label>
+                        </div>
+                    </div>
+                    <div class="next-button-box">
+                        <br>
+                        <button type="button" class="btn btn-secondary back-button" onclick="showPreviousStep()">Back</button>
+                        <button type="button" class="btn btn-primary next-button" onclick="showNextStepFrom6()">Next</button>
+                    </div>
+                </div> 
+
+                <!-- Step 7: Get Location 6 -->
+                <div class="row" id="step7" hidden>
+                    <div class="col-12">
+                        <input type="text" class="form-control run-request-input" name="stop_6_name" id="step-6-search-input" placeholder="Search for 6th location">
+                        <ul id="step-6-search-results" class="list-group"></ul>
+                    </div>
+                    <div class="col-12">
+                        <input type="text" class="form-control run-request-input" name="stop_6_address_1" placeholder="10202 Washington Blvd">
+                    </div>
+                    <div class="col-12">
+                        <input type="text" class="form-control run-request-input" name="stop_6_address_2" placeholder="Stage 21">
+                    </div>
+                    <div class="col-5">
+                        <input type="text" class="form-control run-request-input" name="stop_6_city" placeholder="Culver City">
+                    </div>
+                    <div class="col-3">
+                        <input type="text" class="form-control run-request-input" name="stop_6_state" placeholder="CA">
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control run-request-input" name="stop_6_zip" placeholder="90232">
+                    </div>
+                    <div class="col-12 mb-1">
+                        <br>
+                        <textarea class="form-control" name="run_details_6" id="run_details_6" rows="3" placeholder="Insert details here"></textarea>
+                    </div>
+                    <div class="next-button-box">
+                        <br>
+                        <button type="button" class="btn btn-secondary back-button" onclick="showPreviousStep()">Back</button>
+                        <button type="button" class="btn btn-primary next-button" onclick="showNextStepFrom7()">Next</button>
+                    </div>
+                </div> 
+                
+                <!-- Step 8: Additional information and submission -->        
+                <div class="row" id="step8" hidden>
                     <div class="col-12">
                         <div class="col-12 mb-3">
-                            <label for="truck_size">Truck Size</label>
                             <select class="form-control run-request-input" name="truck_size" id="truck_size">
                                 <option value="" disabled selected>Select a truck size</option>
                                 <option value="Passenger Van">Passenger Van</option>
@@ -157,12 +291,10 @@
                         </div>
                     </div>
                     <div class="col-6 mb-3">
-                        <label>P.O. #</label>
-                        <input type="text" class="form-control run-request-input" name="purchase_order" placeholder="1234">
+                        <input type="text" class="form-control run-request-input" name="purchase_order" placeholder="P.O. #">
                     </div>
                     <div class="col-6 mb-3">
-                        <label>Vendor Order #</label>
-                        <input type="text" class="form-control run-request-input" name="vendor_invoice" placeholder="1234">
+                        <input type="text" class="form-control run-request-input" name="vendor_invoice" placeholder="Vendor Invoice #">
                     </div>
                     <div class="col-12 mb-3">
                         <label for="formFileSm" class="form-label">Supporting Documents</label>
@@ -170,133 +302,203 @@
                     </div>
                     <div class="next-button-box">
                         <br>
-                        <button type="button" class="btn btn-secondary back-button">Back</button>
+                        <button type="button" class="btn btn-secondary back-button" onclick="showPreviousStep()">Back</button>
                         <button type="submit" class="btn btn-primary next-button">Submit Run Request</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+    
+    <!-- Script for the steps -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            function showStep(step) {
-                const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
-                steps.forEach(s => document.getElementById(s).hidden = s !== step);
+        let stepStack = [];
+    
+        function showStep(step) {
+            // Hide all steps
+            for (let i = 1; i <= 8; i++) {
+                const stepElement = document.getElementById(`step${i}`);
+                if (stepElement) stepElement.hidden = true;
             }
-            document.querySelector('#step1 .next-button').addEventListener('click', function() {
-                showStep('step2');
-            });
-            document.querySelector('#step2 .back-button').addEventListener('click', function() {
-                showStep('step1');
-            });
-            document.querySelector('#step2 .next-button').addEventListener('click', function() {
-                showStep('step3');
-            });
-            document.querySelector('#step3 .back-button').addEventListener('click', function() {
-                showStep('step2');
-            });
-            document.querySelector('#step3 .next-button').addEventListener('click', function() {
-                showStep('step4');
-            });
-            document.querySelector('#step4 .back-button').addEventListener('click', function() {
-                showStep('step3');
-            });
-            document.querySelector('#step4 .next-button').addEventListener('click', function() {
-                showStep('step5');
-            });
-            document.querySelector('#step5 .back-button').addEventListener('click', function() {
-                showStep('step4');
-            });
-        });
+            // Show the requested step
+            const currentStepElement = document.getElementById(`step${step}`);
+            if (currentStepElement) currentStepElement.hidden = false;
+        }
+    
+        function showNextStep(currentStep, switchId) {
+            stepStack.push(currentStep);
+            const switchChecked = document.getElementById(switchId).checked;
+            if (switchChecked) {
+                showStep(currentStep + 1);
+            } else {
+                showStep(8);
+            }
+        }
+    
+        function showStep1() { 
+            stepStack = []; // Clear the stack when showing step 1
+            showStep(1); 
+        }
+    
+        function showStep2() { 
+            stepStack = [1]; // Initialize the stack with step 1
+            showStep(2); 
+        }
+    
+        function showStep3() { showStep(3); }
+        function showStep4() { showStep(4); }
+        function showStep5() { showStep(5); }
+        function showStep6() { showStep(6); }
+        function showStep7() { showStep(7); }
+        function showStep8() { showStep(8); }
+    
+        function showNextStepFrom2() { showNextStep(2, 'stop_1_switch'); }
+        function showNextStepFrom3() { showNextStep(3, 'stop_2_switch'); }
+        function showNextStepFrom4() { showNextStep(4, 'stop_3_switch'); }
+        function showNextStepFrom5() { showNextStep(5, 'stop_4_switch'); }
+        function showNextStepFrom6() { showNextStep(6, 'stop_5_switch'); }
+        function showNextStepFrom7() { showStep(8); }
+    
+        function showPreviousStep() {
+            if (stepStack.length > 0) {
+                const previousStep = stepStack.pop();
+                showStep(previousStep);
+            }
+        }
     </script>
 </main>
 
 <!-- Script for the live search -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const pickupSearchInput = document.getElementById('pickup-search-input');
-    const dropoffSearchInput = document.getElementById('dropoff-search-input');
-    const pickupSearchResults = document.getElementById('pickup-search-results');
-    const dropoffSearchResults = document.getElementById('dropoff-search-results');
+   document.addEventListener('DOMContentLoaded', function() {
+        const searchInputs = {
+            pickup: document.getElementById('pickup-search-input'),
+            dropoff: document.getElementById('dropoff-search-input'),
+            stop3: document.getElementById('step-3-search-input'),
+            stop4: document.getElementById('step-4-search-input'),
+            stop5: document.getElementById('stop-5-search-input'),
+            stop6: document.getElementById('step-6-search-input')
+        };
+        
+        const searchResults = {
+            pickup: document.getElementById('pickup-search-results'),
+            dropoff: document.getElementById('dropoff-search-results'),
+            stop3: document.getElementById('step-3-search-results'),
+            stop4: document.getElementById('step-4-search-results'),
+            stop5: document.getElementById('step-5-search-results'),
+            stop6: document.getElementById('step-6-search-results')
+        };
+        
+        function setupSearch(inputElement, resultsElement, type) {
+            inputElement.addEventListener('input', function() {
+                const inputValue = inputElement.value.trim();
+                if (inputValue.length > 0) {
+                    fetchLocations(inputValue, type, resultsElement);
+                } else {
+                    resultsElement.innerHTML = ''; // Clear results if input is empty
+                }
+            });
 
-    pickupSearchInput.addEventListener('input', function() {
-        const inputValue = pickupSearchInput.value.trim();
-        if (inputValue.length > 0) {
-            fetchLocations(inputValue, 'pickup');
-        } else {
-            pickupSearchResults.innerHTML = ''; // Clear results if input is empty
+            resultsElement.addEventListener('click', function(event) {
+                if (event.target && event.target.nodeName === 'LI') {
+                    const selectedData = JSON.parse(event.target.getAttribute('data-item'));
+                    populateFormFields(selectedData, type);
+                    resultsElement.innerHTML = ''; // Clear results after selection
+                }
+            });
         }
+
+        function fetchLocations(query, type, resultElement) {
+            fetch(`/search_locations/?query=${query}&type=${type}`)
+            .then(response => response.json())
+            .then(data => {
+                displaySearchResults(data, resultElement);
+            })
+            .catch(error => {
+                console.error('Error fetching locations:', error);
+            });
+        }
+
+        function displaySearchResults(data, resultElement) {
+            resultElement.innerHTML = '';
+            data.forEach(item => {
+                const li = document.createElement('li');
+                li.classList.add('list-group-item');
+                li.textContent = `${item.type === 'vendor' ? '' : 'Production Location: '}${item.name}`;
+                li.setAttribute('data-item', JSON.stringify(item));
+                resultElement.appendChild(li);
+            });
+        }
+
+        function populateFormFields(data, type) {
+            const fields = {
+                pickup: {
+                    name: 'pickup_name',
+                    address1: 'pickup_address_1',
+                    address2: 'pickup_address_2',
+                    city: 'pickup_city',
+                    state: 'pickup_state',
+                    zip: 'pickup_zip'
+                },
+                dropoff: {
+                    name: 'dropoff_name',
+                    address1: 'dropoff_address_1',
+                    address2: 'dropoff_address_2',
+                    city: 'dropoff_city',
+                    state: 'dropoff_state',
+                    zip: 'dropoff_zip'
+                },
+                stop3: {
+                    name: 'stop_3_name',
+                    address1: 'stop_3_address_1',
+                    address2: 'stop_3_address_2',
+                    city: 'stop_3_city',
+                    state: 'stop_3_state',
+                    zip: 'stop_3_zip'
+                },
+                stop4: {
+                    name: 'stop_4_name',
+                    address1: 'stop_4_address_1',
+                    address2: 'stop_4_address_2',
+                    city: 'stop_4_city',
+                    state: 'stop_4_state',
+                    zip: 'stop_4_zip'
+                },
+                stop5: {
+                    name: 'stop_5_name',
+                    address1: 'stop_5_address_1',
+                    address2: 'stop_5_address_2',
+                    city: 'stop_5_city',
+                    state: 'stop_5_state',
+                    zip: 'stop_5_zip'
+                },
+                stop6: {
+                    name: 'stop_6_name',
+                    address1: 'stop_6_address_1',
+                    address2: 'stop_6_address_2',
+                    city: 'stop_6_city',
+                    state: 'stop_6_state',
+                    zip: 'stop_6_zip'
+                }
+            };
+            
+            const fieldsToUpdate = fields[type];
+
+            document.querySelector(`input[name="${fieldsToUpdate.name}"]`).value = data.name;
+            document.querySelector(`input[name="${fieldsToUpdate.address1}"]`).value = data.address_1;
+            document.querySelector(`input[name="${fieldsToUpdate.address2}"]`).value = data.address_2 || '';
+            document.querySelector(`input[name="${fieldsToUpdate.city}"]`).value = data.city;
+            document.querySelector(`input[name="${fieldsToUpdate.state}"]`).value = data.state;
+            document.querySelector(`input[name="${fieldsToUpdate.zip}"]`).value = data.zip;
+        }
+
+        setupSearch(searchInputs.pickup, searchResults.pickup, 'pickup');
+        setupSearch(searchInputs.dropoff, searchResults.dropoff, 'dropoff');
+        setupSearch(searchInputs.stop3, searchResults.stop3, 'stop3');
+        setupSearch(searchInputs.stop4, searchResults.stop4, 'stop4');
+        setupSearch(searchInputs.stop5, searchResults.stop5, 'stop5');
+        setupSearch(searchInputs.stop6, searchResults.stop6, 'stop6');
     });
-
-    dropoffSearchInput.addEventListener('input', function() {
-        const inputValue = dropoffSearchInput.value.trim();
-        if (inputValue.length > 0) {
-            fetchLocations(inputValue, 'dropoff');
-        } else {
-            dropoffSearchResults.innerHTML = ''; // Clear results if input is empty
-        }
-    });
-
-    pickupSearchResults.addEventListener('click', function(event) {
-        if (event.target && event.target.nodeName === 'LI') {
-            const selectedData = JSON.parse(event.target.getAttribute('data-item'));
-            populateFormFields(selectedData);
-            pickupSearchResults.innerHTML = ''; // Clear results after selection
-        }
-    });
-
-    dropoffSearchResults.addEventListener('click', function(event) {
-        if (event.target && event.target.nodeName === 'LI') {
-            const selectedData = JSON.parse(event.target.getAttribute('data-item'));
-            populateFormFields(selectedData);
-            dropoffSearchResults.innerHTML = ''; // Clear results after selection
-        }
-    });
-
-    function fetchLocations(query, type) {
-        fetch(`/search_locations/?query=${query}&type=${type}`)
-        .then(response => response.json())
-        .then(data => {
-            if (type === 'pickup') {
-                displaySearchResults(data, pickupSearchResults);
-            } else if (type === 'dropoff') {
-                displaySearchResults(data, dropoffSearchResults);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching locations:', error);
-        });
-    }
-
-    function displaySearchResults(data, resultElement) {
-        resultElement.innerHTML = '';
-        data.forEach(item => {
-            const li = document.createElement('li');
-            li.classList.add('list-group-item');
-            li.textContent = `${item.type === 'vendor' ? '' : 'Production Location: '}${item.name}`;
-            li.setAttribute('data-item', JSON.stringify(item));
-            resultElement.appendChild(li);
-        });
-    }
-
-    function populateFormFields(data) {
-        if (data.search_type === 'pickup') {
-            document.querySelector('input[name="pickup_name"]').value = data.name;
-            document.querySelector('input[name="pickup_address_1"]').value = data.address_1;
-            document.querySelector('input[name="pickup_address_2"]').value = data.address_2 || '';
-            document.querySelector('input[name="pickup_city"]').value = data.city;
-            document.querySelector('input[name="pickup_state"]').value = data.state;
-            document.querySelector('input[name="pickup_zip"]').value = data.zip;
-        } else if (data.search_type === 'dropoff') {
-            document.querySelector('input[name="dropoff_name"]').value = data.name;
-            document.querySelector('input[name="dropoff_address_1"]').value = data.address_1;
-            document.querySelector('input[name="dropoff_address_2"]').value = data.address_2 || '';
-            document.querySelector('input[name="dropoff_city"]').value = data.city;
-            document.querySelector('input[name="dropoff_state"]').value = data.state;
-            document.querySelector('input[name="dropoff_zip"]').value = data.zip;
-        }
-    }
-});
 
 </script>
     
