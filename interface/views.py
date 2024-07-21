@@ -133,7 +133,7 @@ def user_admin(request):
 @login_required(login_url=login)
 def dashboard(request):
     # Fetch RunRequest data model filtered by production_title in session
-    runs = RunRequest.objects.all().order_by('-run_date')
+    runs = RunRequest.objects.all().order_by('run_date')
 
     # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
