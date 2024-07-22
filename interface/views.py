@@ -364,7 +364,7 @@ def run_queue(request):
     return render(request, 'interface/run_queue.html', context=context)
 
 # View Run
-@login_required(login_url='login')
+# No login required so a run can be sent to a driver that does not currently have an active account
 def view_run(request, run_request_id):
     run_request = get_object_or_404(RunRequest, id=run_request_id)
 
