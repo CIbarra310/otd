@@ -12,6 +12,7 @@ from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from django.utils import timezone
 from django.utils.html import strip_tags
 from core.models import Production, NewUser
 import json
@@ -129,24 +130,32 @@ def user_admin(request):
 
     return render(request, 'interface/user_admin.html', context = context)
 
-# - Dashboard Page
-@login_required(login_url=login)
+@login_required(login_url='login')  # Ensure 'login' is the correct URL name
 def dashboard(request):
     # Fetch RunRequest data model filtered by production_title in session
     runs = RunRequest.objects.all().order_by('run_date')
 
     # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
-    user_productions = user.productions.filter(is_active=True)
+    user_productions = user.productions.filter(is_active=True)[:5]
 
     # Filter runs by production_title in session
     production_title_in_session = request.session.get('production_title')
     if production_title_in_session:
         runs = runs.filter(production_title=production_title_in_session)
 
+    # Separate and limit "Completed" and "Open" runs
+    completed_runs = runs.filter(run_status="Completed")[:5]
+    open_runs = runs.filter(run_status="Open")[:5]
+
+    # Get the current date
+    current_date = timezone.now().date()
+
     # Pass the objects to the template context
     context = {
         'runs': runs,
+        'completed_runs': completed_runs,
+        'open_runs': open_runs,
         'user_productions': user_productions,
     }
     return render(request, 'interface/dashboard.html', context=context)

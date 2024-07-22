@@ -41,19 +41,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for run in runs %}
-                                    {% if run.run_status == "Open" %}
-                                        {% if forloop.counter <= 5 %}
-                                            <tr>
-                                                <th scope="row">{{ run.id }}</th>
-                                                <td>{{ run.pickup_name }}</td>
-                                                <td>{{ run.run_date }}</td>
-                                                <td>
-                                                    <a class="btn btn-secondary" href="{% url 'view_run' run.id %}" title="view_run"><i class="fa fa-eye"></i></a>
-                                                </td>
-                                            </tr>
-                                        {% endif %}
-                                    {% endif %}
+                                {% for run in open_runs %}
+                                    <tr class="{% if run.run_date < current_date %}table-danger{% endif %}">
+                                        <th scope="row">{{ run.id }}</th>
+                                        <td>{{ run.pickup_name }}</td>
+                                        <td>{{ run.run_date }}</td>
+                                        <td>
+                                            <a class="btn btn-secondary" href="{% url 'view_run' run.id %}" title="view_run"><i class="fa fa-eye"></i></a>
+                                        </td>
+                                    </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -74,19 +70,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for run in runs %}
-                                    {% if run.run_status == "Completed" %}
-                                        {% if forloop.counter <= 5 %}
-                                            <tr>
-                                                <th scope="row">{{ run.id }}</th>
-                                                <td>{{ run.pickup_name }}</td>
-                                                <td>{{ run.run_date }}</td>
-                                                <td>
-                                                    <a class="btn btn-secondary" href="{% url 'view_run' run.id %}" title="view_run"><i class="fa fa-eye"></i></a>
-                                                </td>
-                                            </tr>
-                                        {% endif %}
-                                    {% endif %}
+                                {% for run in completed_runs %}
+                                    <tr>
+                                        <th scope="row">{{ run.id }}</th>
+                                        <td>{{ run.pickup_name }}</td>
+                                        <td>{{ run.run_date }}</td>
+                                        <td>
+                                            <a class="btn btn-secondary" href="{% url 'view_run' run.id %}" title="view_run"><i class="fa fa-eye"></i></a>
+                                        </td>
+                                    </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
