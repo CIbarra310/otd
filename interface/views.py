@@ -114,6 +114,33 @@ def production_admin(request):
 
     return render(request, 'interface/production_admin.html', context = context)
 
+# - Location Admin
+@login_required(login_url=login)
+def location_admin(request):
+    locations = Location.objects.all()
+
+     # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
+    context = {
+        'locations': locations,
+        'user_productions': user_productions,    
+    }
+
+    return render(request, 'interface/location_admin.html', context = context)
+
+# - View Location
+@login_required(login_url='login')
+def view_location(request, location_id):
+    location = get_object_or_404(Location, id=location_id)
+
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
+    return render(request, 'interface/location.html', {'location': location})
+
 # - User Admin
 @login_required(login_url=login)
 def user_admin(request):
@@ -429,6 +456,7 @@ def change_production(request):
         request.session['production_title'] = production.production_title
 
     return render(request, 'interface/dashboard.html', {'user_productions': user_productions, 'selected_production': production})
+
 # Search Locations
 def search_locations(request):
     query = request.GET.get('query', '')

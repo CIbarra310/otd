@@ -1,0 +1,66 @@
+{% extends 'interface/layout.html' %}
+
+{% block content %}
+    <nav class="p-2" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'location_admin' %}">Production Locations</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Location {{ location.id }}</li>
+        </ol>
+    </nav>
+
+    <div class="card-body">
+        <div class="card-title">
+            <h5>{{ location.location_name }}</h5>
+        </div>
+        <br>
+        <form action="" method="post">
+            <div class="container">
+                <div class="row">
+                    <input type="hidden" name="production_title" value="{{ location.production_title }}">
+                    <div class="col-12">
+                        <label for="location_name" class="form-group">Location Name</label>
+                        <input type="text" class="form-control" name="location_name" value="{{ location.location_name }}">
+                    </div>
+                    <div class="col-6">
+                        <label for="location_contact" class="form-group">Contact Name</label>
+                        <input type="text" class="form-control" name="location_contact" value="{{ location.location_contact }}">
+                    </div>
+                    <div class="col-6">
+                        <label for="location_phone" class="form-group">Phone</label>
+                        <input type="text" class="form-control" name="location_phone" value="{{ location.location_phone }}">
+                    </div>
+                    <div class="col-12">
+                        <label for="location_address_1" class="form-group">Address 1</label>
+                        <input type="text" class="form-control" name="location_address_1" value="{{ location.location_address_1 }}">
+                    </div>
+                    <div class="col-12">
+                        <label for="location_address_2" class="form-group">Address 2</label>
+                        <input type="text" class="form-control" name="location_address_2" value="{{ location.location_address_2 }}">
+                    </div>
+                    <div class="col-6">
+                        <label for="location_city" class="form-group">City</label>
+                        <input type="text" class="form-control" name="location_city" value="{{ location.location_city }}">
+                    </div>
+                    <div class="col-3">
+                        <label for="location_state" class="form-group">State</label>
+                        <input type="text" class="form-control" name="location_state" value="{{ location.location_state }}">
+                    </div>
+                    <div class="col-3">
+                        <label for="location_zip" class="form-group">Zip</label>
+                        <input type="text" class="form-control" name="location_zip" value="{{ location.location_zip }}">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-outline-success">Update Location</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-outline-danger">Delete Driver</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
