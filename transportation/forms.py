@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, ButtonHolder, Submit, Div
-from .models import RunRequest, Driver
+from .models import RunRequest, Driver, Vehicle
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Field
 
@@ -104,4 +104,21 @@ class NewDriver(forms.ModelForm):
             'rate',
             'grouping',
             'last_4'
+        ]
+
+# - Create new vehicle
+class NewVehicle(forms.ModelForm):
+    class Meta:
+        model = Vehicle
+        fields = [
+            'production_title',
+            'vehicle_type',
+            'vendor_name',
+            'vendor_unit_number',
+            'internal_unit_number',
+            'purchase_order',
+            'vehicle_notes',
+            'assigned_department',
+            'assigned_driver',
+            'is_active',
         ]

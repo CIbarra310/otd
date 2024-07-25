@@ -71,7 +71,6 @@ class Production(models.Model):
     production_notes = models.TextField(max_length=2000, null=True)
     is_active = models.BooleanField(default=True)
 
-
     def __str__(self):
         return self.production_title
 

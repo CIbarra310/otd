@@ -1,7 +1,7 @@
 from .forms import LoginForm, CreateUserForm
 from core.models import Production, Vendor, Location
 from collections import defaultdict
-from transportation.forms import NewRunRequest, RunRequest, NewDriver, Driver
+from transportation.forms import NewRunRequest, RunRequest, NewDriver, Driver, Vehicle
 from production.forms import RadioForm
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -23,7 +23,6 @@ def home(request):
         return redirect('dashboard')  # You can use the name of the URL pattern for the dashboard page
     else:
         return render(request, 'interface/index.html')
-
 
 # - Register a new user
 def register(request):
@@ -129,6 +128,31 @@ def location_admin(request):
     }
 
     return render(request, 'interface/location_admin.html', context = context)
+
+# - Add Location
+@login_required(login_url='login')
+def add_location(request):
+
+    if request.method == "POST":
+        location = Location(request.POST)
+        if location.is_valid():
+            location.save()
+            return redirect("location_admin")
+        else:
+            messages.error(request, "There was an error with your submission. Please check the form for errors.")
+
+    location = Location()
+
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
+    context = {
+        'location': location,
+        'user_productions': user_productions,
+    }
+
+    return render(request, 'interface/add_location.html', context = context)
 
 # - View Location
 @login_required(login_url='login')
@@ -405,6 +429,26 @@ def view_run(request, run_request_id):
     }
 
     return render(request, 'interface/run.html', context=context)
+
+@login_required(login_url='login')
+def equipment_admin(request):
+    vehicles = Vehicle.objects.all()
+
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
+     # Filter runs by production_title in session
+    production_title_in_session = request.session.get('current_production_id')
+    if production_title_in_session:
+        vehicles = vehicles.filter(production_title=production_title_in_session)
+
+    context = {
+        'vehicles': vehicles,
+        'user_productions': user_productions,
+    }
+
+    return render(request, 'interface/equipment_admin.html', context=context)
 
 @login_required(login_url='login')
 def radios(request):

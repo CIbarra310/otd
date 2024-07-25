@@ -1,4 +1,5 @@
 from django.db import models
+from core.models import Production, Department
 from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
@@ -12,20 +13,23 @@ class Driver(models.Model):
     rate = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
     grouping = models.IntegerField(null=True, blank=True)
     last_4 = models.CharField(max_length=6, null=True, blank=True)
+    assigned_vehicle = models.ManyToManyField('Vehicle', blank=True, related_name='drivers')
     is_active = models.BooleanField(default=True)
     
     def __str__(self):
         return self.first_name + " " + self.last_name
 
 class Vehicle(models.Model):
-    production_title = models.CharField(max_length=150, null=True)
+    production_title = models.ForeignKey(Production, on_delete=models.CASCADE, related_name='vehicles')
     vehicle_type = models.CharField(max_length=150, null=True)
     vendor_name = models.CharField(max_length=100, null=True)
     vendor_unit_number = models.CharField(max_length=10, null=True)
     internal_unit_number = models.CharField(max_length=20, null=True)
     purchase_order = models.CharField(max_length=10, null=True)
-    vehicle_notes = models.TextField(max_length=2000, null=True)
-    assigned_driver = models.CharField(max_length=100, null=True)
+    vehicle_notes = models.TextField(max_length=2000, null=True, blank=True)
+    assigned_department = models.ForeignKey(Department, null=True, blank=True, on_delete=models.CASCADE, related_name='vehicles')
+    assigned_driver = models.ManyToManyField(Driver, blank=True, related_name='vehicles')
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.vehicle_type + " " + self.vendor_unit_number

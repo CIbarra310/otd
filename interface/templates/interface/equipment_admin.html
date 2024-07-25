@@ -1,0 +1,55 @@
+{% extends 'interface/layout.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <main>
+        <br>
+        <div class="container">
+            <h1>Equipment</h1>
+            <hr>
+            <div class="p-3">
+                <a class="btn btn-outline-primary p-2" href="{% url 'add_location' %}">Add Vehicle</a>
+                <a class="btn btn-outline-primary p-2" href="{% url 'add_location' %}">Add Trailer</a>
+                <a class="btn btn-outline-primary p-2" href="{% url 'add_location' %}">Add Picture Car</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive p-3">
+                    <h5>Vehicles</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Vehicle Type</th>
+                                <th scope="col">Vendor</th>
+                                <th scope="col">Vendor Unit #</th>
+                                <th scope="col">Internal Unit # (Optional)</th>
+                                <th scope="col">Purchase Order</th>
+                                <th scope="col">Department</th>
+                                <th scope="col">Assigned Driver</th>
+                                <th scope="col">Vehicle Notes</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for vehicle in vehicles %}
+                                <tr>
+                                    <td>{{ vehicle.vehicle_type }}</td>
+                                    <td>{{ vehicle.vendor_unit_number }}</td>
+                                    <td>{{ vehicle.vendor_unit_number }}</td>
+                                    <td>{{ vehicle.internal_unit_number }}</td>
+                                    <td>{{ vehicle.purchase_order }}</td>
+                                    <td>{{ vehicle.assigned_department }}</td>
+                                    <td>{{ vehicle.assigned_driver }}</td>
+                                    <td>{{ vehicle.vehicle_notes }}</td>
+                                    <td>
+                                        <a href="" class="btn btn-secondary">Edit</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

@@ -8,7 +8,7 @@ class DriverAdmin(admin.ModelAdmin):
     list_filter = ('is_active',)
     fieldsets = (
         (None, {
-            'fields': ('production_title', 'first_name', 'last_name', 'driver_email', 'driver_phone', 'occupation_code', 'rate', 'grouping', 'last_4')
+            'fields': ('production_title', 'first_name', 'last_name', 'driver_email', 'driver_phone', 'occupation_code', 'rate', 'grouping', 'last_4', 'assigned_vehicle', 'is_active')
         }),
     )
 
