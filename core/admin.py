@@ -50,7 +50,7 @@ class LocationAdmin(admin.ModelAdmin):
     list_filter = ('location_name', 'location_state')
     fieldsets = (
         (None, {
-            'fields': ('location_name', 'location_address', 'location_city', 'location_state', 'location_zip', 'location_phone', 'location_email', 'is_active')
+            'fields': ('location_name','location_contact', 'location_phone', 'location_address_1', 'location_address_2', 'location_city', 'location_state', 'location_zip')
         }),
     )
 

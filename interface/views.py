@@ -122,6 +122,12 @@ def location_admin(request):
     user = get_object_or_404(NewUser, id=request.user.id)
     user_productions = user.productions.filter(is_active=True)
 
+     # Filter runs by production_title in session
+    production_title_in_session = request.session.get('current_production_id')
+    if production_title_in_session:
+        locations = locations.filter(production_title=production_title_in_session)
+
+
     context = {
         'locations': locations,
         'user_productions': user_productions,    
