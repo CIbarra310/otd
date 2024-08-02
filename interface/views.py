@@ -1,6 +1,7 @@
 from .forms import LoginForm, CreateUserForm
 from core.models import Production, Vendor, Location
 from collections import defaultdict
+from core.models import Location, Production, Vendor, NewUser
 from transportation.forms import NewRunRequest, RunRequest, NewDriver, Driver, Vehicle
 from production.forms import RadioForm
 from django.contrib import messages
@@ -123,7 +124,7 @@ def location_admin(request):
     user_productions = user.productions.filter(is_active=True)
 
      # Filter runs by production_title in session
-    production_title_in_session = request.session.get('current_production_id')
+    production_title_in_session = request.session.get('production_title')
     if production_title_in_session:
         locations = locations.filter(production_title=production_title_in_session)
 
