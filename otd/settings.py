@@ -34,6 +34,11 @@ CSRF_TRUSTED_ORIGINS = ['https://www.ontheday.app',
                         'https://www.ontheday.app/login',
                         'https://on-the-day-6d3c5e11e0df.herokuapp.com/']
 
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
+    'https://www.ontheday.app',
+    'https://on-the-day-6d3c5e11e0df.herokuapp.com',
+]
 
 # Application definition
 
@@ -51,11 +56,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'storages',
+    'corsheaders',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
