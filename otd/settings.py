@@ -30,13 +30,16 @@ DEBUG = True
 ALLOWED_HOSTS = ['www.ontheday.app', 'on-the-day-6d3c5e11e0df.herokuapp.com', 'localhost', '127.0.0.1']
 
 # Add domains to CSRF_TRUSTED_ORIGINS
-CSRF_TRUSTED_ORIGINS = ['https://www.ontheday.app',' https://www.ontheday.app', 'https://on-the-day-6d3c5e11e0df.herokuapp.com']
+CSRF_TRUSTED_ORIGINS = ['https://www.ontheday.app', 'https://on-the-day-6d3c5e11e0df.herokuapp.com']
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
     'https://www.ontheday.app',
     'https://on-the-day-6d3c5e11e0df.herokuapp.com',
 ]
+
+CSRF_COOKIE_SECURE = True  # Ensures the CSRF cookie is only sent over HTTPS
+CSRF_COOKIE_SAMESITE = 'Lax'  # Adjust as needed, 'Lax' is often sufficient
 
 # Application definition
 
