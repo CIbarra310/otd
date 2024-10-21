@@ -15,6 +15,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.html import strip_tags
+from django.views.decorators.csrf import csrf_protect
 from core.models import Production, NewUser
 import json
 
@@ -40,6 +41,7 @@ def register(request):
     return render(request, 'interface/register.html', context = context) 
 
 # - Login an existing user
+@csrf_protect
 def login(request):
     if request.user.is_authenticated:
         return redirect("dashboard")
