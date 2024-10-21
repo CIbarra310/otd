@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django import forms
 from django.forms.widgets import PasswordInput, TextInput
 from django.utils import timezone
-from core.models import Production, Department, JobTitle
+from core.models import Production, Department, JobTitle, NewUser
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit
 from transportation.models import RunRequest
@@ -31,7 +31,7 @@ class CreateUserForm(UserCreationForm):
     # job_title = forms.CharField(max_length=100)
 
     class Meta:
-        model = User
+        model = NewUser
         fields = ['username','email', 'password1', 'password2', 'first_name', 'last_name', 'job_title', 'department', 'production_title']
 
 
