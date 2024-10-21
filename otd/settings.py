@@ -29,6 +29,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# Add domains to CSRF_TRUSTED_ORIGINS
+CSRF_TRUSTED_ORIGINS = ['https://www.ontheday.app',
+                        'https://on-the-day-6d3c5e11e0df.herokuapp.com/']
+
+
 
 # Application definition
 
