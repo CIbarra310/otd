@@ -157,10 +157,6 @@ load_dotenv(dotenv_path=dotenv_path)
 
 AUTH_USER_MODEL = 'core.NewUser'
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://on-the-day-6d3c5e11e0df.herokuapp.com',  # Replace with your actual domain
-]
-
 # AWS Configuration information
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
