@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-yyj2m)-$=uh^1wf)e*sdwe#*)2%!wcx*f6s92-ul*7eo05&l61
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://www.ontheday.app', 'https://on-the-day-6d3c5e11e0df.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['www.ontheday.app', 'on-the-day-6d3c5e11e0df.herokuapp.com', 'localhost', '127.0.0.1']
 
 # Add domains to CSRF_TRUSTED_ORIGINS
 CSRF_TRUSTED_ORIGINS = ['https://www.ontheday.app', 'https://on-the-day-6d3c5e11e0df.herokuapp.com']
