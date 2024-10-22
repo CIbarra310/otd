@@ -32,7 +32,7 @@ class CreateUserForm(UserCreationForm):
 
     class Meta:
         model = NewUser
-        fields = ['username','email', 'password1', 'password2', 'first_name', 'last_name', 'job_title', 'department', 'production_title']
+        fields = ['user_name','email', 'password1', 'password2', 'first_name', 'last_name', 'job_title', 'department', 'production_title']
 
 
 # - Login a user
