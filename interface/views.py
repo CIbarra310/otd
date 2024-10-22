@@ -128,40 +128,42 @@ def production_admin(request):
 @login_required(login_url='login')
 def add_production(request):
     if request.method == 'POST':
-        logger.debug("Form submission received.")
+        print("Form submission received.")
         form = AddProductionForm(request.POST)
         if form.is_valid():
             production_code = form.cleaned_data['production_code']
             production_id = form.cleaned_data.get('production_id')
             
-            logger.debug(f"Form is valid. Production code: {production_code}, Production ID: {production_id}")
+            print(f"Form is valid. Production code: {production_code}, Production ID: {production_id}")
             
             if production_id:
                 # Step 2: Confirm and add the production
                 try:
                     production = Production.objects.get(id=production_id)
-                    logger.debug(f"Production found: {production.production_title}")
+                    print(f"Production found: {production.production_title}")
+                    print(f"User's productions before adding: {request.user.productions.all()}")
                     request.user.productions.add(production)
                     request.user.save()
+                    print(f"User's productions after adding: {request.user.productions.all()}")
                     messages.success(request, f'Production {production.production_title} added successfully.')
-                    logger.debug(f"Production {production.production_title} added successfully to user {request.user.username}.")
+                    print(f"Production {production.production_title} added successfully to user {request.user.username}.")
                     return redirect('dashboard')
                 except Production.DoesNotExist:
                     messages.error(request, 'Invalid production ID.')
-                    logger.error("Invalid production ID.")
+                    print("Invalid production ID.")
             else:
                 # Step 1: Search for the production
                 try:
                     production = Production.objects.get(code=production_code)
-                    form.fields['production_id'].initial = production.id
-                    logger.debug(f"Production found: {production.production_title}")
+                    form = AddProductionForm(initial={'production_code': production_code, 'production_id': production.id})
+                    print(f"Production found: {production.production_title}")
                     return render(request, 'interface/add_production.html', {'form': form, 'production': production})
                 except Production.DoesNotExist:
                     messages.error(request, 'Invalid production code.')
-                    logger.error("Invalid production code.")
+                    print("Invalid production code.")
         else:
-            logger.debug("Form is not valid")
-            logger.debug(form.errors)
+            print("Form is not valid")
+            print(form.errors)
     else:
         form = AddProductionForm()
     return render(request, 'interface/add_production.html', {'form': form})

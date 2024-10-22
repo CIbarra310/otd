@@ -27,7 +27,7 @@ class UserAdminConfig(UserAdmin):
 def generate_production_code(length=6):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
 class ProductionAdmin(admin.ModelAdmin):
-    list_display = ('production_title', 'code', 'production_studio', 'production_email', 'purchase_order', 'coordinator_name', 'captain_name', 'is_active')
+    list_display = ('id', 'production_title', 'code', 'production_studio', 'production_email', 'purchase_order', 'coordinator_name', 'captain_name', 'is_active')
     search_fields = ('production_title', 'production_studio', 'coordinator_name', 'captain_name')
     list_filter = ('is_active', 'production_studio')
     fieldsets = (
