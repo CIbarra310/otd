@@ -60,6 +60,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
 # Create your models here.
 class Production(models.Model):
     create_date = models.DateField(auto_now_add=True)
+    code = models.CharField(max_length=6, unique=True, null=True, blank=True)  # Add this field for the 6-digit code
     production_title = models.CharField(max_length=150, null=True)
     production_studio = models.CharField(max_length=150, null=True)
     production_email = models.EmailField(_('email address'), null=True)

@@ -13,4 +13,5 @@ class LocationForm(forms.ModelForm):
                   'location_city',
                   'location_state',
                   'location_zip']
-        
+
+    

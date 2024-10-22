@@ -1,0 +1,25 @@
+{% extends 'interface/layout.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <main>
+        <div class="container shadow-md col-12 col-md-6 col-lg-6 col-xl-4">
+            <br>
+            <h3>Add a Production</h3>
+            <hr>
+            <form method="POST" action="{% url 'add_production' %}">
+                {% csrf_token %}
+                {{ form|crispy }}
+                {% if production %}
+                    <div class="alert alert-info">
+                        <strong>Production Found:</strong> {{ production.production_title }}
+                    </div>
+                    <button class="btn btn-success" type="submit">Confirm and Add Production</button>
+                {% else %}
+                    <button class="btn btn-primary" type="submit">Search Production</button>
+                {% endif %}
+            </form>
+        </div>
+    </main>
+{% endblock %}

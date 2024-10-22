@@ -1,4 +1,4 @@
-from .forms import LoginForm, CreateUserForm
+from .forms import LoginForm, CreateUserForm, AddProductionForm
 from core.models import Production, Vendor, Location
 from collections import defaultdict
 from core.models import Location, Production, Vendor, NewUser
@@ -120,6 +120,40 @@ def production_admin(request):
     }
 
     return render(request, 'interface/production_admin.html', context = context)
+
+# - Add Production
+@login_required(login_url='login')
+def add_production(request):
+    if request.method == 'POST':
+        form = AddProductionForm(request.POST)
+        if form.is_valid():
+            production_code = form.cleaned_data['production_code']
+            production_id = form.cleaned_data.get('production_id')
+            
+            if production_id:
+                # Step 2: Confirm and add the production
+                try:
+                    production = Production.objects.get(id=production_id)
+                    request.user.productions.add(production)
+                    request.user.save()
+                    messages.success(request, f'Production {production.production_title} added successfully.')
+                    return redirect('dashboard')
+                except Production.DoesNotExist:
+                    messages.error(request, 'Invalid production ID.')
+            else:
+                # Step 1: Search for the production
+                try:
+                    production = Production.objects.get(code=production_code)
+                    form.fields['production_id'].initial = production.id
+                    return render(request, 'interface/add_production.html', {'form': form, 'production': production})
+                except Production.DoesNotExist:
+                    messages.error(request, 'Invalid production code.')
+        else:
+            print("Form is not valid")
+            print(form.errors)
+    else:
+        form = AddProductionForm()
+    return render(request, 'interface/add_production.html', {'form': form})
 
 # - Location Admin
 @login_required(login_url=login)

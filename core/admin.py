@@ -1,3 +1,5 @@
+import random
+import string
 from django.contrib import admin
 
 from .models import Production, Vendor, Location, Department, JobTitle, NewUser
@@ -22,15 +24,22 @@ class UserAdminConfig(UserAdmin):
          ),
     )
 
+def generate_production_code(length=6):
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
 class ProductionAdmin(admin.ModelAdmin):
-    list_display = ('production_title', 'production_studio', 'production_email', 'purchase_order', 'coordinator_name', 'captain_name', 'is_active')
+    list_display = ('production_title', 'code', 'production_studio', 'production_email', 'purchase_order', 'coordinator_name', 'captain_name', 'is_active')
     search_fields = ('production_title', 'production_studio', 'coordinator_name', 'captain_name')
     list_filter = ('is_active', 'production_studio')
     fieldsets = (
         (None, {
-            'fields': ('production_title', 'production_studio', 'production_email', 'purchase_order', 'coordinator_name', 'coordinator_email', 'captain_name', 'captain_email', 'production_notes', 'is_active')
+            'fields': ('production_title', 'code', 'production_studio', 'production_email', 'purchase_order', 'coordinator_name', 'coordinator_email', 'captain_name', 'captain_email', 'production_notes', 'is_active')
         }),
     )
+
+    def save_model(self, request, obj, form, change):
+        if not obj.code:
+            obj.code = generate_production_code()
+        super().save_model(request, obj, form, change)
 
 class VendorAdmin(admin.ModelAdmin):
     ordering = ('vendor_name',)

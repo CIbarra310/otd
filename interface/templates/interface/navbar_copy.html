@@ -1,3 +1,4 @@
+{% load crispy_forms_tags %}
 <nav class="bg-dark sidebar" id="sidebar">
     <div class="container">
         <div class="row">
@@ -12,6 +13,7 @@
                     </select>
                 </div>
             </form>
+            <a href="{% url 'add_production' %}"><i>Add Production</i></a>
         </div>
     </div>
     <br>

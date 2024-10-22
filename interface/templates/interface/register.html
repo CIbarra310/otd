@@ -10,8 +10,9 @@
             <hr>
             <form method="POST" action="{% url 'register' %}">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Register</button>
+                {{ form|crispy }}
+                <br>
+                <button class="btn btn-primary" type="submit">Register</button>
             </form>
             <br>
             <div class="text-center">

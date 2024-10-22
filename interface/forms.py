@@ -24,14 +24,23 @@ class CreateUserForm(UserCreationForm):
         queryset=Department.objects.order_by('department_title'),
         empty_label="Select Department"
     )
+    
     job_title = forms.ModelChoiceField(
         queryset=JobTitle.objects.order_by('job_title'),
         empty_label="Select Job Title",
-        required=False # Changed from True to False
+        required=False, # Changed from True to False
+        widget=forms.Select(attrs={'class': 'form-control d-none'})  # Add 'd-none' class to hide the field
     )
+    
     class Meta:
         model = NewUser
         fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'phone_number', 'production_title', 'department', 'job_title']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].required = False  # Make username non-mandatory
+        self.fields['username'].widget = forms.HiddenInput()  # Hide the username field
+        self.fields['job_title'].widget = forms.HiddenInput()  # Hide the username field
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -52,3 +61,7 @@ class CreateUserForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=TextInput())
     password = forms.CharField(widget=PasswordInput())
+
+class AddProductionForm(forms.Form):
+    production_code = forms.CharField(max_length=6, min_length=6, help_text="Enter the 6-digit production code")
+    production_id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
