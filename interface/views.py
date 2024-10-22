@@ -28,17 +28,20 @@ def home(request):
 
 # - Register a new user
 def register(request):
-    form = CreateUserForm()
     if request.method == "POST":
         form = CreateUserForm(request.POST)
-
         if form.is_valid():
             form.save()
             messages.success(request, "Account created successfully!")
             return redirect("login")
-        
-    context = {'form':form}  
-    return render(request, 'interface/register.html', context = context) 
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = CreateUserForm()
+    
+    context = {'form': form}  
+    return render(request, 'interface/register.html', context=context) 
+
 
 # - Login an existing user
 @csrf_protect
