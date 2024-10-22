@@ -24,25 +24,29 @@
         <li><a class="dropdown-item" href="{% url 'run_history' %}"><i class="fa fa-clock"></i> Run History</a></li>
     </ul>
     <br>
-    <ul>
-        <strong class="text-white">Transportation</strong>
-        <li><a class="dropdown-item" href="{% url 'driver_roster' %}">
-            <i class="fa fa-user"></i> Driver Roster</a>
-        </li>
-        <li><a class="dropdown-item" href="{% url 'driver_rundown' %}" hidden>
-            <i class="fa fa-users"></i> Driver Rundown</a>
-        </li>
-        <li><a class="dropdown-item" href="{% url 'equipment_admin' %}" >
-            <i class="fa fa-gear"></i> Equipment</a>
-        </li>
-    </ul>
+    {% if request.session.department == "Transportation" or request.session.department == "Admin" %}
+        <ul>
+            <strong class="text-white">Transportation</strong>
+            <li><a class="dropdown-item" href="{% url 'driver_roster' %}">
+                <i class="fa fa-user"></i> Driver Roster</a>
+            </li>
+            <li><a class="dropdown-item" href="{% url 'driver_rundown' %}" hidden>
+                <i class="fa fa-users"></i> Driver Rundown</a>
+            </li>
+            <li><a class="dropdown-item" href="{% url 'equipment_admin' %}" >
+                <i class="fa fa-gear"></i> Equipment</a>
+            </li>
+        </ul>
+    {% endif %}
     <br>
+    {% if request.session.department == "Admin" %}
     <ul>
         <strong class="text-white">Admin</strong>
         <li><a class="dropdown-item" href="{% url 'user_admin' %}"><i class="fa fa-user"></i> Users</a></li>
         <li><a class="dropdown-item" href="{% url 'production_admin' %}"><i class="fa fa-film"></i> Productions</a></li>
         <li><a class="dropdown-item" href="{% url 'location_admin' %}"><i class="fa fa-map-pin"></i> Locations</a></li>
     </ul>
+    {% endif %}
     <br>
 </nav>
 

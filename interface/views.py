@@ -481,6 +481,11 @@ def run_queue(request):
     if production_title_in_session:
         runs = runs.filter(production_title=production_title_in_session)
 
+    # Filter runs by user's department
+    user_department = request.user.department
+    if user_department not in ['Admin', 'Production', 'Transportation']:
+        runs = runs.filter(requester_department=user_department)
+
     # Pass the objects to the template context
     context = {
         'runs': runs,
