@@ -43,6 +43,7 @@ class CreateUserForm(UserCreationForm):
         user.production_title = self.cleaned_data['production_title']
         user.department = self.cleaned_data['department']
         user.job_title = self.cleaned_data['job_title']
+        user.is_active = True
         if commit:
             user.save()
         return user
