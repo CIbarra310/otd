@@ -80,7 +80,7 @@ def login(request):
 
                 # Set session variables
                 request.session['user_id'] = user.id
-                request.session['user_name'] = user.user_name
+                request.session['username'] = user.username
                 request.session['first_name'] = user.first_name
                 request.session['last_name'] = user.last_name
                 request.session['email'] = user.email
