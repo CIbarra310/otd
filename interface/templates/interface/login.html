@@ -11,10 +11,7 @@
     
                 <form method="POST" autocomplete="off" action="">
                     {% csrf_token %}
-                    {{form.username|as_crispy_field}}
-                    <br>
-                    {{form.password|as_crispy_field}}
-                    <br>
+                    {{ form|crispy }}
                     <button type="submit" class="btn btn-primary w-100 p-2 btn-block">Login</button>
                 </form>
                 <br>
