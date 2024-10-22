@@ -61,14 +61,16 @@ class RunRequest(models.Model):
     pickup_zip = models.CharField(max_length=10)
     run_details = models.TextField(max_length=500)
 
+
+
     # - Stop 2 Information
-    dropoff_name = models.CharField(max_length=100, blank=True)
-    dropoff_phone = models.CharField(max_length=15, blank=True)
-    dropoff_address_1 = models.CharField(max_length=100, blank=True)
-    dropoff_address_2 = models.CharField(max_length=100, null=True, blank=True)
-    dropoff_city = models.CharField(max_length=100, blank=True)
-    dropoff_state = models.CharField(max_length=2, blank=True)
-    dropoff_zip = models.CharField(max_length=10, blank=True)
+    stop_2_name = models.CharField(max_length=100, blank=True)
+    stop_2_phone = models.CharField(max_length=15, blank=True)
+    stop_2_address_1 = models.CharField(max_length=100, blank=True)
+    stop_2_address_2 = models.CharField(max_length=100, null=True, blank=True)
+    stop_2_city = models.CharField(max_length=100, blank=True)
+    stop_2_state = models.CharField(max_length=2, blank=True)
+    stop_2_zip = models.CharField(max_length=10, blank=True)
     run_details_2 = models.TextField(max_length=500, null=True, blank=True)
 
     # - Stop 3 Information
@@ -110,6 +112,16 @@ class RunRequest(models.Model):
     stop_6_state = models.CharField(max_length=2, blank=True)
     stop_6_zip = models.CharField(max_length=10, blank=True)
     run_details_6 = models.TextField(max_length=500, null=True, blank=True)
+
+    # - Drop Off Information
+    dropoff_name = models.CharField(max_length=100, blank=True)
+    dropoff_phone = models.CharField(max_length=15, blank=True)
+    dropoff_address_1 = models.CharField(max_length=100, blank=True)
+    dropoff_address_2 = models.CharField(max_length=100, null=True, blank=True)
+    dropoff_city = models.CharField(max_length=100, blank=True)
+    dropoff_state = models.CharField(max_length=2, blank=True)
+    dropoff_zip = models.CharField(max_length=10, blank=True)
+    dropoff_details = models.TextField(max_length=500, null=True, blank=True)
 
     # - Run Details
     purchase_order = models.CharField(max_length=20, null=True, blank=True)

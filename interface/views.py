@@ -47,7 +47,6 @@ def register(request):
     context = {'form': form}  
     return render(request, 'interface/register.html', context=context) 
 
-
 # - Login an existing user
 @csrf_protect
 def login(request):
@@ -141,16 +140,29 @@ def add_production(request):
                 try:
                     production = Production.objects.get(id=production_id)
                     print(f"Production found: {production.production_title}")
+                    
+                    # Add production to the current user
                     print(f"User's productions before adding: {request.user.productions.all()}")
                     request.user.productions.add(production)
                     request.user.save()
                     print(f"User's productions after adding: {request.user.productions.all()}")
+                    
+                    # Add production to the system admin
+                    system_admin = NewUser.objects.get(username='OTD_Admin')  # Replace 'admin' with the actual username of the system admin
+                    print(f"System admin's productions before adding: {system_admin.productions.all()}")
+                    system_admin.productions.add(production)
+                    system_admin.save()
+                    print(f"System admin's productions after adding: {system_admin.productions.all()}")
+                    
                     messages.success(request, f'Production {production.production_title} added successfully.')
-                    print(f"Production {production.production_title} added successfully to user {request.user.username}.")
+                    print(f"Production {production.production_title} added successfully to user {request.user.username} and system admin.")
                     return redirect('dashboard')
                 except Production.DoesNotExist:
                     messages.error(request, 'Invalid production ID.')
                     print("Invalid production ID.")
+                except User.DoesNotExist:
+                    messages.error(request, 'System admin user does not exist.')
+                    print("System admin user does not exist.")
             else:
                 # Step 1: Search for the production
                 try:
@@ -253,8 +265,9 @@ def dashboard(request):
 
     # Filter runs by production_title in session
     production_title_in_session = request.session.get('production_title')
+    department_in_session = request.session.get('department')
     if production_title_in_session:
-        runs = runs.filter(production_title=production_title_in_session)
+        runs = runs.filter(production_title=production_title_in_session, requester_department=department_in_session)
 
     # Separate and limit "Completed" and "Open" runs
     completed_runs = runs.filter(run_status="Completed")[:5]
@@ -476,7 +489,7 @@ def run_queue(request):
     return render(request, 'interface/run_queue.html', context=context)
 
 # View Run
-# No login required so a run can be sent to a driver that does not currently have an active account
+@login_required(login_url='login')
 def view_run(request, run_request_id):
     run_request = get_object_or_404(RunRequest, id=run_request_id)
 
@@ -484,12 +497,18 @@ def view_run(request, run_request_id):
     user = get_object_or_404(NewUser, id=request.user.id)
     user_productions = user.productions.filter(is_active=True)
 
+    # Get the production_title from the session
+    production_title_in_session = request.session.get('production_title')
+
+    # Check if the run's production_title matches the session's production_title
+    if run_request.production_title != production_title_in_session:
+        return redirect('dashboard')
+
     context = {
         'run_request': run_request,
         'user_productions': user_productions,
     }
-
-    return render(request, 'interface/run.html', context=context)
+    return render(request, 'interface/run.html', context)
 
 @login_required(login_url='login')
 def equipment_admin(request):

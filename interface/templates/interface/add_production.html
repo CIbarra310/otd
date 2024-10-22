@@ -13,7 +13,7 @@
                 {{ form|crispy }}
                 {% if production %}
                     <div class="alert alert-info">
-                        <strong>Production Found:</strong> {{ production.production_title }} {{ production.id }}
+                        <strong>Production Found:</strong> {{ production.production_title }}
                     </div>
                     <button class="btn btn-success" type="submit">Confirm and Add Production</button>
                 {% else %}

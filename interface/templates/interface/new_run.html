@@ -101,23 +101,23 @@
                 <!-- Step 3: Get Location 2  -->
                 <div class="row" id="step3" hidden>
                     <div class="col-12">
-                        <input type="text" class="form-control run-request-input" name="dropoff_name" id="dropoff-search-input" placeholder="Search for 2nd location">
-                        <ul id="dropoff-search-results" class="list-group"></ul>
+                        <input type="text" class="form-control run-request-input" name="stop_2_name" id="step-2-search-input" placeholder="Search for 2nd location">
+                        <ul id="step-2-search-results" class="list-group"></ul>
                     </div>
                     <div class="col-12">
-                        <input type="text" class="form-control run-request-input" name="dropoff_address_1" placeholder="10202 Washington Blvd">
+                        <input type="text" class="form-control run-request-input" name="stop_2_address_1" placeholder="10202 Washington Blvd">
                     </div>
                     <div class="col-12">
-                        <input type="text" class="form-control run-request-input" name="dropoff_address_2" placeholder="Stage 21">
+                        <input type="text" class="form-control run-request-input" name="stop_2_address_2" placeholder="Stage 21">
                     </div>
                     <div class="col-5">
-                        <input type="text" class="form-control run-request-input" name="dropoff_city" placeholder="Culver City">
+                        <input type="text" class="form-control run-request-input" name="stop_2_city" placeholder="Culver City">
                     </div>
                     <div class="col-3">
-                        <input type="text" class="form-control run-request-input" name="dropoff_state" placeholder="CA">
+                        <input type="text" class="form-control run-request-input" name="stop_2_state" placeholder="CA">
                     </div>
                     <div class="col-4">
-                        <input type="text" class="form-control run-request-input" name="dropoff_zip" placeholder="90232">
+                        <input type="text" class="form-control run-request-input" name="stop_2_zip" placeholder="90232">
                     </div>
                     <br>
                     <div class="col-12 mb-1">
@@ -211,7 +211,7 @@
                 <!-- Step 6: Get Location 5 -->
                 <div class="row" id="step6" hidden>
                     <div class="col-12">
-                        <input type="text" class="form-control run-request-input" name="stop_5_name" id="stop-5-search-input" placeholder="Search for 5th location">
+                        <input type="text" class="form-control run-request-input" name="stop_5_name" id="step-5-search-input" placeholder="Search for 5th location">
                         <ul id="step-5-search-results" class="list-group"></ul>
                     </div>
                     <div class="col-12">
@@ -272,12 +272,43 @@
                     <div class="next-button-box">
                         <br>
                         <button type="button" class="btn btn-secondary back-button" onclick="showPreviousStep()">Back</button>
-                        <button type="button" class="btn btn-primary next-button" onclick="showNextStepFrom7()">Next</button>
+                        <button type="button" class="btn btn-primary next-button" onclick="showStep8()">Next</button>
                     </div>
                 </div> 
-                
-                <!-- Step 8: Additional information and submission -->        
+
+                <!-- Step 8: Get drop off location -->
                 <div class="row" id="step8" hidden>
+                    <div class="col-12">
+                        <input type="text" class="form-control run-request-input" name="dropoff_name" id="dropoff-search-input" placeholder="Search for drop off location">
+                        <ul id="dropoff-search-results" class="list-group"></ul>
+                    </div>
+                    <div class="col-12">
+                        <input type="text" class="form-control run-request-input" name="dropoff_address_1" placeholder="10202 Washington Blvd">
+                    </div>
+                    <div class="col-12">
+                        <input type="text" class="form-control run-request-input" name="dropoff_address_2" placeholder="Stage 21">
+                    </div>
+                    <div class="col-5">
+                        <input type="text" class="form-control run-request-input" name="dropoff_city" placeholder="Culver City">
+                    </div>
+                    <div class="col-3">
+                        <input type="text" class="form-control run-request-input" name="dropoff_state" placeholder="CA">
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control run-request-input" name="dropoff_zip" placeholder="90232">
+                    </div>
+                    <br>
+                    <div class="col-12 mb-1">
+                        <br>
+                        <textarea class="form-control" name="run_details_2" id="run_details_2" rows="3" placeholder="Insert details here"></textarea>
+                    </div>
+                    <div class="next-button-box">
+                        <br>
+                        <button type="button" class="btn btn-primary next-button" onclick="showStep9()">Next</button>
+                    </div>
+                </div>
+                <!-- Step 9: Additional information and submission -->        
+                <div class="row" id="step9" hidden>
                     <div class="col-12">
                         <div class="col-12 mb-3">
                             <select class="form-control run-request-input" name="truck_size" id="truck_size">
@@ -316,7 +347,7 @@
     
         function showStep(step) {
             // Hide all steps
-            for (let i = 1; i <= 8; i++) {
+            for (let i = 1; i <= 9; i++) {
                 const stepElement = document.getElementById(`step${i}`);
                 if (stepElement) stepElement.hidden = true;
             }
@@ -351,13 +382,15 @@
         function showStep6() { showStep(6); }
         function showStep7() { showStep(7); }
         function showStep8() { showStep(8); }
+        function showStep9() { showStep(9); }
     
         function showNextStepFrom2() { showNextStep(2, 'stop_1_switch'); }
         function showNextStepFrom3() { showNextStep(3, 'stop_2_switch'); }
         function showNextStepFrom4() { showNextStep(4, 'stop_3_switch'); }
         function showNextStepFrom5() { showNextStep(5, 'stop_4_switch'); }
         function showNextStepFrom6() { showNextStep(6, 'stop_5_switch'); }
-        function showNextStepFrom7() { showStep(8); }
+        function showNextStepFrom7() { showNextStep(7, 'stop_6_switch'); }
+        function showNextStepFrom8() { showStep(9); }
     
         function showPreviousStep() {
             if (stepStack.length > 0) {
@@ -373,20 +406,22 @@
    document.addEventListener('DOMContentLoaded', function() {
         const searchInputs = {
             pickup: document.getElementById('pickup-search-input'),
-            dropoff: document.getElementById('dropoff-search-input'),
+            stop2: document.getElementById('step-2-search-input'),
             stop3: document.getElementById('step-3-search-input'),
             stop4: document.getElementById('step-4-search-input'),
-            stop5: document.getElementById('stop-5-search-input'),
-            stop6: document.getElementById('step-6-search-input')
+            stop5: document.getElementById('step-5-search-input'),
+            stop6: document.getElementById('step-6-search-input'),
+            dropoff: document.getElementById('dropoff-search-input'),
         };
         
         const searchResults = {
             pickup: document.getElementById('pickup-search-results'),
-            dropoff: document.getElementById('dropoff-search-results'),
+            stop2: document.getElementById('step-2-search-results'),
             stop3: document.getElementById('step-3-search-results'),
             stop4: document.getElementById('step-4-search-results'),
             stop5: document.getElementById('step-5-search-results'),
-            stop6: document.getElementById('step-6-search-results')
+            stop6: document.getElementById('step-6-search-results'),
+            dropoff: document.getElementById('dropoff-search-results'),
         };
         
         function setupSearch(inputElement, resultsElement, type) {
@@ -440,13 +475,13 @@
                     state: 'pickup_state',
                     zip: 'pickup_zip'
                 },
-                dropoff: {
-                    name: 'dropoff_name',
-                    address1: 'dropoff_address_1',
-                    address2: 'dropoff_address_2',
-                    city: 'dropoff_city',
-                    state: 'dropoff_state',
-                    zip: 'dropoff_zip'
+                stop2: {
+                    name: 'stop_2_name',
+                    address1: 'stop_2_address_1',
+                    address2: 'stop_2_address_2',
+                    city: 'stop_2_city',
+                    state: 'stop_2_state',
+                    zip: 'stop_2_zip'
                 },
                 stop3: {
                     name: 'stop_3_name',
@@ -479,7 +514,15 @@
                     city: 'stop_6_city',
                     state: 'stop_6_state',
                     zip: 'stop_6_zip'
-                }
+                },
+                dropoff: {
+                    name: 'dropoff_name',
+                    address1: 'dropoff_address_1',
+                    address2: 'dropoff_address_2',
+                    city: 'dropoff_city',
+                    state: 'dropoff_state',
+                    zip: 'dropoff_zip'
+                },
             };
             
             const fieldsToUpdate = fields[type];
@@ -493,11 +536,12 @@
         }
 
         setupSearch(searchInputs.pickup, searchResults.pickup, 'pickup');
-        setupSearch(searchInputs.dropoff, searchResults.dropoff, 'dropoff');
+        setupSearch(searchInputs.stop2, searchResults.stop2, 'stop2');
         setupSearch(searchInputs.stop3, searchResults.stop3, 'stop3');
         setupSearch(searchInputs.stop4, searchResults.stop4, 'stop4');
         setupSearch(searchInputs.stop5, searchResults.stop5, 'stop5');
         setupSearch(searchInputs.stop6, searchResults.stop6, 'stop6');
+        setupSearch(searchInputs.dropoff, searchResults.dropoff, 'dropoff');
     });
 
 </script>
