@@ -9,16 +9,16 @@ class UserAdminConfig(UserAdmin):
     search_fields = ('productions', 'department', 'job_title')
     list_filter = ('productions', 'department', 'job_title')
     ordering = ('-start_date',)
-    list_display = ('email', 'username', 'first_name', 'last_name','phone_number', 'password', 'production_title', 'department', 'job_title', 'is_staff', 'is_active')
+    list_display = ('email', 'username', 'first_name', 'last_name', 'phone_number', 'production_title', 'department', 'job_title', 'is_staff', 'is_active')
     fieldsets = (
-        ('User Information', {'fields': ('email', 'username', 'first_name', 'last_name', 'phone_number', 'password1', 'password2')}),
+        ('User Information', {'fields': ('email', 'username', 'first_name', 'last_name', 'phone_number', 'password')}),
         ('Production Information', {'fields': ('productions', 'department', 'job_title',)}),
         ('Permissions', {'fields': ('is_staff', 'is_active', 'groups')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'username', 'first_name', 'last_name','password', 'phone_number', 'production_title', 'department', 'job_title', 'is_staff', 'is_active')}
+            'fields': ('email', 'username', 'first_name', 'last_name', 'password', 'phone_number', 'production_title', 'department', 'job_title', 'is_staff', 'is_active')}
          ),
     )
 
