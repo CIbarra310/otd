@@ -31,24 +31,24 @@ class CustomAccountManager(BaseUserManager):
 
 class NewUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
-    user_name = models.CharField(max_length=150, unique=True)
+    username = models.CharField(max_length=150, unique=True)
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     start_date = models.DateTimeField(default=timezone.now)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     
-    production_title = models.CharField(max_length=150)
+    production_title = models.CharField(max_length=150, blank=True, null=True)
     phone_number = models.CharField(max_length=20)
     department = models.CharField(max_length=150, blank=True)
-    job_title = models.CharField(max_length=150, blank=True)
+    job_title = models.CharField(max_length=150, blank=True, null=True)
 
     productions = models.ManyToManyField('Production', related_name='users', blank=True)
 
     objects = CustomAccountManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['user_name', 'first_name']
+    REQUIRED_FIELDS = ['username', 'first_name']
 
     def __str__(self):
         return self.user_name
