@@ -4,6 +4,7 @@ from collections import defaultdict
 from core.models import Location, Production, Vendor, NewUser
 from transportation.forms import NewRunRequest, RunRequest, NewDriver, Driver, Vehicle
 from production.forms import RadioForm
+from django import forms
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
@@ -35,6 +36,7 @@ def register(request):
             messages.success(request, "Account created successfully!")
             return redirect("login")
         else:
+            print(forms.errors)  # Debugging line to print form errors
             messages.error(request, "Please correct the errors below.")
     else:
         form = CreateUserForm()
