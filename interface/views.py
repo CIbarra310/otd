@@ -36,7 +36,7 @@ def register(request):
             messages.success(request, "Account created successfully!")
             return redirect("login")
         else:
-            print(forms.errors)  # Debugging line to print form errors
+            print(form.errors)  # Debugging line to print form errors
             messages.error(request, "Please correct the errors below.")
     else:
         form = CreateUserForm()
