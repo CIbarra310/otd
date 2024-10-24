@@ -168,7 +168,7 @@ def add_production(request):
                 except Production.DoesNotExist:
                     messages.error(request, 'Invalid production ID.')
                     print("Invalid production ID.")
-                except User.DoesNotExist:
+                except NewUser.DoesNotExist:
                     messages.error(request, 'System admin user does not exist.')
                     print("System admin user does not exist.")
             else:
@@ -320,6 +320,11 @@ def driver_roster(request):
 # - Add Driver
 @login_required(login_url='login')
 def add_driver(request):
+
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
     if request.method == 'POST':
         form = NewDriver(request.POST)
         if form.is_valid():
@@ -361,7 +366,12 @@ def add_driver(request):
     else:
         form = NewDriver()
 
-    return render(request, 'interface/add_driver.html', {'form': form})
+    context = {
+        'form': form,
+        'user_productions': user_productions,
+    }
+
+    return render(request, 'interface/add_driver.html', context=context)
 
 # - Activate Driver
 @login_required(login_url='login')
@@ -582,6 +592,30 @@ def new_run(request):
     }
     return render(request, 'interface/new_run.html', context)
 
+# - Update a run
+@login_required(login_url='login')
+def update_run(request, run_id):
+    run = get_object_or_404(RunRequest, id=run_id)
+
+    if request.method == 'POST':
+        form = NewRunRequest(request.POST, instance=run)
+        if form.is_valid():
+            form.save()
+            print("Run updated successfully")  # Debugging line
+            return redirect('run_queue')  # Redirect to the run queue or another appropriate page
+        else:
+            print("Form is not valid")  # Debugging line
+            print(form.errors)  # Debugging line to print form errors
+    else:
+        form = NewRunRequest(instance=run)
+        print("GET request - form initialized")  # Debugging line
+
+    context = {
+        'form': form,
+        'run': run,
+    }
+    return render(request, 'interface/run.html', context)
+
 # - Complete a run
 @login_required(login_url='login')
 def complete_run(request, run_request_id):
@@ -677,6 +711,11 @@ def run_history(request):
     if production_title_in_session:
         runs = runs.filter(production_title=production_title_in_session)
 
+    # Filter runs by user's department
+    user_department = request.session.get('department')
+    if user_department not in ['Admin', 'Production', 'Transportation']:
+        runs = runs.filter(requester_department=user_department)
+
     # Pass the objects to the template context
     context = {
         'runs': runs,
@@ -700,7 +739,7 @@ def run_queue(request):
         runs = runs.filter(production_title=production_title_in_session)
 
     # Filter runs by user's department
-    user_department = request.user.department
+    user_department = request.session.get('department')
     if user_department not in ['Admin', 'Production', 'Transportation']:
         runs = runs.filter(requester_department=user_department)
 
@@ -728,6 +767,8 @@ def view_run(request, run_request_id):
         return redirect('dashboard')
 
     context = {
+        'run': run_request,
+        'run_id': run_request_id,
         'run_request': run_request,
         'user_productions': user_productions,
     }
@@ -823,6 +864,11 @@ def equipment_list(request):
 
 @login_required(login_url='login')
 def daily_rundown(request):
+
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
     production_title = request.session.get('production_title')
     if not production_title:
         return render(request, 'interface/daily_rundown.html', {'error': 'Production title is missing from session.'})
@@ -865,12 +911,17 @@ def daily_rundown(request):
         'off_production_drivers': off_production_drivers,
         'driver_times': driver_times,
         'equipment': equipment,
+        'user_productions': user_productions,
         
     }
     return render(request, 'interface/daily_rundown.html', context)
 
 @login_required(login_url='login')
 def add_driver_to_rundown(request):
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
     production_title = request.session.get('production_title')
     if not production_title:
         return render(request, 'interface/add_driver_to_rundown.html', {'error': 'Production title is missing from session.'})
@@ -900,6 +951,7 @@ def add_driver_to_rundown(request):
     context = {
         'drivers': drivers,
         'date': date_str,
+        'user_productions': user_productions,
     }
     return render(request, 'interface/add_driver_to_rundown.html', context)
 

@@ -15,7 +15,7 @@ class DriverAdmin(admin.ModelAdmin):
 class RunRequestAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'production_title', 'requester_department', 'run_date', 'pickup_name', 
-        'dropoff_name', 'stop_3_name', 'stop_4_name', 'stop_5_name', 'stop_6_name',
+        'stop_2_name', 'stop_3_name', 'stop_4_name', 'stop_5_name', 'stop_6_name', 'dropoff_name', 'run_status'
     )
     search_fields = ('id', 'requester_name', 'requester_phone', 'requester_email', 'requester_department', 'pickup_name', 'pickup_phone', 'pickup_address_1', 'pickup_address_2', 'pickup_city', 'pickup_state', 'pickup_zip', 'dropoff_name', 'dropoff_phone', 'dropoff_address_1', 'dropoff_address_2', 'dropoff_city', 'dropoff_state')
     list_filter = ('run_date', 'production_title')
@@ -35,9 +35,9 @@ class RunRequestAdmin(admin.ModelAdmin):
             )
         }),
         ('Stop 2 ', {
-            'fields': ('dropoff_name', 'dropoff_phone', 
-                'dropoff_address_1', 'dropoff_address_2', 'dropoff_city', 'dropoff_state', 
-                'dropoff_zip', 'run_details_2',
+            'fields': ('stop_2_name', 'stop_2_phone',
+                'stop_2_address_1', 'stop_2_address_2', 'stop_2_city', 'stop_2_state', 
+                'stop_2_zip', 'run_details_2'
             )
         }),
         ('Stop 3 ', {
@@ -63,6 +63,12 @@ class RunRequestAdmin(admin.ModelAdmin):
                 'stop_6_address_1', 'stop_6_address_2', 'stop_6_city', 'stop_6_state', 
                 'stop_6_zip', 'run_details_6'
                 )
+        }),
+        ('Drop Off ', {
+            'fields': ('dropoff_name', 'dropoff_phone', 
+                'dropoff_address_1', 'dropoff_address_2', 'dropoff_city', 'dropoff_state', 
+                'dropoff_zip', 'dropoff_details',
+            )
         }),
         ('Additional Information', {
             'fields': ('purchase_order', 'vendor_invoice', 

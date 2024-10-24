@@ -52,6 +52,7 @@ urlpatterns = [
     path('run_history', views.run_history, name="run_history"),
     path('run_queue', views.run_queue, name="run_queue"),
     path('run/<int:run_request_id>/', views.view_run, name='view_run'),
+    path('run/<int:run_request_id>/', views.update_run, name='update_run'),
     path('complete_run/<int:run_request_id>/', views.complete_run, name="complete_run"),
     path('cancel_run/<int:run_request_id>/', views.cancel_run, name="cancel_run"),
 
