@@ -1,2 +1,4 @@
 # Environment variables
 variables.env
+# Email information
+.env

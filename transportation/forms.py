@@ -20,7 +20,7 @@ class NewRunRequest(forms.ModelForm):
         ('10-Ton', '10-Ton'),
     ]
 
-    truck_size = forms.ChoiceField(choices=TRUCK_SIZE_CHOICES)
+    truck_size = forms.ChoiceField(choices=TRUCK_SIZE_CHOICES, required=False)
     
     class Meta:
         model = RunRequest

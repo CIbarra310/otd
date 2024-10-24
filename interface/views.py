@@ -8,10 +8,12 @@ from transportation.models import DriverTimes, PictureCars, DriverDailyRundown
 from production.forms import RadioForm
 from datetime import datetime, timedelta
 from django import forms
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import auth
+from django.core.mail import EmailMessage
 from django.db.models.functions import Lower
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -532,20 +534,41 @@ def new_run(request):
             instance.run_status = "Open"
             instance.save()
 
-            # Send confirmation emails
-            subject = 'Run Request #{instance.id} to {instance.pickup_name} Submitted'
-            message = f'Thank you for submitting a run request, {instance.requester_name}. Your request is now open.'
-            from_email = 'admin@ontheday.app'
-            recipient_list = [instance.requester_email]
+            # Fetch the requester's email from the session data
+            requester_email = request.session.get('email')
 
-            #send_mail(
-            #   subject,
-            #    message,
-            #    from_email,
-            #    recipient_list,
-            #    fail_silently=False,
-            #)
-            
+            # Fetch the production title from the session data
+            production_title = request.session.get('production_title')
+            production = get_object_or_404(Production, production_title=production_title)
+
+            # Fetch the captain's email based on the production title
+            captain_email = production.captain_email
+
+            # Construct the URL to the run
+            run_url = f"https://www.ontheday.app/run/{instance.id}"
+
+            # Send an email to the requester
+            requester_email_message = EmailMessage(
+                subject=f'Run Request #{instance.id} to {instance.pickup_name} Submitted',
+                body=f'Thank you for submitting a run request, {instance.requester_name}. Your request is now open. You can view the details of your run here: {run_url}',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[requester_email],
+                reply_to=[captain_email],
+            )
+            requester_email_message.send(fail_silently=False)
+
+
+            # Send an email to the captain
+            captain_email_message = EmailMessage(
+                subject=f'New Run Submitted by {instance.requester_department}',
+                body=f'A new run has been submitted by {instance.requester_name}. You can view the details of the run here: {run_url}',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[captain_email],
+                reply_to=[requester_email],
+            )
+            captain_email_message.send(fail_silently=False)
+
+
             return redirect("dashboard")
         else:
             print(run.errors)  # Debugging line to print form errors
@@ -565,6 +588,30 @@ def complete_run(request, run_request_id):
     run = get_object_or_404(RunRequest, id=run_request_id)
     run.run_status = "Completed"
     run.save()
+
+    # Fetch the requester's email from the run instance
+    requester_email = run.requester_email
+
+    # Fetch the production title from the session data
+    production_title = request.session.get('production_title')
+    production = get_object_or_404(Production, production_title=production_title)
+
+    # Fetch the captain's email based on the production title
+    captain_email = production.captain_email
+
+    # Construct the URL to the run
+    run_url = f"https://www.ontheday.app/run/{run.id}"
+
+    # Send an email to the requester
+    complete_email_message = EmailMessage(
+        subject=f'Run Request #{run.id} has been completed',
+        body=f'Your run has been completed. You can view the details of your run here: {run_url}',
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[requester_email],
+        reply_to=[captain_email],
+    )
+    complete_email_message.send(fail_silently=False)
+
     
     # Get the referer URL
     referer = request.META.get('HTTP_REFERER')
@@ -581,6 +628,30 @@ def cancel_run(request, run_request_id):
     run = get_object_or_404(RunRequest, id=run_request_id)
     run.run_status = "Cancelled"
     run.save()
+
+    # Fetch the requester's email from the run instance
+    requester_email = run.requester_email
+
+    # Fetch the production title from the session data
+    production_title = request.session.get('production_title')
+    production = get_object_or_404(Production, production_title=production_title)
+
+    # Fetch the captain's email based on the production title
+    captain_email = production.captain_email
+
+
+    # Construct the URL to the run
+    run_url = f"https://www.ontheday.app/run/{run.id}"
+
+    # Send an email to the requester
+    cancel_email_message = EmailMessage(
+        subject=f'Run Request #{run.id} Cancelled',
+        body=f'Your run has been cancelled. You can view the details of your run here: {run_url}',
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[requester_email],
+        reply_to=[captain_email],
+    )
+    cancel_email_message.send(fail_silently=False)
     
     # Get the referer URL
     referer = request.META.get('HTTP_REFERER')
