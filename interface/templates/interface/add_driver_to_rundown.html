@@ -1,0 +1,65 @@
+{% extends 'interface/layout.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Add Driver to Rundown for {{ date }}</h1>
+    <form method="post" action="{% url 'add_driver_to_rundown' %}?date={{ date }}" id="add-driver-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="driver">Select Driver:</label>
+            <select id="driver" name="driver_id" class="form-control">
+                <option value="">Select a driver</option>
+                {% for driver in drivers %}
+                <option value="{{ driver.id }}">{{ driver.first_name }} {{ driver.last_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div id="driver-info" style="display: none;">
+            <h3>Driver Information</h3>
+            <div class="form-group">
+                <label for="driver_phone">Phone:</label>
+                <input type="text" id="driver_phone" name="driver_phone" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="last_4">Last 4:</label>
+                <input type="text" id="last_4" name="last_4" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="notes">Notes:</label>
+                <textarea id="notes" name="notes" class="form-control"></textarea>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Add Driver</button>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const driverSelect = document.getElementById('driver');
+    const driverInfoDiv = document.getElementById('driver-info');
+    const driverPhoneInput = document.getElementById('driver_phone');
+    const last4Input = document.getElementById('last_4');
+    const callTimeInput = document.getElementById('call_time');
+    const wrapTimeInput = document.getElementById('wrap_time');
+    const notesTextarea = document.getElementById('notes');
+
+    driverSelect.addEventListener('change', function() {
+        const driverId = this.value;
+        if (driverId) {
+            fetch(`/api/driver_info/${driverId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    driverPhoneInput.value = data.driver_phone;
+                    last4Input.value = data.last_4;
+                    callTimeInput.value = data.call_time;
+                    wrapTimeInput.value = data.wrap_time;
+                    notesTextarea.value = data.notes;
+                    driverInfoDiv.style.display = 'block';
+                });
+        } else {
+            driverInfoDiv.style.display = 'none';
+        }
+    });
+});
+</script>
+{% endblock %}

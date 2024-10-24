@@ -12,7 +12,10 @@
             <h1>Driver Roster</h1>
           </div>
           <hr>
-          <a class="btn btn-outline-primary p-2" href="{% url 'add_driver' %}">New Driver</a>
+          <form method="post" action="{% url 'add_driver' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-primary p-2">New Driver</button>
+          </form>
           <br><br>
           <h3>Active Drivers</h3>
           <div class="table-responsive card-body">

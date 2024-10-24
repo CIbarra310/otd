@@ -9,11 +9,10 @@
             <h1>Equipment</h1>
             <hr>
             <div class="p-3">
-                <a class="btn btn-outline-primary p-2" href="{% url 'add_location' %}">Add Vehicle</a>
-                <a class="btn btn-outline-primary p-2" href="{% url 'add_location' %}">Add Trailer</a>
-                <a class="btn btn-outline-primary p-2" href="{% url 'add_location' %}">Add Picture Car</a>
+                <a class="btn btn-outline-primary p-2" href="{% url 'add_equipment' %}">Add Equipment</a>
+                <a class="btn btn-outline-primary p-2" href="{% url 'add_picture_cars' %}">Add Picture Car</a>
             </div>
-            <div class="card-body">
+            <div class="card-body" id="vehicles">
                 <div class="table-responsive p-3">
                     <h5>Vehicles</h5>
                     <table class="table">
@@ -32,19 +31,97 @@
                         </thead>
                         <tbody>
                             {% for vehicle in vehicles %}
-                                <tr>
-                                    <td>{{ vehicle.vehicle_type }}</td>
-                                    <td>{{ vehicle.vendor_unit_number }}</td>
-                                    <td>{{ vehicle.vendor_unit_number }}</td>
-                                    <td>{{ vehicle.internal_unit_number }}</td>
-                                    <td>{{ vehicle.purchase_order }}</td>
-                                    <td>{{ vehicle.assigned_department }}</td>
-                                    <td>{{ vehicle.assigned_driver }}</td>
-                                    <td>{{ vehicle.vehicle_notes }}</td>
-                                    <td>
-                                        <a href="" class="btn btn-secondary">Edit</a>
-                                    </td>
-                                </tr>
+                                {% if vehicle.equipment_type_1 == 'Truck' %}
+                                    <tr>
+                                        <td>{{ vehicle.equipment_type_1 }}</td>
+                                        <td>{{ vehicle.vendor_unit_number }}</td>
+                                        <td>{{ vehicle.vendor_unit_number }}</td>
+                                        <td>{{ vehicle.internal_unit_number }}</td>
+                                        <td>{{ vehicle.purchase_order }}</td>
+                                        <td>{{ vehicle.assigned_department }}</td>
+                                        <td>{{ vehicle.assigned_driver }}</td>
+                                        <td>{{ vehicle.vehicle_notes }}</td>
+                                        <td>
+                                            <a href="" class="btn btn-secondary">Edit</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-body" id="trailers">
+                <div class="table-responsive p-3">
+                    <h5>Trailers</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Vehicle Type</th>
+                                <th scope="col">Vendor</th>
+                                <th scope="col">Vendor Unit #</th>
+                                <th scope="col">Internal Unit # (Optional)</th>
+                                <th scope="col">Purchase Order</th>
+                                <th scope="col">Department</th>
+                                <th scope="col">Assigned Driver</th>
+                                <th scope="col">Vehicle Notes</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for vehicle in vehicles %}
+                                {% if vehicle.equipment_type_1 == "Trailer" %}
+                                    <tr>
+                                        <td>{{ vehicle.equipment_type_1 }}</td>
+                                        <td>{{ vehicle.vendor_unit_number }}</td>
+                                        <td>{{ vehicle.vendor_unit_number }}</td>
+                                        <td>{{ vehicle.internal_unit_number }}</td>
+                                        <td>{{ vehicle.purchase_order }}</td>
+                                        <td>{{ vehicle.assigned_department }}</td>
+                                        <td>{{ vehicle.assigned_driver }}</td>
+                                        <td>{{ vehicle.vehicle_notes }}</td>
+                                        <td>
+                                            <a href="" class="btn btn-secondary">Edit</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-body" id="picture_cars">
+                <div class="table-responsive p-3">
+                    <h5>Picture Cars</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Production Title</th>
+                                <th>Year</th>
+                                <th>Make</th>
+                                <th>Model</th>
+                                <th>Vendor Name</th>
+                                <th>Vendor Unit Number</th>
+                                <th>Scene</th>
+                                <th>Purchase Order</th>
+                                <th>Notes</th>
+                                <th>Active</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for car in picture_cars %}
+                            <tr>
+                                <td>{{ car.production_title }}</td>
+                                <td>{{ car.year }}</td>
+                                <td>{{ car.make }}</td>
+                                <td>{{ car.model }}</td>
+                                <td>{{ car.vendor_name }}</td>
+                                <td>{{ car.vendor_unit_number }}</td>
+                                <td>{{ car.scene }}</td>
+                                <td>{{ car.purchase_order }}</td>
+                                <td>{{ car.picture_car_notes }}</td>
+                                <td>{{ car.is_active }}</td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>

@@ -19,9 +19,10 @@
     <br>
     <ul>
         <strong class="text-white">Runs</strong>
+        <li><a class="dropdown-item" href="{% url 'driver_times' %}"><i class="fa fa-clock"></i> Submit Times</a></li>
         <li><a class="dropdown-item" href="{% url 'new_run' %}"><i class="fa fa-truck"></i> Run Request</a></li>
         <li><a class="dropdown-item" href="{% url 'run_queue' %}"><i class="fa fa-list-ul"></i> Run Queue</a></li>
-        <li><a class="dropdown-item" href="{% url 'run_history' %}"><i class="fa fa-clock"></i> Run History</a></li>
+        <li><a class="dropdown-item" href="{% url 'run_history' %}"><i class="fa fa-clock-rotate-left"></i> Run History</a></li>
     </ul>
     <br>
     {% if request.session.department == "Transportation" or request.session.department == "Admin" %}
@@ -40,12 +41,12 @@
     {% endif %}
     <br>
     {% if request.session.department == "Admin" %}
-    <ul>
-        <strong class="text-white">Admin</strong>
-        <li><a class="dropdown-item" href="{% url 'user_admin' %}"><i class="fa fa-user"></i> Users</a></li>
-        <li><a class="dropdown-item" href="{% url 'production_admin' %}"><i class="fa fa-film"></i> Productions</a></li>
-        <li><a class="dropdown-item" href="{% url 'location_admin' %}"><i class="fa fa-map-pin"></i> Locations</a></li>
-    </ul>
+        <ul>
+            <strong class="text-white">Admin</strong>
+            <li><a class="dropdown-item" href="{% url 'user_admin' %}"><i class="fa fa-user"></i> Users</a></li>
+            <li><a class="dropdown-item" href="{% url 'production_admin' %}"><i class="fa fa-film"></i> Productions</a></li>
+            <li><a class="dropdown-item" href="{% url 'location_admin' %}"><i class="fa fa-map-pin"></i> Locations</a></li>
+        </ul>
     {% endif %}
     <br>
 </nav>

@@ -21,7 +21,7 @@
             </div>
             <hr>
             <br>
-            <form action="" method="POST" action="{% url 'add_driver' %}" id="driver-form">
+            <form action="{% url 'add_driver' %}" method="POST" action="{% url 'add_driver' %}" id="driver-form">
                 {% csrf_token %}
                 <!-- Information pulled from user information -->
                 <div class="row">
@@ -38,7 +38,7 @@
                         <input class="form-control" type="text" id="last_name" name="last_name">
                     </div>
                     <div class="col-6">
-                        <label for="driver_email">User Name</label>
+                        <label for="driver_email">Email</label>
                         <input class="form-control" type="text" id="driver_email" name="driver_email">
                     </div>
                     <div class="col-6">

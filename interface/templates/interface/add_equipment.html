@@ -1,0 +1,14 @@
+{% extends 'interface/layout.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Add New Equipment</h1>
+    <form method="post" action="{% url 'add_equipment' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary mt-3">Save Equipment</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,38 +1,80 @@
 from django.db import models
 from core.models import Production, Department
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings  # Import settings to get the custom user model
 
 # Create your models here.
 class Driver(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # Use custom user model
     production_title = models.CharField(max_length=150, null=True, blank=True)
     first_name = models.CharField(max_length=150, null=True, blank=True)
     last_name = models.CharField(max_length=150, null=True, blank=True)
     driver_email = models.EmailField(_('email address'), null=True, blank=True)
     driver_phone = models.CharField(max_length=15, null=True, blank=True)
     occupation_code = models.CharField(max_length=4, null=True, blank=True)
+    production_status = models.CharField(max_length=50, null=True, blank=True) # On production or off production
     rate = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
     grouping = models.IntegerField(null=True, blank=True)
+    local = models.IntegerField(null=True, blank=True)
     last_4 = models.CharField(max_length=6, null=True, blank=True)
-    assigned_vehicle = models.ManyToManyField('Vehicle', blank=True, related_name='drivers')
+    assigned_truck = models.ManyToManyField('Equipment', related_name='assigned_truck', limit_choices_to={'equipment_type_1': 'truck'})
+    assigned_trailer = models.ManyToManyField('Equipment', related_name='assigned_trailer', limit_choices_to={'equipment_type_1': 'trailer'})
+    supporting_department = models.ForeignKey(Department, null=True, blank=True, on_delete=models.CASCADE, related_name='drivers')
     is_active = models.BooleanField(default=True)
     
     def __str__(self):
         return self.first_name + " " + self.last_name
 
-class Vehicle(models.Model):
+class Equipment(models.Model):
+    EQUIPMENT_TYPE_1_CHOICES = [
+        ('truck', 'Truck'),
+        ('trailer', 'Trailer'),
+    ]
+    TRUCK_TYPE_CHOICES = [
+        ('stakebed', 'Stakebed'),
+        ('box_truck', 'Box Truck'),
+        ('5_ton', '5-Ton'),
+        ('10_ton', '10-Ton'),
+        ('tractor', 'Tractor'),
+        ('van', 'Van'),
+        # Add more truck types as needed
+    ]
+    
+    TRAILER_TYPE_CHOICES = [
+        ('2_room', '2 Room'),
+        ('3_room', '3 Room'),
+        ('flatbed', 'Flatbed'),
+        # Add more trailer types as needed
+    ]
     production_title = models.ForeignKey(Production, on_delete=models.CASCADE, related_name='vehicles')
-    vehicle_type = models.CharField(max_length=150, null=True)
+    equipment_type_1 = models.CharField(max_length=150, choices=EQUIPMENT_TYPE_1_CHOICES , null=True) # truck or trailer
+    equipment_type_2 = models.CharField(max_length=150, null=True) # truck or trailer specific (stakebed, 2 room, etc..)
     vendor_name = models.CharField(max_length=100, null=True)
     vendor_unit_number = models.CharField(max_length=10, null=True)
-    internal_unit_number = models.CharField(max_length=20, null=True)
+    fleet_number = models.CharField(max_length=20, null=True)
     purchase_order = models.CharField(max_length=10, null=True)
-    vehicle_notes = models.TextField(max_length=2000, null=True, blank=True)
+    equipment_notes = models.TextField(max_length=2000, null=True, blank=True)
     assigned_department = models.ForeignKey(Department, null=True, blank=True, on_delete=models.CASCADE, related_name='vehicles')
     assigned_driver = models.ManyToManyField(Driver, blank=True, related_name='vehicles')
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.vehicle_type + " " + self.vendor_unit_number
+        return self.equipment_type_1 + " " + self.fleet_number
+
+class PictureCars(models.Model):
+    production_title = models.ForeignKey(Production, on_delete=models.CASCADE, related_name='picture_cars')
+    year = models.IntegerField(null=True) 
+    make = models.CharField(max_length=150, null=True)
+    model = models.CharField(max_length=150, null=True)
+    vendor_name = models.CharField(max_length=100, null=True)
+    vendor_unit_number = models.CharField(max_length=10, null=True)
+    scene = models.CharField(max_length=20, null=True)
+    purchase_order = models.CharField(max_length=10, null=True)
+    picture_car_notes = models.TextField(max_length=2000, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+       return f"{self.year} {self.make} {self.model}"
 
 class RunRequest(models.Model):
     # - Assign production to the run
@@ -136,4 +178,32 @@ class RunRequest(models.Model):
 
     def __str__(self):
         return "Run #" + str(self.id) + " - " + self.requester_department
-    
+
+class DriverTimes(models.Model):
+    driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
+    production_title = models.CharField(max_length=255)
+    work_date = models.DateField()
+    call_time = models.DecimalField(max_digits=5, decimal_places=2)
+    wrap_time = models.DecimalField(max_digits=5, decimal_places=2)
+    lunch_1_out = models.DecimalField(max_digits=5, decimal_places=2)
+    lunch_1_in = models.DecimalField(max_digits=5, decimal_places=2)
+    lunch_2_out = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    lunch_2_in = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    notes = models.TextField(blank=True, null=True)
+    total_hours = models.DecimalField(max_digits=5, decimal_places=2)
+    instructions = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.driver} - {self.work_date} - {self.production_title}"    
+
+class DriverDailyRundown(models.Model):
+    production = models.ForeignKey(Production, on_delete=models.CASCADE)
+    date = models.DateField()
+    drivers = models.ManyToManyField(Driver)
+    equipment = models.ManyToManyField('Equipment')  # Assuming you have an Equipment model
+    driver_times = models.ManyToManyField(DriverTimes, blank=True)
+
+    def __str__(self):
+        return f"{self.production.production_title} - {self.date}"

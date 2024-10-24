@@ -1,0 +1,62 @@
+{% extends 'interface/layout.html' %}
+
+{% block content %}
+    <nav class="p-2" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Driver {{ driver.id }}</li>
+        </ol>
+    </nav>
+
+    <div class="card-body">
+        <h1 class="text-center">Work Time Submission</h1>
+        <h3 class="text-center">{{ request.session.production_title }}</h3>
+        <hr>
+        <form action="" method="post">
+            <div class="col-12">
+                <label for="work_date">Date:</label>
+                <input type="date" class="form-control" name="work_date" id="work_date">
+            </div>
+            {% csrf_token %}
+            <div class="row pb-2">
+                <div class="col-6">
+                    <label for="call_time" class="form-group">Call Time</label>
+                    <input type="number" step="0.1" class="form-control" name="call_time" value="">
+                </div>
+                <div class="col-6">
+                    <label for="wrap_time" class="form-group">Wrap time</label>
+                    <input type="number" step="0.1" class="form-control" name="wrap_time" value="">
+                </div>
+            </div>
+            <div class="row pb-2">
+                <div class="col-6">
+                    <label for="lunch_1_out" class="form-group">Lunch 1 Out</label>
+                    <input type="number" step="0.1" class="form-control" id="lunch_1_out" name="lunch_1_out" aria-label="Lunch 1 Out" value="">
+                </div>
+                <div class="col-6">
+                    <label for="lunch_1_in" class="form-group">Lunch 1 In</label>
+                    <input type="number" step="0.1" class="form-control" id="lunch_1_in" name="lunch_1_in" aria-label="Lunch 1 In" value="">
+                </div>
+            </div>
+            <div class="row pb-2">
+                <div class="col-6">
+                    <label for="lunch_2_out" class="form-group">Lunch 2 Out</label>
+                    <input type="number" step="0.1" class="form-control" id="lunch_2_out" name="lunch_2_out" aria-label="Lunch 2 Out" value="">
+                </div>
+                <div class="col-6">
+                    <label for="lunch_2_in" class="form-group">Lunch 2 In</label>
+                    <input type="number" step="0.1" class="form-control" id="lunch_2_in" name="lunch_2_in" aria-label="Lunch 2 In" value="">
+                </div>
+            </div>
+            <div class="row p-2">
+                <label for="notes" class="form-group">Notes</label>
+                <textarea class="form-control" name="notes" id="notes" rows="3"></textarea>
+            </div>
+            <br>
+            <div class="row p-2">
+                <button class="btn btn-primary">Submit Times</button>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

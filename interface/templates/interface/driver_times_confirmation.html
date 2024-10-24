@@ -1,0 +1,36 @@
+{% extends 'interface/layout.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Driver Timesheet Confirmation</h1>
+    <hr>
+    <form method="post" action="{% url 'driver_times_submit' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <p><strong>Driver: </strong>{{ user.first_name }} {{ user.last_name }}</p>
+            <p><strong>Production: </strong>{{ request.session.production_title }}</p>
+            <p><strong>Shift Date: </strong>{{ work_date }}</p>
+            <p><strong>Call Time: </strong>{{ call_time }}</p>
+            <p><strong>Lunch 1: </strong>{{ lunch_1_out }} to {{ lunch_1_in }}</p>
+            <p><strong>Lunch 2: </strong>{{ lunch_2_out }} to {{ lunch_2_in }}</p>
+            <p><strong>Wrap Time: </strong>{{ wrap_time }}</p>
+            <p><strong>Total Hours: </strong>{{ total_hours }} Hours</p>
+            <p><strong>Notes: </strong>{{ notes }}</p>
+        </div>
+        <hr>
+        <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="confirmation_checkbox" onclick="toggleSubmitButton()">
+            <label class="form-check-label" for="confirmation_checkbox">I confirm that the above information is correct</label>
+        </div>
+        <button type="submit" class="btn btn-primary" id="submit_button" disabled>Submit</button>
+        <a href="{% url 'driver_times' %}" class="btn btn-secondary">Back</a>
+    </form>
+</div>
+<script>
+    function toggleSubmitButton() {
+        const checkbox = document.getElementById('confirmation_checkbox');
+        const submitButton = document.getElementById('submit_button');
+        submitButton.disabled = !checkbox.checked;
+    }
+</script>
+{% endblock %}

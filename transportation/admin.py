@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Driver, Vehicle, RunRequest
+from .models import Driver, Equipment, RunRequest, PictureCars, DriverTimes, DriverDailyRundown
 # Register your models here.
 
 class DriverAdmin(admin.ModelAdmin):
@@ -8,7 +8,7 @@ class DriverAdmin(admin.ModelAdmin):
     list_filter = ('is_active',)
     fieldsets = (
         (None, {
-            'fields': ('production_title', 'first_name', 'last_name', 'driver_email', 'driver_phone', 'occupation_code', 'rate', 'grouping', 'last_4', 'assigned_vehicle', 'is_active')
+            'fields': ('production_title','supporting_department', 'first_name', 'last_name','production_status', 'driver_email', 'driver_phone', 'occupation_code', 'rate', 'grouping', 'last_4', 'assigned_truck', 'assigned_trailer', 'is_active')
         }),
     )
 
@@ -75,6 +75,19 @@ class RunRequestAdmin(admin.ModelAdmin):
         }),
     )
 
+class EquipmentAdmin(admin.ModelAdmin):
+    list_display = ('production_title', 'equipment_type_1', 'equipment_type_2', 'vendor_name', 'fleet_number')
+    search_fields = ('production_title', 'equipment_type_1', 'equipment_type_2', 'vendor_name', 'vendor_unit_number')
+    list_filter = ('is_active', 'production_title',  'equipment_type_1', 'equipment_type_2',)
+    fieldsets = (
+        (None, {
+            'fields': ('production_title', 'equipment_type_1', 'equipment_type_2', 'vendor_name', 'fleet_number')
+        }),
+    )
+
 admin.site.register(Driver, DriverAdmin)
-admin.site.register(Vehicle)
+admin.site.register(Equipment, EquipmentAdmin)
 admin.site.register(RunRequest, RunRequestAdmin)
+admin.site.register(PictureCars)
+admin.site.register(DriverTimes)
+admin.site.register(DriverDailyRundown)

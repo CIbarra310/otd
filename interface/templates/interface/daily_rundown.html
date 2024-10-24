@@ -1,0 +1,199 @@
+{% extends 'interface/layout.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Driver Daily Rundown for {{ production.production_title }}</h1>
+    <h2>{{ date }} ({{ day_of_week }})</h2>
+    <form method="get" action="{% url 'daily_rundown' %}" id="date-form">
+        <div class="row">
+            <div class="col-10 form-group">
+                <label for="date">Select Date:</label>
+                <input type="date" id="date" name="date" class="form-control" value="{{ date }}">
+            </div>
+            <div class="col-2 pt-2">
+                <button type="submit" class="btn btn-primary mt-3">View</button>
+            </div>
+        </div>
+    </form>
+    <br>
+    <div id="on-production" name="on-production">
+        <div class="d-flex justify-content-between">
+            <h2>On Production</h2>
+            <a href="{% url 'add_driver_to_rundown' %}?date={{ date }}" class="btn btn-secondary">Add Driver</a>
+        </div>
+        <table class="table border" id="on-production-table">
+            <thead>
+                <tr>
+                    <th hidden>Driver ID</th>
+                    <th>Department</th>
+                    <th>Driver Name</th>
+                    <th>Last 4</th>
+                    <th>Call</th>
+                    <th>Wrap</th>
+                    <th>Assignment</th>
+                    <th>Instructions</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for driver in on_production_drivers %}
+                    <tr data-driver-id="{{ driver.id }}">
+                        <td hidden>{{ driver.id }}</td> <!-- Hidden column for driver ID -->
+                       <td>
+                            {% if driver.supporting_department %}
+                                <span class="badge bg-primary">{{ driver.supporting_department }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Floater</span>
+                            {% endif %}
+                       </td>
+                        <td>
+                            <b>{{ driver.first_name }} {{ driver.last_name }}</b><br>
+                            {{ driver.driver_phone }}
+                        </td>
+                        <td>{{ driver.last_4 }}</td>
+                        <td>
+                            {% for dt in driver_times %}
+                                {% if dt.driver_id == driver.id  %}
+                                    {{ dt.call_time }}
+                                {% endif %}
+                            {% empty %}
+                                No call
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for dt in driver_times %}
+                                {% if dt.driver_id == driver.id  %}
+                                    {{ dt.wrap_time }}
+                                {% endif %}
+                            {% empty %}
+                                No wrap
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <strong>Truck: </strong>
+                            {% for truck in driver.assigned_truck.all %}
+                                {{ truck.equipment_type_2 }} {{ truck.fleet_number }}
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}<br>
+                            <strong>Trailer: </strong>
+                            {% for trailer in driver.assigned_trailer.all %}
+                                {{ trailer.equipment_type_2 }} {{ trailer.fleet_number }}<br>
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for dt in driver_times %}
+                                {% if dt.driver_id == driver.id  %}
+                                    {{ dt.instructions }}
+                                {% endif %}
+                            {% empty %}
+                                No instructions
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'remove_driver_from_rundown' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="driver_id" value="{{ driver.id }}">
+                                <input type="hidden" name="date" value="{{ date }}">
+                                <button type="submit" class="btn btn-danger">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div id="off-production" name="off-production">
+        <div class="d-flex justify-content-between">
+            <h2>Off Production</h2>
+        </div>
+        <table class="table border" id="off-production-table">
+            <thead>
+                <tr>
+                    <th hidden>Driver ID</th>
+                    <th>Department</th>
+                    <th>Driver Name</th>
+                    <th>Last 4</th>
+                    <th>Call</th>
+                    <th>Wrap</th>
+                    <th>Assignment</th>
+                    <th>Instructions</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for driver in off_production_drivers %}
+                <tr data-driver-id="{{ driver.id }}">
+                    <td hidden>{{ driver.id }}</td> <!-- Hidden column for driver ID -->
+                    <td>
+                        {% if driver.supporting_department %}
+                            <span class="badge bg-primary">{{ driver.supporting_department }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Floater</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <b>{{ driver.first_name }} {{ driver.last_name }}</b><br>
+                        {{ driver.driver_phone }}
+                    </td>
+                    <td>{{ driver.last_4 }}</td>
+                    <td>
+                        {% for dt in driver_times %}
+                            {% if dt.driver_id == driver.id  %}
+                                {{ dt.call_time }}
+                            {% endif %}
+                        {% empty %}
+                            No call
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for dt in driver_times %}
+                            {% if dt.driver_id == driver.id  %}
+                                {{ dt.wrap_time }}
+                            {% endif %}
+                        {% empty %}
+                            No wrap
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <strong>Truck: </strong>
+                        {% for truck in driver.assigned_truck.all %}
+                            {{ truck.equipment_type_2 }} {{ truck.fleet_number }}
+                        {% empty %}
+                            No trucks assigned
+                        {% endfor %}<br>
+                        <strong>Trailer: </strong>
+                        {% for trailer in driver.assigned_trailer.all %}
+                            {{ trailer.equipment_type_2 }} {{ trailer.fleet_number }}<br>
+                        {% empty %}
+                            No trucks assigned
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for dt in driver_times %}
+                            {% if dt.driver_id == driver.id  %}
+                                {{ dt.instructions }}
+                            {% endif %}
+                        {% empty %}
+                            No instructions
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'remove_driver_from_rundown' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="driver_id" value="{{ driver.id }}">
+                            <input type="hidden" name="date" value="{{ date }}">
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <button id="save-rundown" class="btn btn-primary mt-3">Save Rundown</button>
+    <button id="copy-rundown" class="btn btn-secondary mt-3">Copy to Next Day</button>
+</div>
+{% endblock %}

@@ -18,7 +18,7 @@ class CreateUserForm(UserCreationForm):
     production_title = forms.ModelChoiceField(
         queryset=Production.objects.filter(is_active=True).order_by('production_title'),
         empty_label="Select Production Title",
-        required=False # Changed from True to False
+        required=False, # Changed from True to False
     )
     department = forms.ModelChoiceField(
         queryset=Department.objects.order_by('department_title'),
@@ -41,6 +41,7 @@ class CreateUserForm(UserCreationForm):
         self.fields['username'].required = False  # Make username non-mandatory
         self.fields['username'].widget = forms.HiddenInput()  # Hide the username field
         self.fields['job_title'].widget = forms.HiddenInput()  # Hide the username field
+        self.fields['production_title'].widget = forms.HiddenInput()  # Hide the username field
 
     def save(self, commit=True):
         user = super().save(commit=False)

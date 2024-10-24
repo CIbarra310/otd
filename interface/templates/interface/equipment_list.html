@@ -1,0 +1,40 @@
+{% extends 'interface/layout.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Equipment List</h1>
+    <a href="{% url 'add_equipment' %}" class="btn btn-primary mb-3">Add New Equipment</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Production Title</th>
+                <th>Vehicle Type</th>
+                <th>Vendor Name</th>
+                <th>Vendor Unit Number</th>
+                <th>Internal Unit Number</th>
+                <th>Purchase Order</th>
+                <th>Notes</th>
+                <th>Department</th>
+                <th>Driver</th>
+                <th>Active</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in equipment %}
+            <tr>
+                <td>{{ item.production_title }}</td>
+                <td>{{ item.vehicle_type }}</td>
+                <td>{{ item.vendor_name }}</td>
+                <td>{{ item.vendor_unit_number }}</td>
+                <td>{{ item.internal_unit_number }}</td>
+                <td>{{ item.purchase_order }}</td>
+                <td>{{ item.vehicle_notes }}</td>
+                <td>{{ item.assigned_department }}</td>
+                <td>{{ item.assigned_driver.all|join:", " }}</td>
+                <td>{{ item.is_active }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

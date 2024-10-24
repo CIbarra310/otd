@@ -173,3 +173,15 @@ STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_DEFAULT_ACL = None
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.me.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'chasen.ibarra@icloud.com'
+EMAIL_HOST_PASSWORD = 'xfck-yhac-jlun-plla'
+
+# Default email address to use for various automated correspondence from the site managers.
+DEFAULT_FROM_EMAIL = 'admin@ontheday.app'
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'dashboard'

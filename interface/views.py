@@ -3,8 +3,10 @@ from .forms import LoginForm, CreateUserForm, AddProductionForm
 from core.models import Production, Vendor, Location
 from collections import defaultdict
 from core.models import Location, Production, Vendor, NewUser
-from transportation.forms import NewRunRequest, RunRequest, NewDriver, Driver, Vehicle
+from transportation.forms import NewRunRequest, RunRequest, NewDriver, Driver, NewEquipment, Equipment, NewPictureCars
+from transportation.models import DriverTimes, PictureCars, DriverDailyRundown
 from production.forms import RadioForm
+from datetime import datetime, timedelta
 from django import forms
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -15,6 +17,7 @@ from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_protect
@@ -35,7 +38,10 @@ def register(request):
     if request.method == "POST":
         form = CreateUserForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            user.email = user.email.lower()  # Normalize email to lowercase
+            user.username = user.username.lower()  # Normalize username to lowercase if it's the email
+            user.save()
             messages.success(request, "Account created successfully!")
             return redirect("login")
         else:
@@ -58,7 +64,7 @@ def login(request):
         form = LoginForm(request, data=request.POST)
 
         if form.is_valid():
-            username = request.POST.get('username')
+            username = request.POST.get('username').lower()
             password = request.POST.get('password')
 
             user = authenticate(request, username=username, password=password)
@@ -267,7 +273,10 @@ def dashboard(request):
     production_title_in_session = request.session.get('production_title')
     department_in_session = request.session.get('department')
     if production_title_in_session:
-        runs = runs.filter(production_title=production_title_in_session, requester_department=department_in_session)
+        if department_in_session == "Admin":
+            runs = runs.filter(production_title=production_title_in_session)
+        else:
+            runs = runs.filter(production_title=production_title_in_session, requester_department=department_in_session)
 
     # Separate and limit "Completed" and "Open" runs
     completed_runs = runs.filter(run_status="Completed")[:5]
@@ -306,27 +315,51 @@ def driver_roster(request):
     }
     return render(request, 'interface/driver_roster.html', context=context)
 
-@login_required(login_url=login)
+# - Add Driver
+@login_required(login_url='login')
 def add_driver(request):
+    if request.method == 'POST':
+        form = NewDriver(request.POST)
+        if form.is_valid():
+            try:
+                # Use driver_email to find the existing user
+                email = form.cleaned_data['driver_email']
+                user = NewUser.objects.filter(email=email).first()
+                if not user:
+                    return render(request, 'interface/add_driver.html', {'form': form, 'error': 'No user with this email exists.'})
 
-    # Fetch current user's productions
-    user = get_object_or_404(NewUser, id=request.user.id)
-    user_productions = user.productions.filter(is_active=True)
-    
-    if request.method == "POST":
-        driver = NewDriver(request.POST)
-        if driver.is_valid():
-            driver.save()
-            return redirect("driver_roster")
+                # Retrieve production_title from the session
+                production_title = request.session.get('production_title')
+                if not production_title:
+                    return render(request, 'interface/add_driver.html', {'form': form, 'error': 'Production title is missing from session.'})
+
+                # Create the Driver instance
+                driver = Driver(
+                    user=user,
+                    production_title=production_title,
+                    first_name=form.cleaned_data['first_name'],
+                    last_name=form.cleaned_data['last_name'],
+                    driver_email=form.cleaned_data['driver_email'],
+                    driver_phone=form.cleaned_data['driver_phone'],
+                    occupation_code=form.cleaned_data['occupation_code'],
+                    rate=form.cleaned_data['rate'],
+                    grouping=form.cleaned_data['grouping'],
+                    last_4=form.cleaned_data['last_4'],
+                    is_active=True
+                )
+                driver.save()
+
+                return redirect('driver_roster')  # Redirect to the driver roster page
+            except Exception as e:
+                print(f"Error saving driver: {e}")
+                return render(request, 'interface/add_driver.html', {'form': form, 'error': str(e)})
         else:
-           messages.error(request, "There was an error with your submission. Please check the form for errors.")
+            print("Form is not valid")
+            print(form.errors)
+    else:
+        form = NewDriver()
 
-    driver = NewDriver()
-    context = {
-        'driver': driver,
-        'user_productions': user_productions,
-    }
-    return render(request, 'interface/add_driver.html', context=context)
+    return render(request, 'interface/add_driver.html', {'form': form})
 
 # - Activate Driver
 @login_required(login_url='login')
@@ -360,6 +393,120 @@ def view_driver(request, driver_id):
     user_productions = user.productions.filter(is_active=True)
 
     return render(request, 'interface/driver.html', {'driver': driver})
+
+# - Driver Times
+@login_required(login_url='login')
+def driver_times(request):
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+    
+    if request.method == 'POST':
+
+        # Retrieve form data
+        first_name = request.session.get('first_name')
+        last_name = request.session.get('last_name')
+        driver_name = f"{first_name} {last_name}" if first_name and last_name else None
+        work_date = request.POST.get('work_date')
+        call_time = float(request.POST.get('call_time'))
+        wrap_time = float(request.POST.get('wrap_time'))
+        lunch_1_out = float(request.POST.get('lunch_1_out'))
+        lunch_1_in = float(request.POST.get('lunch_1_in'))
+        lunch_2_out = request.POST.get('lunch_2_out') or 0
+        lunch_2_in = request.POST.get('lunch_2_in') or 0
+        notes = request.POST.get('notes')
+
+        # Convert lunch_2_out and lunch_2_in to float if they are provided, otherwise set to 0
+        lunch_2_out = float(lunch_2_out) if lunch_2_out else 0
+        lunch_2_in = float(lunch_2_in) if lunch_2_in else 0
+
+        # Calculate total hours
+        total_hours = wrap_time - call_time - ((lunch_1_in - lunch_1_out) + (lunch_2_in - lunch_2_out))
+
+        # Store the form data in the session
+        request.session['work_date'] = work_date
+        request.session['call_time'] = call_time
+        request.session['wrap_time'] = wrap_time
+        request.session['lunch_1_out'] = lunch_1_out
+        request.session['lunch_1_in'] = lunch_1_in
+        request.session['lunch_2_out'] = lunch_2_out
+        request.session['lunch_2_in'] = lunch_2_in
+        request.session['notes'] = notes
+        request.session['total_hours'] = total_hours
+
+        # Redirect to the confirmation page
+        return redirect('driver_times_confirmation')
+
+    context = {
+        'user_productions': user_productions,
+    }
+    return render(request, 'interface/driver_times.html', context)
+
+@login_required(login_url='login')
+def driver_times_confirmation(request):
+    context = {
+        'work_date': request.session.get('work_date'),
+        'call_time': request.session.get('call_time'),
+        'wrap_time': request.session.get('wrap_time'),
+        'lunch_1_out': request.session.get('lunch_1_out'),
+        'lunch_1_in': request.session.get('lunch_1_in'),
+        'lunch_2_out': request.session.get('lunch_2_out'),
+        'lunch_2_in': request.session.get('lunch_2_in'),
+        'notes': request.session.get('notes'),
+        'total_hours': request.session.get('total_hours'),
+    }
+    return render(request, 'interface/driver_times_confirmation.html', context)
+
+@login_required(login_url='login')
+def driver_times_submit(request):
+    if request.method == 'POST':
+        # Retrieve form data from the session
+        user = request.user
+        driver = Driver.objects.get(user=user)
+        production_title = request.session.get('production_title')
+        work_date = request.session.get('work_date')
+        call_time = request.session.get('call_time')
+        wrap_time = request.session.get('wrap_time')
+        lunch_1_out = request.session.get('lunch_1_out')
+        lunch_1_in = request.session.get('lunch_1_in')
+        lunch_2_out = request.session.get('lunch_2_out')
+        lunch_2_in = request.session.get('lunch_2_in')
+        notes = request.session.get('notes')
+        total_hours = request.session.get('total_hours')
+
+        # Save the data to the database
+        DriverTimes.objects.create(
+            driver=driver,
+            production_title=production_title,
+            work_date=work_date,
+            call_time=call_time,
+            wrap_time=wrap_time,
+            lunch_1_out=lunch_1_out,
+            lunch_1_in=lunch_1_in,
+            lunch_2_out=lunch_2_out,
+            lunch_2_in=lunch_2_in,
+            notes=notes,
+            total_hours=total_hours
+        )
+
+        # Clear the session data
+        request.session.pop('production_title', None)
+        request.session.pop('work_date', None)
+        request.session.pop('call_time', None)
+        request.session.pop('wrap_time', None)
+        request.session.pop('lunch_1_out', None)
+        request.session.pop('lunch_1_in', None)
+        request.session.pop('lunch_2_out', None)
+        request.session.pop('lunch_2_in', None)
+        request.session.pop('notes', None)
+        request.session.pop('total_hours', None)
+
+        return redirect('driver_times_success')
+    return redirect('driver_times')
+
+@login_required(login_url='login')
+def driver_times_success(request):
+    return render(request, 'interface/driver_times_success.html')
 
 # - Create a new run
 @login_required(login_url='login')
@@ -517,7 +664,8 @@ def view_run(request, run_request_id):
 
 @login_required(login_url='login')
 def equipment_admin(request):
-    vehicles = Vehicle.objects.all()
+    vehicles = Equipment.objects.all()
+    picture_cars = PictureCars.objects.all()
 
     # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
@@ -527,13 +675,305 @@ def equipment_admin(request):
     production_title_in_session = request.session.get('current_production_id')
     if production_title_in_session:
         vehicles = vehicles.filter(production_title=production_title_in_session)
+        picture_cars = picture_cars.filter(production_title=production_title_in_session)
 
     context = {
         'vehicles': vehicles,
+        'picture_cars': picture_cars,
         'user_productions': user_productions,
     }
 
     return render(request, 'interface/equipment_admin.html', context=context)
+
+@login_required(login_url='login')
+def add_equipment(request):
+    if request.method == 'POST':
+        form = NewEquipment(request.POST)
+        if form.is_valid():
+            try:
+                # Retrieve production_title from the session
+                production_title = request.session.get('production_title')
+                if not production_title:
+                    return render(request, 'interface/add_equipment.html', {'form': form, 'error': 'Production title is missing from session.'})
+
+                # Retrieve or create the Production instance
+                production, created = Production.objects.get_or_create(production_title=production_title)
+
+                # Save the Equipment instance with the production_title
+                equipment = form.save(commit=False)
+                equipment.production_title = production
+                equipment.save()
+                form.save_m2m()  # Save the many-to-many relationships
+
+                return redirect('equipment_list')  # Redirect to the equipment list page
+            except Exception as e:
+                print(f"Error saving equipment: {e}")
+                return render(request, 'interface/add_equipment.html', {'form': form, 'error': str(e)})
+        else:
+            print("Form is not valid")
+            print(form.errors)
+    else:
+        form = NewEquipment()
+
+    return render(request, 'interface/add_equipment.html', {'form': form})
+
+@login_required(login_url='login')
+def add_picture_cars(request):
+    production_title = request.session.get('production_title')
+    if not production_title:
+        return render(request, 'interface/add_picture_cars.html', {'error': 'Production title is missing from session.'})
+
+    production = Production.objects.filter(production_title=production_title).first()
+    if request.method == 'POST':
+        form = NewPictureCars(request.POST, production_title_initial=production)
+        if form.is_valid():
+            try:
+                # Save the PictureCars instance with the production_title
+                picture_car = form.save(commit=False)
+                picture_car.production_title = production
+                picture_car.save()
+
+                return redirect('picture_cars_list')  # Redirect to the picture cars list page
+            except Exception as e:
+                print(f"Error saving picture car: {e}")
+                return render(request, 'interface/add_picture_cars.html', {'form': form, 'error': str(e)})
+        else:
+            print("Form is not valid")
+            print(form.errors)
+    else:
+        form = NewPictureCars(production_title_initial=production)
+
+    return render(request, 'interface/add_picture_cars.html', {'form': form})
+
+@login_required(login_url='login')
+def equipment_list(request):
+    equipment = Equipment.objects.all()
+    return render(request, 'interface/equipment_list.html', {'equipment': equipment})
+
+@login_required(login_url='login')
+def daily_rundown(request):
+    production_title = request.session.get('production_title')
+    if not production_title:
+        return render(request, 'interface/daily_rundown.html', {'error': 'Production title is missing from session.'})
+
+    production = get_object_or_404(Production, production_title=production_title)
+    date_str = request.GET.get('date', datetime.today().strftime('%Y-%m-%d'))
+    date = datetime.strptime(date_str, '%Y-%m-%d').date()  # Convert string to date object
+    day_of_week = date.strftime('%A')  # Get the day of the week
+
+    # Fetch the rundown for the selected date, if it exists
+    try:
+        rundown = DriverDailyRundown.objects.get(production=production, date=date)
+        drivers = rundown.drivers.all()
+        equipment = rundown.equipment.all()
+        driver_times = DriverTimes.objects.filter(driver__in=drivers, work_date=date, production_title=production_title)
+    except DriverDailyRundown.DoesNotExist:
+        rundown = None
+        drivers = Driver.objects.none()
+        equipment = Equipment.objects.none()
+        driver_times = DriverTimes.objects.none()
+
+    # Print the driver IDs to the console
+    for driver in drivers:
+        print("Driver ID:", driver.id)
+
+    # Divide drivers by production status
+    on_production_drivers = drivers.filter(production_status='On Production')
+    off_production_drivers = drivers.filter(production_status='Off Production')
+ 
+    # Debugging: Print the fetched driver_times
+    for dt in driver_times:
+        print("Driver Times:",driver_times)
+
+    context = {
+        'rundown': rundown,
+        'production': production,
+        'date': date_str,  # Pass the date string for display
+        'day_of_week': day_of_week,  # Include the day of the week in the context
+        'on_production_drivers': on_production_drivers,
+        'off_production_drivers': off_production_drivers,
+        'driver_times': driver_times,
+        'equipment': equipment,
+        
+    }
+    return render(request, 'interface/daily_rundown.html', context)
+
+@login_required(login_url='login')
+def add_driver_to_rundown(request):
+    production_title = request.session.get('production_title')
+    if not production_title:
+        return render(request, 'interface/add_driver_to_rundown.html', {'error': 'Production title is missing from session.'})
+
+    production = get_object_or_404(Production, production_title=production_title)
+    date_str = request.GET.get('date')
+    date = datetime.strptime(date_str, '%Y-%m-%d').date()
+
+    if request.method == 'POST':
+        driver_id = request.POST.get('driver_id')
+        driver = get_object_or_404(Driver, id=driver_id)
+
+        rundown, created = DriverDailyRundown.objects.get_or_create(
+            production=production,
+            date=date,
+        )
+        rundown.drivers.add(driver)
+        # Update driver information for the specific day
+        driver.driver_phone = request.POST.get('driver_phone')
+        driver.last_4 = request.POST.get('last_4')
+        driver.assigned_vehicle = request.POST.get('assigned_vehicle')
+        driver.driver_email = request.POST.get('driver_email')
+        driver.save()
+        return redirect(f"{reverse('daily_rundown')}?date={date_str}")
+
+    drivers = Driver.objects.filter(production_title=production_title, is_active=True).exclude(driverdailyrundown__date=date)
+    context = {
+        'drivers': drivers,
+        'date': date_str,
+    }
+    return render(request, 'interface/add_driver_to_rundown.html', context)
+
+@login_required(login_url='login')
+def driver_info(request, driver_id):
+    driver = get_object_or_404(Driver, id=driver_id)
+    # Fetch the latest rundown for the driver to get the instructions
+    rundown = DriverDailyRundown.objects.filter(drivers=driver).order_by('-date').first()
+    instructions = rundown.instructions if rundown else ''
+    data = {
+        'driver_phone': driver.driver_phone,
+        'last_4': driver.last_4,
+        'assigned_vehicle': driver.assigned_vehicle,
+        'email': driver.driver_email,
+        'notes': instructions,
+    }
+    return JsonResponse(data)
+
+@login_required(login_url='login')
+def remove_driver_from_rundown(request):
+    if request.method == 'POST':
+        driver_id = request.POST.get('driver_id')
+        date_str = request.POST.get('date')
+        production_title = request.session.get('production_title')
+        production = get_object_or_404(Production, production_title=production_title)
+        date = datetime.strptime(date_str, '%Y-%m-%d').date()
+
+        rundown = get_object_or_404(DriverDailyRundown, production=production, date=date)
+        driver = get_object_or_404(Driver, id=driver_id)
+        rundown.drivers.remove(driver)
+
+        return redirect(f"{reverse('daily_rundown')}?date={date_str}")
+
+@login_required(login_url='login')
+def save_rundown(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        production_title = request.session.get('production_title')
+        production = get_object_or_404(Production, production_title=production_title)
+        date_str = data.get('date')
+        date = datetime.strptime(date_str, '%Y-%m-%d').date()
+
+        rundown, created = DriverDailyRundown.objects.get_or_create(
+            production=production,
+            date=date,
+        )
+
+        rundown.drivers.clear()
+        rundown.equipment.clear()
+        rundown.driver_times.clear()
+
+        for driver_data in data.get('drivers', []):
+            if 'id' in driver_data:
+                driver = get_object_or_404(Driver, id=driver_data['id'])
+            else:
+                driver = Driver.objects.create(
+                    first_name=driver_data['first_name'],
+                    last_name=driver_data['last_name'],
+                    driver_phone=driver_data['driver_phone'],
+                    last_4=driver_data['last_4'],
+                    is_active=True
+                )
+            rundown.drivers.add(driver)
+
+        for equipment_data in data.get('equipment', []):
+            equipment = get_object_or_404(Equipment, id=equipment_data['id'])
+            rundown.equipment.add(equipment)
+
+        for driver_time_data in data.get('driver_times', []):
+            driver_time = get_object_or_404(DriverTimes, id=driver_time_data['id'])
+            rundown.driver_times.add(driver_time)
+
+        rundown.save()
+        return JsonResponse({'status': 'success'})
+
+@login_required(login_url='login')
+def copy_rundown(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        production_title = request.session.get('production_title')
+        production = get_object_or_404(Production, production_title=production_title)
+        date_str = data.get('date')
+        date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        next_date = date + timedelta(days=1)
+
+        rundown, created = DriverDailyRundown.objects.get_or_create(
+            production=production,
+            date=next_date,
+        )
+
+        if not created:
+            rundown.drivers.clear()
+            rundown.equipment.clear()
+            rundown.driver_times.clear()
+
+        original_rundown = get_object_or_404(DriverDailyRundown, production=production, date=date)
+        for driver in original_rundown.drivers.all():
+            rundown.drivers.add(driver)
+        for equipment in original_rundown.equipment.all():
+            rundown.equipment.add(equipment)
+        for driver_time in original_rundown.driver_times.all():
+            rundown.driver_times.add(driver_time)
+
+        rundown.save()
+        return JsonResponse({'status': 'success'})
+# - Search Drivers on daily rundown
+@login_required(login_url='login')
+def search_active_drivers(request):
+    query = request.GET.get('query', '')
+    date_str = request.GET.get('date', '')
+    production_title = request.session.get('production_title')
+    production = get_object_or_404(Production, production_title=production_title)
+    date = datetime.strptime(date_str, '%Y-%m-%d').date()
+
+    # Get drivers already on the sheet for the selected date
+    try:
+        rundown = DriverDailyRundown.objects.get(production=production, date=date)
+        existing_driver_ids = rundown.drivers.values_list('id', flat=True)
+    except DriverDailyRundown.DoesNotExist:
+        existing_driver_ids = []
+
+    drivers = Driver.objects.filter(production_title=production_title, is_active=True).exclude(id__in=existing_driver_ids)
+
+    results = []
+    for driver in drivers:
+        results.append({'id': driver.id, 'first_name': driver.first_name, 'last_name': driver.last_name})
+
+    return JsonResponse({'drivers': results})
+
+@login_required(login_url='login')
+def search_drivers_and_equipment(request):
+    query = request.GET.get('query', '')
+    production_title = request.session.get('production_title')
+    production = get_object_or_404(Production, production_title=production_title)
+
+    drivers = Driver.objects.filter(production_title=production_title, is_active=True, first_name__icontains=query) | Driver.objects.filter(production_title=production_title, is_active=True, last_name__icontains=query)
+    equipment = Equipment.objects.filter(production_title=production, is_active=True, vehicle_type__icontains=query) | Equipment.objects.filter(production_title=production, is_active=True, vendor_unit_number__icontains=query)
+
+    results = []
+    for driver in drivers:
+        results.append({'id': driver.id, 'name': f"{driver.first_name} {driver.last_name}", 'type': 'driver'})
+    for equip in equipment:
+        results.append({'id': equip.id, 'name': f"{equip.vehicle_type} {equip.vendor_unit_number}", 'type': 'equipment'})
+
+    return JsonResponse({'results': results})
 
 @login_required(login_url='login')
 def radios(request):
@@ -657,7 +1097,7 @@ def get_user_details_by_email(request):
                     'production_title': production_title,
                     'first_name': user.first_name,
                     'last_name': user.last_name,
-                    'user_name': user.user_name,
+                    'user_name': user.username,
                     'driver_email': user.email,
                     'driver_phone': user.phone_number,
                 }
