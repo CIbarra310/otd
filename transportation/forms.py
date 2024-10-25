@@ -106,6 +106,7 @@ class NewRunRequest(forms.ModelForm):
         ]
 
     def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request', None)
         super(NewRunRequest, self).__init__(*args, **kwargs)
         run_instance = kwargs.get('instance')
         if run_instance:
@@ -120,7 +121,6 @@ class NewRunRequest(forms.ModelForm):
         self.fields['requester_email'].widget.attrs['readonly'] = True
         self.fields['requester_department'].widget.attrs['readonly'] = True
         self.fields['run_status'].widget.attrs['readonly'] = True
-
 
         self.helper = FormHelper()
         self.helper.form_show_labels = False 
