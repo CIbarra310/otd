@@ -1,4 +1,5 @@
 {% extends 'interface/layout.html' %}
+
 {% load crispy_forms_tags %}
 
 {% block content %}
@@ -29,11 +30,19 @@
                                         <strong>Ready Time:</strong> {{ run.ready_time }}<br>
                                         <strong>Need By:</strong> {{ run.need_by_this_time }}
                                     </div>
-                                    <div class="col-5">
-                                        <button class="btn btn-primary">Acknowledge</button>
-                                    </div>
+                                    {% if request.session.department == 'Transportation' or request.session.department == 'Admin' %}
+                                        <div class="col-5">
+                                            {% if run.run_status == 'Open' %}
+                                                <form method="post" action="{% url 'acknowledge_run' run.id %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-primary">Acknowledge</button>
+                                            </form>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
                                 </div>
                                 <br>
+                                <!-- Stop 1 -->
                                 <div class="row">
                                     <div class="col-7">
                                         <strong>Go To:</strong><br>
@@ -44,7 +53,8 @@
                                             {{ run.pickup_address_2}}<br>
                                         {% endif %}
 
-                                        {{ run.pickup_city }}, {{ run.pickup_state }} {{ run.pickup_zip }}
+                                        {{ run.pickup_city }}, {{ run.pickup_state }} {{ run.pickup_zip }}<br>
+                                        <strong>Notes: </strong> {{ run.run_details_4 }}
                                     </div>
                                     <div class="col-5">
                                         <a  class="btn btn-outline-primary" href="https://maps.apple.com/?address={{ run.pickup_address_1 }},+{{ run.pickup_city }},+{{ run.pickup_state }}+{{ run.pickup_zip }}">
@@ -53,12 +63,163 @@
                                         <a  class="btn btn-outline-primary" href="https://www.google.com/maps/search/?api=1&query={{ run.pickup_address_1 }},+{{ run.pickup_city }},+{{ run.pickup_state }}">
                                             <i class="fa fa-google"></i>
                                         </a>
-                                                <a  class="btn btn-outline-primary" href="https://truckmap.com/place/{{ run.pickup_address_1|urlencode }}{{ run.pickup_city|urlencode }}{{ run.pickup_state|urlencode }}{{ run.pickup_zip|urlencode }}">
+                                        <a class="btn btn-outline-primary" href="https://truckmap.com/place/{{ run.pickup_address_1}}-{{ run.pickup_city }}-{{ run.pickup_state }}-{{ run.pickup_zip }}-usa" hidden>
                                             <i class="fa fa-truck"></i>
                                         </a>
                                     </div>
                                 </div>
                                 <br>
+
+                                <!-- Stop 2 -->
+                                {% if run.stop_2_name %}
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <strong>Stop 2:</strong><br>
+                                            {{ run.stop_2_name }}<br>
+                                            {{ run.stop_2_address_1 }}<br>
+
+                                            {% if run_request.stop_2_address_2 %}
+                                                {{ run.stop_2_address_2}}<br>
+                                            {% endif %}
+
+                                            {{ run.stop_2_city }}, {{ run.stop_2_state }} {{ run.stop_2_zip }}<br>
+                                            <strong>Notes: </strong> {{ run.run_details_2 }}
+                                        </div>
+                                        <div class="col-5">
+                                            <a  class="btn btn-outline-primary" href="https://maps.apple.com/?address={{ run.stop_2_address_1 }},+{{ run.stop_2_city }},+{{ run.stop_2_state }}+{{ run.stop_2_zip }}">
+                                                <i class="fa fa-apple"></i>
+                                            </a>
+                                            <a  class="btn btn-outline-primary" href="https://www.google.com/maps/search/?api=1&query={{ run.stop_2_address_1 }},+{{ run.stop_2_city }},+{{ run.stop_2_state }}">
+                                                <i class="fa fa-google"></i>
+                                            </a>
+                                            <a class="btn btn-outline-primary" href="https://truckmap.com/place/{{ run.stop_2_address_1 }}-{{ run.stop_2_city }}-{{ run.stop_2_state }}-{{ run.stop_2_zip }}-usa" hidden>
+                                                <i class="fa fa-truck"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <br>
+                                {% endif %}
+
+                                <!-- Stop 3 -->
+                                {% if run.stop_3_name %}
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <strong>Stop 3:</strong><br>
+                                            {{ run.stop_3_name }}<br>
+                                            {{ run.stop_3_address_1 }}<br>
+
+                                            {% if run_request.stop_3_address_2 %}
+                                                {{ run.stop_3_address_2}}<br>
+                                            {% endif %}
+
+                                            {{ run.stop_3_city }}, {{ run.stop_3_state }} {{ run.stop_3_zip }}<br>
+                                            <strong>Notes: </strong> {{ run.run_details_3 }}
+                                        </div>
+                                        <div class="col-5">
+                                            <a  class="btn btn-outline-primary" href="https://maps.apple.com/?address={{ run.stop_3_address_1 }},+{{ run.stop_3_city }},+{{ run.stop_3_state }}+{{ run.stop_3_zip }}">
+                                                <i class="fa fa-apple"></i>
+                                            </a>
+                                            <a  class="btn btn-outline-primary" href="https://www.google.com/maps/search/?api=1&query={{ run.stop_3_address_1 }},+{{ run.stop_3_city }},+{{ run.stop_3_state }}">
+                                                <i class="fa fa-google"></i>
+                                            </a>
+                                            <a class="btn btn-outline-primary" href="https://truckmap.com/place/{{ run.stop_3_address_1 }}-{{ run.stop_3_city }}-{{ run.stop_3_state }}-{{ run.stop_3_zip }}-usa" hidden>
+                                                <i class="fa fa-truck"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <br>
+                                {% endif %}
+
+                                <!-- Stop 4 -->
+                                {% if run.stop_4_name %}
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <strong>Stop 4:</strong><br>
+                                            {{ run.stop_4_name }}<br>
+                                            {{ run.stop_4_address_1 }}<br>
+
+                                            {% if run_request.stop_4_address_2 %}
+                                                {{ run.stop_4_address_2}}<br>
+                                            {% endif %}
+
+                                            {{ run.stop_4_city }}, {{ run.stop_4_state }} {{ run.stop_4_zip }}<br>
+                                            <strong>Notes: </strong> {{ run.run_details_4 }}
+                                        </div>
+                                        <div class="col-5">
+                                            <a  class="btn btn-outline-primary" href="https://maps.apple.com/?address={{ run.stop_4_address_1 }},+{{ run.stop_4_city }},+{{ run.stop_4_state }}+{{ run.stop_4_zip }}">
+                                                <i class="fa fa-apple"></i>
+                                            </a>
+                                            <a  class="btn btn-outline-primary" href="https://www.google.com/maps/search/?api=1&query={{ run.stop_4_address_1 }},+{{ run.stop_4_city }},+{{ run.stop_4_state }}">
+                                                <i class="fa fa-google"></i>
+                                            </a>
+                                            <a class="btn btn-outline-primary" href="https://truckmap.com/place/{{ run.stop_4_address_1 }}-{{ run.stop_4_city }}-{{ run.stop_4_state }}-{{ run.stop_4_zip }}-usa" hidden>
+                                                <i class="fa fa-truck"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <br>
+                                {% endif %}
+
+                                <!-- Stop 5 -->
+                                {% if run.stop_5_name %}
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <strong>Stop 5:</strong><br>
+                                            {{ run.stop_5_name }}<br>
+                                            {{ run.stop_5_address_1 }}<br>
+
+                                            {% if run_request.stop_5_address_2 %}
+                                                {{ run.stop_5_address_2}}<br>
+                                            {% endif %}
+
+                                            {{ run.stop_5_city }}, {{ run.stop_5_state }} {{ run.stop_5_zip }}<br>
+                                            <strong>Notes: </strong> {{ run.run_details_5 }}
+                                        </div>
+                                        <div class="col-5">
+                                            <a  class="btn btn-outline-primary" href="https://maps.apple.com/?address={{ run.stop_5_address_1 }},+{{ run.stop_5_city }},+{{ run.stop_5_state }}+{{ run.stop_5_zip }}">
+                                                <i class="fa fa-apple"></i>
+                                            </a>
+                                            <a  class="btn btn-outline-primary" href="https://www.google.com/maps/search/?api=1&query={{ run.stop_5_address_1 }},+{{ run.stop_5_city }},+{{ run.stop_5_state }}">
+                                                <i class="fa fa-google"></i>
+                                            </a>
+                                            <a class="btn btn-outline-primary" href="https://truckmap.com/place/{{ run.stop_5_address_1 }}-{{ run.stop_5_city }}-{{ run.stop_5_state }}-{{ run.stop_5_zip }}-usa" hidden>
+                                                <i class="fa fa-truck"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <br>
+                                {% endif %}
+
+                                <!-- Stop 6 -->
+                                {% if run.stop_6_name %}
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <strong>Stop 6:</strong><br>
+                                            {{ run.stop_6_name }}<br>
+                                            {{ run.stop_6_address_1 }}<br>
+
+                                            {% if run_request.stop_6_address_2 %}
+                                                {{ run.stop_6_address_2}}<br>
+                                            {% endif %}
+
+                                            {{ run.stop_6_city }}, {{ run.stop_6_state }} {{ run.stop_6_zip }}<br>
+                                            <strong>Notes: </strong> {{ run.run_details_6 }}
+                                        </div>
+                                        <div class="col-5">
+                                            <a  class="btn btn-outline-primary" href="https://maps.apple.com/?address={{ run.stop_6_address_1 }},+{{ run.stop_6_city }},+{{ run.stop_6_state }}+{{ run.stop_6_zip }}">
+                                                <i class="fa fa-apple"></i>
+                                            </a>
+                                            <a  class="btn btn-outline-primary" href="https://www.google.com/maps/search/?api=1&query={{ run.stop_6_address_1 }},+{{ run.stop_6_city }},+{{ run.stop_6_state }}">
+                                                <i class="fa fa-google"></i>
+                                            </a>
+                                            <a class="btn btn-outline-primary" href="https://truckmap.com/place/{{ run.stop_6_address_1 }}-{{ run.stop_6_city }}-{{ run.stop_6_state }}-{{ run.stop_6_zip }}-usa" hidden>
+                                                <i class="fa fa-truck"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <br>
+                                {% endif %}
+                                <!-- Drop Off -->
                                 <div class="row">
                                     <div class="col-7">
                                         <strong>Take To:</strong><br>
@@ -69,7 +230,8 @@
                                             {{ run.dropoff_address_2}}<br>
                                         {% endif %}
 
-                                        {{ run.dropoff_city }}, {{ run.dropoff_state }} {{ run.dropoff_zip }}
+                                        {{ run.dropoff_city }}, {{ run.dropoff_state }} {{ run.dropoff_zip }}<br>
+                                        <strong>Notes: </strong> {{ run.dropoff_details }}
                                     </div>
                                     <div class="col-5">
                                         <a  class="btn btn-outline-primary" href="https://maps.apple.com/?address={{ run.pickup_address_1 }},+{{ run.pickup_city }},+{{ run.pickup_state }}+{{ run.pickup_zip }}">
@@ -78,7 +240,7 @@
                                         <a class="btn btn-outline-primary" href="https://www.google.com/maps/search/?api=1&query={{ run.pickup_address_1 }},+{{ run.pickup_city }},+{{ run.pickup_state }}">
                                             <i class="fa fa-google"></i>
                                         </a>
-                                        <a class="btn btn-outline-primary" href="https://truckmap.com/place/{{ run.pickup_address_1 }}-{{ run.pickup_city }}-{{ run.pickup_state }}">
+                                        <a class="btn btn-outline-primary" href="https://truckmap.com/place/{{ run.pickup_address_1 }}-{{ run.pickup_city }}-{{ run.pickup_state }}" hidden>
                                             <i class="fa fa-truck"></i>
                                         </a>
                                     </div>
@@ -88,15 +250,21 @@
                                 {{ run.run_details }}<br>
                                 <br>
                                 <div class="row">
-                                    <div class="col-4">
-                                        <a class="btn btn-secondary" href="{% url 'view_run' run.id %}" style="width: 100%;">View</a>
-                                    </div>
-                                    <div class="col-4">
-                                        <a class="btn btn-success" href="{% url 'complete_run' run.id %}" style="width: 100%;">Complete</a>
-                                    </div>
-                                    <div class="col-4">
-                                        <a class="btn btn-danger" href="{% url 'cancel_run' run.id %}" style="width: 100%;">Cancel</a>
-                                    </div>
+                                    {% if request.session.job_title != 'Driver' %}
+                                        <div class="col-4">
+                                            <a class="btn btn-secondary" href="{% url 'view_run' run.id %}" style="width: 100%;">View</a>
+                                        </div>
+                                    {% endif %}
+                                    {%if request.session.department == 'Transportation' or request.session.department == 'Admin' %}
+                                        <div class="col-4">
+                                            <a class="btn btn-success" href="{% url 'complete_run' run.id %}" style="width: 100%;">Complete</a>
+                                        </div>
+                                    {% endif %}
+                                    {% if request.session.job_title != 'Driver' %}
+                                        <div class="col-4">
+                                            <a class="btn btn-danger" href="{% url 'cancel_run' run.id %}" style="width: 100%;">Cancel</a>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </details>

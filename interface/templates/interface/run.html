@@ -7,29 +7,31 @@
         <li class="breadcrumb-item active" aria-current="page">Run {{ run_request.id }}</li>
         </ol>
     </nav>
-    <form method="POST" action="{% url 'update_run' run.id %}">
+    <form method="POST" action="{% url 'update_run' run_request.id %}" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="container shadow-md col-10 pt-2">
             <h1>Run {{ run_request.id }} - {{ run_request.requester_department }}</h1>
             
             <!-- Alerts -->
-            {% if run_request.run_status == "Open" %}
-                <div class="alert alert-primary  text-center">
-                    This run is scheduled
-                </div>
-            {% elif run_request.run_status == "In Progress" %}
-                <div class="alert alert-warning  text-center">
-                    This run is currently in progress
-                </div>
-            {% elif run_request.run_status == "Cancelled" %}
-                <div class="alert alert-danger  text-center">
-                    This run has been cancelled
-                </div>
-            {% elif run_request.run_status == "Completed" %}
-                <div class="alert alert-success text-center">
-                    This run has been completed
-                </div>
-            {% endif %}
+             <div>
+                {% if run_request.run_status == "Open" %}
+                    <div class="alert alert-primary  text-center">
+                        This run is scheduled
+                    </div>
+                {% elif run_request.run_status == "In Progress" %}
+                    <div class="alert alert-warning  text-center">
+                        This run is currently in progress
+                    </div>
+                {% elif run_request.run_status == "Cancelled" %}
+                    <div class="alert alert-danger  text-center">
+                        This run has been cancelled
+                    </div>
+                {% elif run_request.run_status == "Completed" %}
+                    <div class="alert alert-success text-center">
+                        This run has been completed
+                    </div>
+                {% endif %}
+            </div>
             <!-- Requester Information-->
             <div class="row" >
                 <h3>Requested By</h3>
@@ -54,6 +56,22 @@
 
             <!-- Run Information/First Stop -->
             <h3>Run Information</h3>
+            <div class="row">
+                <div class="col-4">
+                    <label for="run_date">Run Date</label>
+                    <input type="date" class="form-control" name="run_date" id="run_date" value="{{ run_request.run_date }}">
+                </div>
+                <div class="col-4">
+                    <label for="ready_time">Run Time</label>
+                    <input type="time" class="form-control" name="ready_time" id="ready_time" value="{{ run_request.ready_time }}">
+                </div>
+                <div class="col-4">
+                    <label for="need_by_this_time">Need By</label>
+                    <input type="time" class="form-control" name="need_by_this_time" id="need_by_this_time" value="{{ run_request.need_by_this_time }}">
+                </div>
+            </div>  
+            <br>
+            <h5>Stop 1:</h5>
             <div class="row">
                 <div class="col-12">
                     <label for="pickup_name">Stop #1</label>
@@ -347,6 +365,30 @@
                 </div>
             </div>
             <br>
+
+            <!-- Assign Drivers and Transportation Notes -->
+            {% if request.session.department == 'Transportation' or request.session.department == 'Admin' %}
+                {% if request.session.job_title != 'Driver' %}
+                    <h2>Transportation</h2>
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label for="transportation_notes">Transportation Notes</label>
+                            <textarea class="form-control" name="transportation_notes" id="transportation_notes">{{ run_request.transportation_notes }}</textarea>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="assigned_driver">Assigned Driver</label>
+                            <select class="form-control" name="assigned_driver" id="assigned_driver">
+                                <option value="" selected disabled>Please select a driver</option>
+                                {% for driver in active_drivers %}
+                                    <option value="{{ driver.id }}" {% if driver in active_drivers.all %}selected{% endif %}>{{ driver.first_name }} {{ driver.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                {% endif %}
+            {% endif %}
+            
             <!-- Buttons -->
             <div class="row pb-5">
                 <div class="col-4 text-center">

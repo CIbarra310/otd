@@ -3,7 +3,7 @@ from .forms import LoginForm, CreateUserForm, AddProductionForm
 from core.models import Production, Vendor, Location
 from collections import defaultdict
 from core.models import Location, Production, Vendor, NewUser
-from transportation.forms import NewRunRequest, RunRequest, NewDriver, Driver, NewEquipment, Equipment, NewPictureCars
+from transportation.forms import NewRunRequest, RunRequest, NewDriver, Driver, NewEquipment, Equipment, NewPictureCars, PictureCars
 from transportation.models import DriverTimes, PictureCars, DriverDailyRundown
 from production.forms import RadioForm
 from datetime import datetime, timedelta
@@ -281,7 +281,7 @@ def dashboard(request):
             runs = RunRequest.objects.filter(production_title=production_title_in_session, requester_department=department_in_session).order_by('run_date')
     # Separate and limit "Completed" and "Open" runs
     completed_runs = runs.filter(run_status="Completed")[:5]
-    open_runs = runs.filter(run_status="Open")[:5]
+    open_runs = runs.filter(run_status__in=["Open", "In Progress"])[:5]
 
     # Get the current date
     current_date = timezone.now().date()
@@ -593,11 +593,11 @@ def new_run(request):
 
 # - Update a run
 @login_required(login_url='login')
-def update_run(request, run_id):
-    run = get_object_or_404(RunRequest, id=run_id)
+def update_run(request, run_request_id):
+    run_request = get_object_or_404(RunRequest, id=run_request_id)
 
     if request.method == 'POST':
-        form = NewRunRequest(request.POST, instance=run)
+        form = NewRunRequest(request.POST, instance=run_request)
         if form.is_valid():
             form.save()
             print("Run updated successfully")  # Debugging line
@@ -606,12 +606,12 @@ def update_run(request, run_id):
             print("Form is not valid")  # Debugging line
             print(form.errors)  # Debugging line to print form errors
     else:
-        form = NewRunRequest(instance=run)
+        form = NewRunRequest(instance=run_request)
         print("GET request - form initialized")  # Debugging line
 
     context = {
         'form': form,
-        'run': run,
+        'run_request': run_request,
     }
     return render(request, 'interface/run.html', context)
 
@@ -749,6 +749,35 @@ def run_queue(request):
     }
     return render(request, 'interface/run_queue.html', context=context)
 
+@login_required(login_url='login')
+def acknowledge_run(request, run_id):
+    run = get_object_or_404(RunRequest, id=run_id)
+    run.run_status = 'In Progress'
+    run.save()
+
+    # Fetch the requester's email from the run instance
+    requester_email = run.requester_email
+
+    # Fetch the production title from the session data
+    production_title = request.session.get('production_title')
+    production = get_object_or_404(Production, production_title=production_title)
+
+    # Fetch the captain's email based on the production title
+    captain_email = production.captain_email
+
+    # Send an email to the requester
+    acknowledge_email_message = EmailMessage(
+        subject=f'Run Request #{run.id} is in progress',
+        body=f'Hello {run.requester_name},\n\nRun {run.id} to {run.pickup_name } is currently in progress.\n\nThank you.',
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[requester_email],
+        reply_to=[captain_email],
+    )
+
+    acknowledge_email_message.send(fail_silently=False)
+
+    return redirect('run_queue')
+
 # View Run
 @login_required(login_url='login')
 def view_run(request, run_request_id):
@@ -765,11 +794,14 @@ def view_run(request, run_request_id):
     if run_request.production_title != production_title_in_session:
         return redirect('dashboard')
 
+    # Fetch active drivers matching the production title of the run
+    active_drivers = Driver.objects.filter(is_active=True, production_title=run_request.production_title)
+
     context = {
-        'run': run_request,
         'run_id': run_request_id,
         'run_request': run_request,
         'user_productions': user_productions,
+        'active_drivers': active_drivers,
     }
     return render(request, 'interface/run.html', context)
 

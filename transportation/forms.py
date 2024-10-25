@@ -21,7 +21,12 @@ class NewRunRequest(forms.ModelForm):
     ]
 
     truck_size = forms.ChoiceField(choices=TRUCK_SIZE_CHOICES, required=False)
-    
+    assigned_driver = forms.ModelMultipleChoiceField(
+        queryset=Driver.objects.filter(is_active=True),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
     class Meta:
         model = RunRequest
         fields = [
@@ -95,7 +100,7 @@ class NewRunRequest(forms.ModelForm):
             'truck_size',
             'assigned_driver',
             'transportation_notes',
-            'driver_notes'
+            'driver_notes',
         ]
 
 # - Create new driver

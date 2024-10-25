@@ -170,7 +170,7 @@ class RunRequest(models.Model):
     vendor_invoice  = models.CharField(max_length=20, null=True, blank=True)
     run_status = models.CharField(max_length=20, null=True, blank=True)
     truck_size = models.CharField(max_length=50, null=True, blank=True)
-    assigned_driver = models.CharField(max_length=100, null=True, blank=True)
+    assigned_driver = models.ManyToManyField('Driver', blank=True)
 
     # - Transportation Notes
     transportation_notes = models.TextField(max_length=2000, null=True, blank=True)
