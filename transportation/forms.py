@@ -18,6 +18,8 @@ class NewRunRequest(forms.ModelForm):
         ('Cube Truck', 'Cube Truck'),
         ('5-Ton', '5-Ton'),
         ('10-Ton', '10-Ton'),
+        ('Tractor', 'Tractor'),
+        ('Other', 'Other'),
     ]
 
     truck_size = forms.ChoiceField(choices=TRUCK_SIZE_CHOICES, required=False)
@@ -105,6 +107,21 @@ class NewRunRequest(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(NewRunRequest, self).__init__(*args, **kwargs)
+        run_instance = kwargs.get('instance')
+        if run_instance:
+            self.fields['assigned_driver'].queryset = Driver.objects.filter(
+                is_active=True,
+                production_title=run_instance.production_title
+            )
+
+        # Set readonly attribute on specific fields
+        self.fields['requester_name'].widget.attrs['readonly'] = True
+        self.fields['requester_phone'].widget.attrs['readonly'] = True
+        self.fields['requester_email'].widget.attrs['readonly'] = True
+        self.fields['requester_department'].widget.attrs['readonly'] = True
+        self.fields['run_status'].widget.attrs['readonly'] = True
+
+
         self.helper = FormHelper()
         self.helper.form_show_labels = False 
         self.helper.layout = Layout(

@@ -800,10 +800,20 @@ def view_run(request, run_request_id):
     else:
         form = NewRunRequest(instance=run)
 
+    # Get active drivers with the same production title
+    active_drivers = Driver.objects.filter(is_active=True, production_title=run.production_title)
+    print("Active Drivers:", active_drivers)
+
+    # Get truck sizes from the form
+    truck_sizes = NewRunRequest.TRUCK_SIZE_CHOICES
+    print("Truck Sizes:", truck_sizes)
+
     context = {
         'form': form,
         'run': run,
         'user_productions': user_productions,
+        'active_drivers': active_drivers,
+        'truck_sizes': truck_sizes,
     }
     return render(request, 'interface/run.html', context)
 
