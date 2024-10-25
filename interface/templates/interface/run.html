@@ -1,407 +1,343 @@
 {% extends 'interface/layout.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
-    <nav class="p-2" aria-label="breadcrumb">
-        <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'run_history' %}">Run History</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Run {{ run_request.id }}</li>
-        </ol>
-    </nav>
-    <form method="POST" action="{% url 'update_run' run_request.id %}" enctype="multipart/form-data">
+    <h1>Edit Run Details</h1>
+    <form method="post" action="{% url 'update_run' run.id %}">
         {% csrf_token %}
-        <div class="container shadow-md col-10 pt-2">
-            <h1>Run {{ run_request.id }} - {{ run_request.requester_department }}</h1>
-            
-            <!-- Alerts -->
-             <div>
-                {% if run_request.run_status == "Open" %}
-                    <div class="alert alert-primary  text-center">
-                        This run is scheduled
-                    </div>
-                {% elif run_request.run_status == "In Progress" %}
-                    <div class="alert alert-warning  text-center">
-                        This run is currently in progress
-                    </div>
-                {% elif run_request.run_status == "Cancelled" %}
-                    <div class="alert alert-danger  text-center">
-                        This run has been cancelled
-                    </div>
-                {% elif run_request.run_status == "Completed" %}
-                    <div class="alert alert-success text-center">
-                        This run has been completed
-                    </div>
-                {% endif %}
+        
+        <div class="form-group">
+            <label for="production_title">Production Title</label>
+            {{ form.production_title|as_crispy_field }}
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="requester_name">Requester Name</label>
+                {{ form.requester_name|as_crispy_field }}
             </div>
-            <!-- Requester Information-->
-            <div class="row" >
-                <h3>Requested By</h3>
-                <div class="col-6">
-                    <label for="requester_name">Name</label>
-                    <input type="text" class="form-control" name="requester_name" id="requester_name" value="{{ run_request.requester_name }}">
-                </div>
-                <div class="col-6">
-                    <label for="requester_department">Department</label>
-                    <input type="text" class="form-control" name="requester_department" id="requester_department" value="{{ run_request.requester_department }}" readonly>
-                </div>
-                <div class="col-6">
-                    <label for="requester_email">Email</label>
-                    <input type="text" class="form-control" name="requester_email" id="requester_email" value="{{ run_request.requester_email }}" readonly>
-                </div>
-                <div class="col-6">
-                    <label for="requester_phone">Phone</label>
-                    <input type="text" class="form-control" name="requester_phone" id="requester_phone" value="{{ run_request.requester_phone }}" readonly>
-                </div>
-            </div>
-            <br>
-
-            <!-- Run Information/First Stop -->
-            <h3>Run Information</h3>
-            <div class="row">
-                <div class="col-4">
-                    <label for="run_date">Run Date</label>
-                    <input type="date" class="form-control" name="run_date" id="run_date" value="{{ run_request.run_date }}">
-                </div>
-                <div class="col-4">
-                    <label for="ready_time">Run Time</label>
-                    <input type="time" class="form-control" name="ready_time" id="ready_time" value="{{ run_request.ready_time }}">
-                </div>
-                <div class="col-4">
-                    <label for="need_by_this_time">Need By</label>
-                    <input type="time" class="form-control" name="need_by_this_time" id="need_by_this_time" value="{{ run_request.need_by_this_time }}">
-                </div>
-            </div>  
-            <br>
-            <h5>Stop 1:</h5>
-            <div class="row">
-                <div class="col-12">
-                    <label for="pickup_name">Stop #1</label>
-                    <input type="text" class="form-control" name="pickup_name" id="pickup_name" value="{{ run_request.pickup_name }}">
-                </div>
-                <div class="col-12">
-                    <label for="pickup_address_1">Address 1</label>
-                    <input type="text" class="form-control" name="pickup_address_1" id="pickup_address_1" value="{{ run_request.pickup_address_1 }}">
-                </div>
-                <div class="col-12">
-                    <label for="pickup_address_2">Address 2</label>
-                    {% if run_request.pickup_address_2 %}
-                        <input type="text" class="form-control" name="pickup_address_2" id="pickup_address_2" value="{{ run_request.pickup_address_2 }}">
-                    {% else %}
-                        <input type="text" class="form-control" name="pickup_address_2" id="pickup_address_2" value="">
-                    {% endif %}
-                </div>
-                <div class="col-5">
-                    <label for="pickup_city">City</label>
-                    <input type="text" class="form-control" name="pickup_city" id="pickup_city" value="{{ run_request.pickup_city }}">
-                </div>
-                <div class="col-3">
-                    <label for="pickup_state">State</label>
-                    <input type="text" class="form-control" name="pickup_name" id="pickup_state" value="{{ run_request.pickup_state }}">
-                </div>
-                <div class="col-4">
-                    <label for="pickup_zip">Zip</label>
-                    <input type="text" class="form-control" name="pickup_zip" id="pickup_zip" value="{{ run_request.pickup_zip }}">
-                </div>
-                <div class="col-12 mb-3">
-                    <label for="run_details" class="form-label">Run Details</label>
-                    <textarea class="form-control" id="run_details" name="run_details" rows="3">{{ run_request.run_details }}</textarea>
-                </div>
-            </div>
-            <br>
-
-            <!-- Stop 2 information -->
-             {% if run_request.stop_2_name %}
-                <div class="row">
-                    <h5>Stop 2:</h5>
-                    <div class="col-12">
-                        <label for="dropoff_name">Stop #2</label>
-                        <input type="text" class="form-control" name="stop_2_name" id="stop_2_name" value="{{ run_request.stop_2_name }}">
-                    </div>
-                    <div class="col-12">
-                        <label for="dropoff_address_1">Address 1</label>
-                        <input type="text" class="form-control" name="stop_2_address_1" id="stop_2_address_1" value="{{ run_request.stop_2_address_1 }}">
-                    </div>
-                    <div class="col-12">
-                        <label for="dropoff_address_2">Address 2</label>
-                        {% if run_request.dropoff_address_2 %}
-                            <input type="text" class="form-control" name="stop_2_address_2" id="stop_2_address_2" value="{{ run_request.stop_2_address_2 }}">
-                        {% else %}
-                            <input type="text" class="form-control" name="stop_2_address_2" id="stop_2_address_2" value="">
-                        {% endif %}
-                    </div>
-                    <div class="col-5">
-                        <label for="dropoff_city">City</label>
-                        <input type="text" class="form-control" name="stop_2_city" id="stop_2_city" value="{{ run_request.stop_2_city }}">
-                    </div>
-                    <div class="col-3">
-                        <label for="dropoff_state">State</label>
-                        <input type="text" class="form-control" name="stop_2_state" id="stop_2_state" value="{{ run_request.stop_2_state }}">
-                    </div>
-                    <div class="col-4">
-                        <label for="dropoff_zip">Zip</label>
-                        <input type="text" class="form-control" name="stop_2_zip" id="stop_2_zip" value="{{ run_request.stop_2_zip }}">
-                    </div>
-                    <div class="col-12 mb-3">
-                        <label for="exampleFormControlTextarea1" class="form-label">Run Details</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">{{ run_request.run_details_2 }}</textarea>
-                    </div>
-                </div>           
-                <br>
-            {% endif %}
-
-            <!-- Stop 3 information -->
-            {% if run_request.stop_3_name %}
-                <div class="row">
-                    <h5>Stop 3:</h5>
-                    <div class="col-12">
-                        <label for="stop_3_name">Stop #3</label>
-                        <input type="text" class="form-control" name="stop_3_name" id="stop_3_name" value="{{ run_request.stop_3_name }}">
-                    </div>
-                    <div class="col-12">
-                        <label for="stop_3_address_1">Address 1</label>
-                        <input type="text" class="form-control" name="stop_3_address_1" id="stop_3_address_1" value="{{ run_request.stop_3_address_1 }}">
-                    </div>
-                    <div class="col-12">
-                        <label for="stop_3_address_2">Address 2</label>
-                        {% if run_request.dropoff_address_2 %}
-                            <input type="text" class="form-control" name="stop_3_address_2" id="stop_3_address_2" value="{{ run_request.stop_3_address_2 }}">
-                        {% else %}
-                            <input type="text" class="form-control" name="stop_3_address_2" id="stop_3_address_2" value="">
-                        {% endif %}
-                    </div>
-                    <div class="col-5">
-                        <label for="stop_3_city">City</label>
-                        <input type="text" class="form-control" name="stop_3_city" id="stop_3_city" value="{{ run_request.stop_3_city }}">
-                    </div>
-                    <div class="col-3">
-                        <label for="stop_3_state">State</label>
-                        <input type="text" class="form-control" name="stop_3_state" id="stop_3_state" value="{{ run_request.stop_3_state }}">
-                    </div>
-                    <div class="col-4">
-                        <label for="stop_3_zip">Zip</label>
-                        <input type="text" class="form-control" name="stop_3_zip" id="stop_3_zip" value="{{ run_request.stop_3_zip }}">
-                    </div>
-                    <div class="col-12 mb-3">
-                        <label for="run_details_3" class="form-label">Run Details</label>
-                        <textarea class="form-control" id="run_details_3" rows="3">{{ run_request.run_details_3 }}</textarea>
-                    </div>
-                </div>           
-                <br>
-            {% endif %}
-
-            <!-- Stop 4 information -->
-            {% if run_request.stop_4_name %}
-                <div class="row">
-                    <h5>Stop 4:</h5>
-                    <div class="col-12">
-                        <label for="stop_4_name">Stop #4</label>
-                        <input type="text" class="form-control" name="stop_4_name" id="stop_4_name" value="{{ run_request.stop_4_name }}">
-                    </div>
-                    <div class="col-12">
-                        <label for="stop_4_address_1">Address 1</label>
-                        <input type="text" class="form-control" name="stop_4_address_1" id="stop_4_address_1" value="{{ run_request.stop_4_address_1 }}">
-                    </div>
-                    <div class="col-12">
-                        <label for="stop_4_address_2">Address 2</label>
-                        {% if run_request.dropoff_address_2 %}
-                            <input type="text" class="form-control" name="stop_4_address_2" id="stop_4_address_2" value="{{ run_request.stop_4_address_2 }}">
-                        {% else %}
-                            <input type="text" class="form-control" name="stop_4_address_2" id="stop_4_address_2" value="">
-                        {% endif %}
-                    </div>
-                    <div class="col-5">
-                        <label for="stop_4_city">City</label>
-                        <input type="text" class="form-control" name="stop_4_city" id="stop_4_city" value="{{ run_request.stop_4_city }}">
-                    </div>
-                    <div class="col-3">
-                        <label for="stop_4_state">State</label>
-                        <input type="text" class="form-control" name="stop_4_state" id="stop_4_state" value="{{ run_request.stop_4_state }}">
-                    </div>
-                    <div class="col-4">
-                        <label for="stop_4_zip">Zip</label>
-                        <input type="text" class="form-control" name="stop_4_zip" id="stop_4_zip" value="{{ run_request.stop_4_zip }}">
-                    </div>
-                    <div class="col-12 mb-3">
-                        <label for="run_details_4" class="form-label">Run Details</label>
-                        <textarea class="form-control" id="run_details_4" rows="3">{{ run_request.run_details_4 }}</textarea>
-                    </div>
-                </div>           
-                <br>
-            {% endif %}
-
-            <!-- Stop 5 information -->
-            {% if run_request.stop_5_name %}
-                <div class="row">
-                    <h5>Stop 5:</h5>
-                    <div class="col-12">
-                        <label for="stop_5_name">Stop #5</label>
-                        <input type="text" class="form-control" name="stop_5_name" id="stop_5_name" value="{{ run_request.stop_5_name }}">
-                    </div>
-                    <div class="col-12">
-                        <label for="stop_5_address_1">Address 1</label>
-                        <input type="text" class="form-control" name="stop_5_address_1" id="stop_5_address_1" value="{{ run_request.stop_5_address_1 }}">
-                    </div>
-                    <div class="col-12">
-                        <label for="stop_5_address_2">Address 2</label>
-                        {% if run_request.dropoff_address_2 %}
-                            <input type="text" class="form-control" name="stop_5_address_2" id="stop_5_address_2" value="{{ run_request.stop_5_address_2 }}">
-                        {% else %}
-                            <input type="text" class="form-control" name="stop_5_address_2" id="stop_5_address_2" value="">
-                        {% endif %}
-                    </div>
-                    <div class="col-5">
-                        <label for="stop_5_city">City</label>
-                        <input type="text" class="form-control" name="stop_5_city" id="stop_5_city" value="{{ run_request.stop_5_city }}">
-                    </div>
-                    <div class="col-3">
-                        <label for="stop_5_state">State</label>
-                        <input type="text" class="form-control" name="stop_5_state" id="stop_5_state" value="{{ run_request.stop_5_state }}">
-                    </div>
-                    <div class="col-4">
-                        <label for="stop_5_zip">Zip</label>
-                        <input type="text" class="form-control" name="stop_5_zip" id="stop_5_zip" value="{{ run_request.stop_5_zip }}">
-                    </div>
-                    <div class="col-12 mb-3">
-                        <label for="run_details_5" class="form-label">Run Details</label>
-                        <textarea class="form-control" id="run_details_5" rows="3">{{ run_request.run_details_5 }}</textarea>
-                    </div>
-                </div>           
-                <br>
-            {% endif %}
-
-            <!-- Stop 6 information -->
-            {% if run_request.stop_6_name %}
-                <div class="row">
-                    <h5>Stop 6:</h5>
-                    <div class="col-12">
-                        <label for="stop_6_name">Stop #6</label>
-                        <input type="text" class="form-control" name="stop_6_name" id="stop_6_name" value="{{ run_request.stop_6_name }}">
-                    </div>
-                    <div class="col-12">
-                        <label for="stop_6_address_1">Address 1</label>
-                        <input type="text" class="form-control" name="stop_6_address_1" id="stop_6_address_1" value="{{ run_request.stop_6_address_1 }}">
-                    </div>
-                    <div class="col-12">
-                        <label for="stop_6_address_2">Address 2</label>
-                        {% if run_request.dropoff_address_2 %}
-                            <input type="text" class="form-control" name="stop_6_address_2" id="stop_6_address_2" value="{{ run_request.stop_6_address_2 }}">
-                        {% else %}
-                            <input type="text" class="form-control" name="stop_6_address_2" id="stop_6_address_2" value="">
-                        {% endif %}
-                    </div>
-                    <div class="col-">
-                        <label for="stop_6_city">City</label>
-                        <input type="text" class="form-control" name="stop_6_city" id="stop_6_city" value="{{ run_request.stop_6_city }}">
-                    </div>
-                    <div class="col-3">
-                        <label for="stop_6_state">State</label>
-                        <input type="text" class="form-control" name="stop_6_state" id="stop_6_state" value="{{ run_request.stop_6_state }}">
-                    </div>
-                    <div class="col-4">
-                        <label for="stop_6_zip">Zip</label>
-                        <input type="text" class="form-control" name="stop_6_zip" id="stop_6_zip" value="{{ run_request.stop_6_zip }}">
-                    </div>
-                    <div class="col-12 mb-3">
-                        <label for="run_details_6" class="form-label">Run Details</label>
-                        <textarea class="form-control" id="run_details_6" rows="3">{{ run_request.run_details_6 }}</textarea>
-                    </div>
-                </div>           
-                <br>
-            {% endif %}
-
-            <!-- Drop Off information -->
-            {% if run_request.dropoff_name %}
-            <div class="row">
-                <h5>Drop Off:</h5>
-                <div class="col-12">
-                    <label for="dropoff_name">Drop Off</label>
-                    <input type="text" class="form-control" name="dropoff_name" id="dropoff_name" value="{{ run_request.dropoff_name }}">
-                </div>
-                <div class="col-12">
-                    <label for="dropoff_address_1">Address 1</label>
-                    <input type="text" class="form-control" name="dropoff_address_1" id="dropoff_address_1" value="{{ run_request.dropoff_address_1 }}">
-                </div>
-                <div class="col-12">
-                    <label for="dropoff_address_2">Address 2</label>
-                    {% if run_request.dropoff_address_2 %}
-                        <input type="text" class="form-control" name="dropoff_address_2" id="dropoff_address_2" value="{{ run_request.dropoff_address_2 }}">
-                    {% else %}
-                        <input type="text" class="form-control" name="dropoff_address_2" id="dropoff_address_2" value="">
-                    {% endif %}
-                </div>
-                <div class="col-5">
-                    <label for="dropoff_city">City</label>
-                    <input type="text" class="form-control" name="dropoff_city" id="dropoff_city" value="{{ run_request.dropoff_city }}">
-                </div>
-                <div class="col-3">
-                    <label for="dropoff_state">State</label>
-                    <input type="text" class="form-control" name="dropoff_state" id="dropoff_state" value="{{ run_request.dropoff_state }}">
-                </div>
-                <div class="col-4">
-                    <label for="dropoff_zip">Zip</label>
-                    <input type="text" class="form-control" name="dropoff_zip" id="dropoff_zip" value="{{ run_request.dropoff_zip }}">
-                </div>
-                <div class="col-12 mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Run Details</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">{{ run_request.dropoff_details }}</textarea>
-                </div>
-            </div>           
-            <br>
-            {% endif %}
-
-            <!-- Supporting Information -->
-            <div class="row">
-                <h5>Supporting Information</h5>
-                <div class="col-6 mb-3">
-                    <label for="purchase_order">P.O. #</label>
-                    <input type="text" class="form-control" name="purchase_order" id="purchase_order" value="{{ run_request.purchase_order }}">
-                </div>
-                <div class="col-6 mb-3">
-                    <label for="vendor_invoice">Vendor Order #</label>
-                    <input type="text" class="form-control" name="vendor_invoice" id="vendor_invoice" value="{{ run_request.vendor_invoice }}">
-                </div>
-                <div class="col-12 mb-3" hidden>
-                    <label for="formFileSm" class="form-label">Supporting Documents</label>
-                    <input class="form-control form-control-sm" id="formFileSm" type="file">
-                </div>
-            </div>
-            <br>
-
-            <!-- Assign Drivers and Transportation Notes -->
-            {% if request.session.department == 'Transportation' or request.session.department == 'Admin' %}
-                {% if request.session.job_title != 'Driver' %}
-                    <h2>Transportation</h2>
-                    <div class="row">
-                        <div class="col-12 mb-3">
-                            <label for="transportation_notes">Transportation Notes</label>
-                            <textarea class="form-control" name="transportation_notes" id="transportation_notes">{{ run_request.transportation_notes }}</textarea>
-                        </div>
-                        <div class="col-12 mb-3">
-                            <label for="assigned_driver">Assigned Driver</label>
-                            <select class="form-control" name="assigned_driver" id="assigned_driver">
-                                <option value="" selected disabled>Please select a driver</option>
-                                {% for driver in active_drivers %}
-                                    <option value="{{ driver.id }}" {% if driver in active_drivers.all %}selected{% endif %}>{{ driver.first_name }} {{ driver.last_name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <br>
-                {% endif %}
-            {% endif %}
-            
-            <!-- Buttons -->
-            <div class="row pb-5">
-                <div class="col-4 text-center">
-                    <a class="btn btn-success" href="{% url 'complete_run' run_request.id %}" title="view_run">Complete</a>
-                </div>
-                <div class="col-4 text-center">
-                    <button class="btn btn-secondary" type="submit">Update</button>
-                </div>
-                <div class="col-4 text-center">
-                    <a class="btn btn-danger" href="{% url 'cancel_run' run_request.id %}" title="view_run">Cancel</a>
-                </div>
+            <div class="form-group col-md-6">
+                <label for="requester_phone">Requester Phone</label>
+                {{ form.requester_phone|as_crispy_field }}
             </div>
         </div>
+        
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="requester_email">Requester Email</label>
+                {{ form.requester_email|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6">
+                <label for="requester_department">Requester Department</label>
+                {{ form.requester_department|as_crispy_field }}
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="run_date">Run Date</label>
+                {{ form.run_date|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-4">
+                <label for="ready_time">Ready Time</label>
+                {{ form.ready_time|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-4">
+                <label for="need_by_this_time">Need By This Time</label>
+                {{ form.need_by_this_time|as_crispy_field }}
+            </div>
+        </div>
+        <hr>
+        <h2>Pickup Information</h2>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="pickup_name">Pickup Name</label>
+                {{ form.pickup_name|as_crispy_field }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="pickup_address_1">Pickup Address 1</label>
+            {{ form.pickup_address_1|as_crispy_field }}
+        </div>
+        <div class="form-group">
+            <label for="pickup_address_2">Pickup Address 2</label>
+            {{ form.pickup_address_2|as_crispy_field }}
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="pickup_city">Pickup City</label>
+                {{ form.pickup_city|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-4">
+                <label for="pickup_state">Pickup State</label>
+                {{ form.pickup_state|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-4">
+                <label for="pickup_zip">Pickup Zip</label>
+                {{ form.pickup_zip|as_crispy_field }}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="run_details">Run Details</label>
+            {{ form.run_details|as_crispy_field }}
+        </div>
+        <hr>
+
+        <!-- Stop 2 -->
+        <div name="stop_2_div">
+            <h2>Stop 2 Information</h2>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="stop_2_name">Stop 2 Name</label>
+                    {{ form.stop_2_name|as_crispy_field }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="stop_2_address_1">Stop 2 Address 1</label>
+                {{ form.stop_2_address_1|as_crispy_field }}
+            </div>
+            <div class="form-group">
+                <label for="stop_2_address_2">Stop 2 Address 2</label>
+                {{ form.stop_2_address_2|as_crispy_field }}
+            </div>
+            <div class="form-row">
+                <label for="stop_2_city">Stop 2 City</label>
+                {{ form.stop_2_city|as_crispy_field }}
+            </div>
+            <div class="form-row">
+                <label for="stop_2_state">Stop 2 State</label>
+                {{ form.stop_2_state|as_crispy_field }}
+            </div>
+            <div class="form-row">
+                <label for="stop_2_zip">Stop 2 Zip</label>
+                {{ form.stop_2_zip|as_crispy_field }}
+            </div>
+            <div class="form-group">
+                <label for="stop_2_details">Stop 2 Details</label>
+                {{ form.run_details_2|as_crispy_field }}
+            </div>
+        </div>
+        <hr>
+        <div name="stop_3_div">
+            <h2>Stop 3 Information</h2>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="stop_3_name">Stop 3 Name</label>
+                    {{ form.stop_3_name|as_crispy_field }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="stop_3_address_1">Stop 3 Address 1</label>
+                {{ form.stop_3_address_1|as_crispy_field }}
+            </div>
+            <div class="form-group">
+                <label for="stop_3_address_2">Stop 3 Address 2</label>
+                {{ form.stop_3_address_2|as_crispy_field }}
+            </div>
+            <div class="form-row">
+                <label for="stop_3_city">Stop 3 City</label>
+                {{ form.stop_3_city|as_crispy_field }}
+            </div>
+            <div class="form-row">
+                <label for="stop_3_state">Stop 3 State</label>
+                {{ form.stop_3_state|as_crispy_field }}
+            </div>
+            <div class="form-row">
+                <label for="stop_3_zip">Stop 3 Zip</label>
+                {{ form.stop_3_zip|as_crispy_field }}
+            </div>
+            <div class="form-group">
+                <label for="stop_3_details">Stop 3 Details</label>
+                {{ form.run_details_3|as_crispy_field }}
+            </div>
+        </div>
+        <hr>
+        <div name="stop_4_div">
+            <h2>Stop 4 Information</h2>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="stop_4_name">Stop 4 Name</label>
+                    {{ form.stop_4_name|as_crispy_field }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="stop_4_address_1">Stop 4 Address 1</label>
+                {{ form.stop_4_address_1|as_crispy_field }}
+            </div>
+            <div class="form-group">
+                <label for="stop_4_address_2">Stop 4 Address 2</label>
+                {{ form.stop_4_address_2|as_crispy_field }}
+            </div>
+            <div class="form-row">
+                <label for="stop_4_city">Stop 4 City</label>
+                {{ form.stop_4_city|as_crispy_field }}
+            </div>
+            <div class="form-row">
+                <label for="stop_4_state">Stop 4 State</label>
+                {{ form.stop_4_state|as_crispy_field }}
+            </div>
+            <div class="form-row">
+                <label for="stop_4_zip">Stop 4 Zip</label>
+                {{ form.stop_4_zip|as_crispy_field }}
+            </div>
+            <div class="form-group">
+                <label for="stop_4_details">Stop 4 Details</label>
+                {{ form.run_details_4|as_crispy_field }}
+            </div>
+        </div>
+        <hr>
+        <div name="stop_5_div">
+            <h2>Stop 5 Information</h2>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="stop_5_name">Stop 5 Name</label>
+                    {{ form.stop_5_name|as_crispy_field }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="stop_5_address_1">Stop 5 Address 1</label>
+                {{ form.stop_5_address_1|as_crispy_field }}
+            </div>
+            <div class="form-group">
+                <label for="stop_5_address_2">Stop 5 Address 2</label>
+                {{ form.stop_5_address_2|as_crispy_field }}
+            </div>
+            <div class="form-row">
+                <label for="stop_5_city">Stop 5 City</label>
+                {{ form.stop_5_city|as_crispy_field }}
+            </div>
+            <div class="form-row">
+                <label for="stop_5_state">Stop 5 State</label>
+                {{ form.stop_5_state|as_crispy_field }}
+            </div>
+            <div class="form-row">
+                <label for="stop_5_zip">Stop 5 Zip</label>
+                {{ form.stop_5_zip|as_crispy_field }}
+            </div>
+            <div class="form-group">
+                <label for="stop_5_details">Stop 5 Details</label>
+                {{ form.run_details_5|as_crispy_field }}
+            </div>
+        </div>
+        <hr>
+        <div name="stop_6_div">
+            <h2>Stop 6 Information</h2>
+            <div class="form-row">
+                <div class="form-group
+                col-md-6">
+                    <label for="stop_6_name">Stop 6 Name</label>
+                    {{ form.stop_6_name|as_crispy_field }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="stop_6_address_1">Stop 6 Address 1</label>
+                {{ form.stop_6_address_1|as_crispy_field }}
+            </div>
+            <div class="form-group">
+                <label for="stop_6_address_2">Stop 6 Address 2</label>
+                {{ form.stop_6_address_2|as_crispy_field }}
+            </div>
+            <div class="form-row">
+                <label for="stop_6_city">Stop 6 City</label>
+                {{ form.stop_6_city|as_crispy_field }}
+            </div>
+            <div class="form-row">
+                <label for="stop_6_state">Stop 6 State</label>
+                {{ form.stop_6_state|as_crispy_field }}
+            </div>
+            <div class="form-row">
+                <label for="stop_6_zip">Stop 6 Zip</label>
+                {{ form.stop_6_zip|as_crispy_field }}
+            </div>
+            <div class="form-group">
+                <label for="stop_6_details">Stop 6 Details</label>
+                {{ form.run_details_6|as_crispy_field }}
+            </div>
+        </div>
+        <hr>
+
+        <!-- Repeat similar structure for Stop 3 to Stop 6 and Dropoff Information -->
+        
+        <h2>Dropoff Information</h2>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="dropoff_name">Dropoff Name</label>
+                {{ form.dropoff_name|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6">
+                <label for="dropoff_phone">Dropoff Phone</label>
+                {{ form.dropoff_phone|as_crispy_field }}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="dropoff_address_1">Dropoff Address 1</label>
+            {{ form.dropoff_address_1|as_crispy_field }}
+        </div>
+        <div class="form-group">
+            <label for="dropoff_address_2">Dropoff Address 2</label>
+            {{ form.dropoff_address_2|as_crispy_field }}
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="dropoff_city">Dropoff City</label>
+                {{ form.dropoff_city|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-4">
+                <label for="dropoff_state">Dropoff State</label>
+                {{ form.dropoff_state|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-4">
+                <label for="dropoff_zip">Dropoff Zip</label>
+                {{ form.dropoff_zip|as_crispy_field }}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="dropoff_details">Dropoff Details</label>
+            {{ form.dropoff_details|as_crispy_field }}
+        </div>
+        
+        <h2>Additional Information</h2>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="purchase_order">Purchase Order</label>
+                {{ form.purchase_order|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6">
+                <label for="vendor_invoice">Vendor Invoice</label>
+                {{ form.vendor_invoice|as_crispy_field }}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="run_status">Run Status</label>
+            {{ form.run_status|as_crispy_field }}
+        </div>
+        
+        <div class="form-group">
+            <label for="truck_size">Truck Size</label>
+            {{ form.truck_size|as_crispy_field }}
+        </div>
+        
+        <div class="form-group">
+            <label for="assigned_driver">Assigned Driver</label>
+            {{ form.assigned_driver|as_crispy_field }}
+        </div>
+        
+        <div class="form-group">
+            <label for="transportation_notes">Transportation Notes</label>
+            {{ form.transportation_notes|as_crispy_field }}
+        </div>
+        
+        <div class="form-group">
+            <label for="driver_notes">Driver Notes</label>
+            {{ form.driver_notes|as_crispy_field }}
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="{% url 'complete_run' run.id %}" class="btn btn-success">Complete</a>
+        <a href="{% url 'cancel_run' run.id %}" class="btn btn-danger">Cancel</a>
     </form>
-    <br>
 {% endblock %}

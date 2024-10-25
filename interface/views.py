@@ -781,27 +781,29 @@ def acknowledge_run(request, run_id):
 # View Run
 @login_required(login_url='login')
 def view_run(request, run_request_id):
-    run_request = get_object_or_404(RunRequest, id=run_request_id)
-
-    # Fetch current user's productions
+    # Fetch the production title from the session data
     user = get_object_or_404(NewUser, id=request.user.id)
     user_productions = user.productions.filter(is_active=True)
+    
+    run = get_object_or_404(RunRequest, id=run_request_id)
 
-    # Get the production_title from the session
-    production_title_in_session = request.session.get('production_title')
+    # Check if the production title in the session matches the run's production title
+    session_production_title = request.session.get('production_title')
+    if session_production_title != run.production_title:
+        return redirect('dashboard')  # Redirect to the dashboard if titles don't match
 
-    # Check if the run's production_title matches the session's production_title
-    if run_request.production_title != production_title_in_session:
-        return redirect('dashboard')
-
-    # Fetch active drivers matching the production title of the run
-    active_drivers = Driver.objects.filter(is_active=True, production_title=run_request.production_title)
+    if request.method == 'POST':
+        form = NewRunRequest(request.POST, instance=run)
+        if form.is_valid():
+            form.save()
+            return redirect('view_run', run_request_id=run.id)
+    else:
+        form = NewRunRequest(instance=run)
 
     context = {
-        'run_id': run_request_id,
-        'run_request': run_request,
+        'form': form,
+        'run': run,
         'user_productions': user_productions,
-        'active_drivers': active_drivers,
     }
     return render(request, 'interface/run.html', context)
 
