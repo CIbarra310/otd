@@ -264,22 +264,21 @@ def user_admin(request):
 
 @login_required(login_url='login')  # Ensure 'login' is the correct URL name
 def dashboard(request):
-    # Fetch RunRequest data model filtered by production_title in session
-    runs = RunRequest.objects.all().order_by('run_date')
-
-    # Fetch current user's productions
+     # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
     user_productions = user.productions.filter(is_active=True)[:5]
+
+    # Initialize runs as an empty queryset
+    runs = RunRequest.objects.none()
 
     # Filter runs by production_title in session
     production_title_in_session = request.session.get('production_title')
     department_in_session = request.session.get('department')
     if production_title_in_session:
         if department_in_session == "Admin":
-            runs = runs.filter(production_title=production_title_in_session)
+            runs = RunRequest.objects.filter(production_title=production_title_in_session).order_by('run_date')
         else:
-            runs = runs.filter(production_title=production_title_in_session, requester_department=department_in_session)
-
+            runs = RunRequest.objects.filter(production_title=production_title_in_session, requester_department=department_in_session).order_by('run_date')
     # Separate and limit "Completed" and "Open" runs
     completed_runs = runs.filter(run_status="Completed")[:5]
     open_runs = runs.filter(run_status="Open")[:5]
