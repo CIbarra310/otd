@@ -321,57 +321,68 @@
 
         
         <h2>Additional Information</h2>
-        <div class="row">
-            <div class="form-group col-6">
-                <label for="purchase_order">Purchase Order</label>
-                {{ form.purchase_order|as_crispy_field }}
-            </div>
-            <div class="form-group col-6">
-                <label for="vendor_invoice">Vendor Invoice</label>
-                {{ form.vendor_invoice|as_crispy_field }}
-            </div>
-            <div class="form-group col-6">
-                <label for="run_status">Run Status</label>
-                {{ form.run_status|as_crispy_field }}
-            </div> 
-            <div class="form-group col-6">
-                <label for="truck_size">Truck Size</label>
-                <select name="truck_size" id="truck_size" class="form-control">
-                    {% for value, label in truck_sizes %}
-                        <option value="{{ value }}">{{ label }}</option>
-                    {% endfor %}
-                </select>
+        <div class="container">
+            <div class="row">
+                <div class="form-group col-6">
+                    <label for="purchase_order">Purchase Order</label>
+                    {{ form.purchase_order|as_crispy_field }}
+                </div>
+                <div class="form-group col-6">
+                    <label for="vendor_invoice">Vendor Invoice</label>
+                    {{ form.vendor_invoice|as_crispy_field }}
+                </div>
+                <div class="form-group col-6">
+                    <label for="run_status">Run Status</label>
+                    {{ form.run_status|as_crispy_field }}
+                </div> 
+                <div class="form-group col-6">
+                    <label for="truck_size">Truck Size</label>
+                    <select name="truck_size" id="truck_size" class="form-control">
+                        {% for value, label in truck_sizes %}
+                            <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% if request.session.department == 'Transportation' or request.session.department == 'Admin' %}
+                    {% if request.session.job_title != 'Driver' %}
+                        <div class="form-group col-12">
+                            <label for="assigned_driver">Assigned Driver</label>
+                            <select name="assigned_driver" id="assigned_driver" class="form-control">
+                                <option value="">Select a driver</option>
+                                {% for driver in active_drivers %}
+                                    <option value="{{ driver.id }}">{{ driver.first_name }} {{ driver.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endif %}
+                {% endif %}
             </div>
             {% if request.session.department == 'Transportation' or request.session.department == 'Admin' %}
                 {% if request.session.job_title != 'Driver' %}
-                    <div class="form-group col-12">
-                        <label for="assigned_driver">Assigned Driver</label>
-                        <select name="assigned_driver" id="assigned_driver" class="form-control">
-                            <option value="">Select a driver</option>
-                            {% for driver in active_drivers %}
-                                <option value="{{ driver.id }}">{{ driver.first_name }} {{ driver.last_name }}</option>
-                            {% endfor %}
-                        </select>
+                    <div class="form-group">
+                        <label for="transportation_notes">Transportation Notes</label>
+                        {{ form.transportation_notes|as_crispy_field }}
                     </div>
                 {% endif %}
             {% endif %}
-        </div>
-        {% if request.session.department == 'Transportation' or request.session.department == 'Admin' %}
-            {% if request.session.job_title != 'Driver' %}
+            {% if request.session.department == 'Transportation' or request.session.department == 'Admin' %}
                 <div class="form-group">
-                    <label for="transportation_notes">Transportation Notes</label>
-                    {{ form.transportation_notes|as_crispy_field }}
+                    <label for="driver_notes">Driver Notes</label>
+                    {{ form.driver_notes|as_crispy_field }}
                 </div>
             {% endif %}
-        {% endif %}
-        {% if request.session.department == 'Transportation' or request.session.department == 'Admin' %}
-            <div class="form-group">
-                <label for="driver_notes">Driver Notes</label>
-                {{ form.driver_notes|as_crispy_field }}
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-4">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
             </div>
-        {% endif %}
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-        <a href="{% url 'complete_run' run.id %}" class="btn btn-success">Complete</a>
-        <a href="{% url 'cancel_run' run.id %}" class="btn btn-danger">Cancel</a>
+            <div class="col-4">
+                <a href="{% url 'complete_run' run.id %}" class="btn btn-success">Complete</a>
+            </div>
+            <div class="col-4">
+                <a href="{% url 'cancel_run' run.id %}" class="btn btn-danger">Cancel</a>
+            </div>
+        </div>
     </form>
 {% endblock %}
