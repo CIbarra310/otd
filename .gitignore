@@ -2,4 +2,4 @@
 variables.env
 # Email information
 .env
-db.sqlite3
+# db.sqlite3
