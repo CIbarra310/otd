@@ -17,19 +17,19 @@
             <!-- Requester Contact Information-->
             <div class="row pb-2">
                 <div class="form-group col-6">
-                    <label for="requester_name">Requester Name</label>
+                    <label for="requester_name">Name</label>
                     {{ form.requester_name|as_crispy_field }}
                 </div>
                 <div class="form-group col-6" readonly>
-                    <label for="requester_phone">Requester Phone</label>
+                    <label for="requester_phone">Phone</label>
                     {{ form.requester_phone|as_crispy_field }}
                 </div>
                 <div class="form-group col-6">
-                    <label for="requester_email">Requester Email</label>
+                    <label for="requester_email">Email</label>
                     {{ form.requester_email|as_crispy_field }}
                 </div>
                 <div class="form-group col-6">
-                    <label for="requester_department">Requester Department</label>
+                    <label for="requester_department">Department</label>
                     {{ form.requester_department|as_crispy_field }}
                 </div>
             </div>
@@ -375,7 +375,7 @@
         <hr>
         <div class="row">
             <div class="col-4">
-                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="submit" class="btn btn-primary">Save</button>
             </div>
             <div class="col-4">
                 <a href="{% url 'complete_run' run.id %}" class="btn btn-success">Complete</a>

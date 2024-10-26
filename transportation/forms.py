@@ -24,8 +24,8 @@ class NewRunRequest(forms.ModelForm):
 
     truck_size = forms.ChoiceField(choices=TRUCK_SIZE_CHOICES, required=False)
     run_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control datepicker'}))
-    ready_time = forms.DateField(widget=forms.DateInput(attrs={'type': 'time', 'class': 'form-control time'}))
-    need_by_this_time = forms.DateField(widget=forms.DateInput(attrs={'type': 'time', 'class': 'form-control time'}))
+    ready_time = forms.TimeField(widget=forms.DateInput(attrs={'type': 'time', 'class': 'form-control time'}))
+    need_by_this_time = forms.TimeField(widget=forms.DateInput(attrs={'type': 'time', 'class': 'form-control time'}))
     run_details = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}))
     run_details_2 = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}))
     run_details_3 = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}))
@@ -33,7 +33,8 @@ class NewRunRequest(forms.ModelForm):
     run_details_5 = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}))
     run_details_6 = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}))
     dropoff_details = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}))
-
+    transportation_notes = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}))
+    driver_notes = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}))
 
     assigned_driver = forms.ModelMultipleChoiceField(
         queryset=Driver.objects.filter(is_active=True),
