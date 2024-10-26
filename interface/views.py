@@ -792,11 +792,16 @@ def view_run(request, run_request_id):
     if session_production_title != run.production_title:
         return redirect('dashboard')  # Redirect to the dashboard if titles don't match
 
+    error_message = None
     if request.method == 'POST':
         form = NewRunRequest(request.POST, instance=run)
         if form.is_valid():
             form.save()
             return redirect('view_run', run_request_id=run.id)
+        else:
+            print("Form is not valid")
+            print("Form errors:", form.errors)
+            error_message = "Please correct the errors below."
     else:
         form = NewRunRequest(instance=run)
 

@@ -6,6 +6,7 @@
     <h1>Run {{ run.id }} Details</h1>
     <form method="post" action="{% url 'update_run' run.id %}">
         {% csrf_token %}
+
         <!-- Primary Information -->
          <div class="container">
              <div class="row" name="primary_information" hidden>
@@ -87,7 +88,6 @@
             </div>
         </div>
         <hr>
-
         <!-- Stop 2 -->
          {% if form.stop_2_name.value %}
         <h2>Stop 2 Information</h2>
@@ -127,7 +127,6 @@
         </div>
         <hr>
         {% endif %}
-
         <!-- Stop 3 -->
          {% if form.stop_3_name.value %}
             <h2>Stop 3 Information</h2>
@@ -167,7 +166,6 @@
             </div>
             <hr>
         {% endif %}
-
         <!-- Stop 4 -->
          {% if form.stop_4_name.value %}
             <h2>Stop 4 Information</h2>
@@ -207,7 +205,6 @@
             </div>
             <hr>
         {% endif %}
-
         <!-- Stop 5 -->
         {% if form.stop_5_name.value %}
             <div class="container" name="stop_5_div">
@@ -245,7 +242,6 @@
             </div>
             <hr>
         {% endif %}
-
         <!-- Stop 6 -->
          {% if form.stop_6_name.value %}
             <h2>Stop 6 Information</h2>
@@ -283,8 +279,7 @@
             </div>
             <hr>
         {% endif %}
-        <!-- Repeat similar structure for Stop 3 to Stop 6 and Dropoff Information -->
-        
+        <!-- Dropoff Information -->
         <h2>Dropoff Information</h2>
         <div class="container" name="dropoff_div">
             <div class="row">
@@ -319,7 +314,7 @@
             </div>
         </div>
 
-        
+        <!-- Additional Information -->
         <h2>Additional Information</h2>
         <div class="container">
             <div class="row">
