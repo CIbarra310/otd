@@ -1,0 +1,16 @@
+{% extends 'interface/layout.html' %}
+
+{% block content %}
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Success!</h4>
+        <p>Your times have been successfully submitted.</p>
+        <hr>
+        <p class="mb-0">You will be redirected to the dashboard shortly.</p>
+    </div>
+    <script>
+        // Redirect to the dashboard after 5 seconds
+        setTimeout(function() {
+            window.location.href = "{% url 'dashboard' %}";
+        }, 5000);
+    </script>
+{% endblock %}

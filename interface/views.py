@@ -455,6 +455,10 @@ def driver_times(request):
 
 @login_required(login_url='login')
 def driver_times_confirmation(request):
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
     context = {
         'work_date': request.session.get('work_date'),
         'call_time': request.session.get('call_time'),
@@ -465,6 +469,7 @@ def driver_times_confirmation(request):
         'lunch_2_in': request.session.get('lunch_2_in'),
         'notes': request.session.get('notes'),
         'total_hours': request.session.get('total_hours'),
+        'user_productions': user_productions,
     }
     return render(request, 'interface/driver_times_confirmation.html', context)
 
@@ -501,7 +506,6 @@ def driver_times_submit(request):
         )
 
         # Clear the session data
-        request.session.pop('production_title', None)
         request.session.pop('work_date', None)
         request.session.pop('call_time', None)
         request.session.pop('wrap_time', None)
@@ -518,6 +522,31 @@ def driver_times_submit(request):
 @login_required(login_url='login')
 def driver_times_success(request):
     return render(request, 'interface/driver_times_success.html')
+
+
+@login_required(login_url='login')
+def driver_times_view(request):
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
+    # Filter driver times by production_title in session
+    production_title_in_session = request.session.get('production_title')
+    yesterday = datetime.today() - timedelta(days=1)
+    date_string = request.GET.get('date', yesterday.strftime('%Y-%m-%d'))
+    date = datetime.strptime(date_string, '%Y-%m-%d').date()
+
+    if production_title_in_session:
+        driver_times = DriverTimes.objects.filter(production_title=production_title_in_session, work_date=date)
+    else:
+        driver_times = DriverTimes.objects.filter(work_date=date)
+
+    context = {
+        'driver_times': driver_times,
+        'user_productions': user_productions,
+        'date': date_string,
+    }
+    return render(request, 'interface/driver_times_view.html', context)
 
 # - Create a new run
 @login_required(login_url='login')
