@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-yyj2m)-$=uh^1wf)e*sdwe#*)2%!wcx*f6s92-ul*7eo05&l61
 DEBUG = True
 
 ALLOWED_HOSTS = ['ontheday.app', # Production Site
-                 'www.ontheday.app.', # Production Site
+                 'https://www.ontheday.app.', # Production Site
                  'on-the-day-6d3c5e11e0df.herokuapp.com', # Production Site Heroku
                  'ontheday.dev', # Dev Site
                  'www.ontheday.dev', # Dev Site
