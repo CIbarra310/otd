@@ -41,7 +41,10 @@ ALLOWED_HOSTS = ['ontheday.app', # Production Site
                  ]
 
 # Add domains to CSRF_TRUSTED_ORIGINS
-CSRF_TRUSTED_ORIGINS = ['https://www.ontheday.app', 'https://on-the-day-6d3c5e11e0df.herokuapp.com']
+CSRF_TRUSTED_ORIGINS = ['https://www.ontheday.app', 
+                        'https://on-the-day-6d3c5e11e0df.herokuapp.com',
+                        'https://ontheday.dev',
+                        'https://on-the-day-dev-1b36211e57b4.herokuapp.com']
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
