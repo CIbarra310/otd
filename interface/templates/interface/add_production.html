@@ -8,6 +8,15 @@
             <br>
             <h3>Add a Production</h3>
             <hr>
+            {% if messages %}
+                <div>
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
             <form method="POST" action="{% url 'add_production' %}">
                 {% csrf_token %}
                 {{ form|crispy }}

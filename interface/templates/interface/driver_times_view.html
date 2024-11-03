@@ -1,0 +1,43 @@
+{% extends 'interface/layout.html' %}
+
+{% block content %}
+    <h1>Times Submitted for {{ request.session.production_title }}</h1>
+    <form method="get" action="{% url 'driver_times_view' %}">
+        <label for="date">Select Date:</label>
+        <input type="date" id="date" name="date" value="{{ date }}">
+        <button type="submit">Submit</button>
+    </form>
+    <hr>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Driver</th>
+                <th>Work Date</th>
+                <th>Call Time</th>
+                <th>Wrap Time</th>
+                <th>Lunch 1 Out</th>
+                <th>Lunch 1 In</th>
+                <th>Lunch 2 Out</th>
+                <th>Lunch 2 In</th>
+                <th>Notes</th>
+                <th>Total Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for time in driver_times %}
+                <tr>
+                    <td>{{ time.driver }}</td>
+                    <td>{{ time.work_date }}</td>
+                    <td>{{ time.call_time }}</td>
+                    <td>{{ time.wrap_time }}</td>
+                    <td>{{ time.lunch_1_out }}</td>
+                    <td>{{ time.lunch_1_in }}</td>
+                    <td>{{ time.lunch_2_out }}</td>
+                    <td>{{ time.lunch_2_in }}</td>
+                    <td>{{ time.notes }}</td>
+                    <td>{{ time.total_hours }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

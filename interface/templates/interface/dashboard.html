@@ -6,8 +6,9 @@
             <h1>{{ user.first_name }} {{ user.last_name }} </h1>
             <p>{{ request.session.department }} | {{ request.session.production_title }}</p>
         </div>
+        <!-- Session Information -->
         <div class="row">
-            <div class="col-12" hidden>
+            <div class="col-12">
                 <p><strong>Email:</strong> {{ request.session.email }}</p>
                 <p><strong>Production ID:</strong> {{ request.session.current_production_id }}</p>
                 <p><strong>Production Title:</strong> {{ request.session.production_title }}</p>
@@ -15,7 +16,14 @@
                 <p><strong>Department:</strong> {{ request.session.department }}</p>
             </div>
         </div>
+        <!-- End Session Information -->
         <hr>
+        {% if not production_title %}
+            <div class="alert alert-warning" role="alert">
+                No production selected. Please add a production from the sidebar.
+            </div>
+        {% endif %}
+        
         <div class="container">
             <div class="row px-2">
                 <div class=" col-12">

@@ -134,6 +134,11 @@ def production_admin(request):
 # - Add Production
 @login_required(login_url='login')
 def add_production(request):
+    print("Add Production view accessed.")
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
     if request.method == 'POST':
         print("Form submission received.")
         form = AddProductionForm(request.POST)
@@ -156,12 +161,17 @@ def add_production(request):
                     print(f"User's productions after adding: {request.user.productions.all()}")
                     
                     # Add production to the system admin
-                    system_admin = NewUser.objects.get(username='OTD_Admin')  # Replace 'admin' with the actual username of the system admin
+                    system_admin = NewUser.objects.get(username='admin@ontheday.app')  # Replace 'admin@ontheday.app' with the actual username of the system admin
                     print(f"System admin's productions before adding: {system_admin.productions.all()}")
                     system_admin.productions.add(production)
                     system_admin.save()
                     print(f"System admin's productions after adding: {system_admin.productions.all()}")
-                    
+
+                    # Set session data
+                    request.session['production_title'] = production.production_title
+                    request.session['production_id'] = production.id
+                    print(f"Session data set: production_title={request.session['production_title']}, production_id={request.session['production_id']}")
+
                     messages.success(request, f'Production {production.production_title} added successfully.')
                     print(f"Production {production.production_title} added successfully to user {request.user.username} and system admin.")
                     return redirect('dashboard')
@@ -177,7 +187,7 @@ def add_production(request):
                     production = Production.objects.get(code=production_code)
                     form = AddProductionForm(initial={'production_code': production_code, 'production_id': production.id})
                     print(f"Production found: {production.production_title}")
-                    return render(request, 'interface/add_production.html', {'form': form, 'production': production})
+                    return render(request, 'interface/add_production.html', {'form': form, 'production': production, 'user_productions': user_productions})
                 except Production.DoesNotExist:
                     messages.error(request, 'Invalid production code.')
                     print("Invalid production code.")
@@ -186,7 +196,12 @@ def add_production(request):
             print(form.errors)
     else:
         form = AddProductionForm()
-    return render(request, 'interface/add_production.html', {'form': form})
+
+    context = {
+        'form': form,
+        'user_productions': user_productions,
+    }
+    return render(request, 'interface/add_production.html', context=context)
 
 # - Location Admin
 @login_required(login_url=login)
@@ -455,6 +470,10 @@ def driver_times(request):
 
 @login_required(login_url='login')
 def driver_times_confirmation(request):
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
     context = {
         'work_date': request.session.get('work_date'),
         'call_time': request.session.get('call_time'),
@@ -465,6 +484,7 @@ def driver_times_confirmation(request):
         'lunch_2_in': request.session.get('lunch_2_in'),
         'notes': request.session.get('notes'),
         'total_hours': request.session.get('total_hours'),
+        'user_productions': user_productions,
     }
     return render(request, 'interface/driver_times_confirmation.html', context)
 
@@ -501,7 +521,6 @@ def driver_times_submit(request):
         )
 
         # Clear the session data
-        request.session.pop('production_title', None)
         request.session.pop('work_date', None)
         request.session.pop('call_time', None)
         request.session.pop('wrap_time', None)
@@ -518,6 +537,31 @@ def driver_times_submit(request):
 @login_required(login_url='login')
 def driver_times_success(request):
     return render(request, 'interface/driver_times_success.html')
+
+
+@login_required(login_url='login')
+def driver_times_view(request):
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
+    # Filter driver times by production_title in session
+    production_title_in_session = request.session.get('production_title')
+    yesterday = datetime.today() - timedelta(days=1)
+    date_string = request.GET.get('date', yesterday.strftime('%Y-%m-%d'))
+    date = datetime.strptime(date_string, '%Y-%m-%d').date()
+
+    if production_title_in_session:
+        driver_times = DriverTimes.objects.filter(production_title=production_title_in_session, work_date=date)
+    else:
+        driver_times = DriverTimes.objects.filter(work_date=date)
+
+    context = {
+        'driver_times': driver_times,
+        'user_productions': user_productions,
+        'date': date_string,
+    }
+    return render(request, 'interface/driver_times_view.html', context)
 
 # - Create a new run
 @login_required(login_url='login')

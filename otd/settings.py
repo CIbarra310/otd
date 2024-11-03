@@ -11,9 +11,12 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import os
+import psycopg2
+import dj_database_url
 from decouple import config
 from pathlib import Path
 from dotenv import load_dotenv
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,10 +31,21 @@ SECRET_KEY = 'django-insecure-yyj2m)-$=uh^1wf)e*sdwe#*)2%!wcx*f6s92-ul*7eo05&l61
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.ontheday.app', 'on-the-day-6d3c5e11e0df.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['ontheday.app', # Production Site
+                 'www.ontheday.app.', # Production Site
+                 'on-the-day-6d3c5e11e0df.herokuapp.com', # Production Site Heroku
+                 'ontheday.dev', # Dev Site
+                 'www.ontheday.dev', # Dev Site
+                 'on-the-day-dev-1b36211e57b4.herokuapp.com', # Dev Site Heroku
+                 'localhost', # Localhost
+                 '127.0.0.1', # Localhost by URL
+                 ]
 
 # Add domains to CSRF_TRUSTED_ORIGINS
-CSRF_TRUSTED_ORIGINS = ['https://www.ontheday.app', 'https://on-the-day-6d3c5e11e0df.herokuapp.com']
+CSRF_TRUSTED_ORIGINS = ['https://www.ontheday.app', 
+                        'https://on-the-day-6d3c5e11e0df.herokuapp.com',
+                        'https://ontheday.dev',
+                        'https://on-the-day-dev-1b36211e57b4.herokuapp.com']
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
@@ -60,6 +74,7 @@ INSTALLED_APPS = [
     'storages',
     'corsheaders',
     'crispy_bootstrap4',
+    'import_export',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
@@ -100,13 +115,25 @@ WSGI_APPLICATION = 'otd.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
 
+# Database configuration
+if os.environ.get('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -188,3 +215,11 @@ DEFAULT_FROM_EMAIL = 'admin@ontheday.app'
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+}
