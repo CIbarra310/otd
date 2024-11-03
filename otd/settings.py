@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'storages',
     'corsheaders',
     'crispy_bootstrap4',
+    'import_export',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"

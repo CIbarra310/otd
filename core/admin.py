@@ -1,9 +1,9 @@
 import random
 import string
 from django.contrib import admin
-
+from import_export.admin import ImportExportModelAdmin
 from .models import Production, Vendor, Location, Department, JobTitle, NewUser
-
+from .resources import ProductionResource, VendorResource, LocationResource, DepartmentResource, JobTitleResource
 from django.contrib.auth.admin import UserAdmin
 from django.forms import Textarea, TextInput
 
@@ -26,7 +26,9 @@ class UserAdminConfig(UserAdmin):
 
 def generate_production_code(length=6):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
-class ProductionAdmin(admin.ModelAdmin):
+
+class ProductionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    resource_class = ProductionResource
     list_display = ('id', 'production_title', 'code', 'production_studio', 'production_email', 'purchase_order', 'coordinator_name', 'captain_name', 'is_active')
     search_fields = ('production_title', 'production_studio', 'coordinator_name', 'captain_name')
     list_filter = ('is_active', 'production_studio')
@@ -41,7 +43,8 @@ class ProductionAdmin(admin.ModelAdmin):
             obj.code = generate_production_code()
         super().save_model(request, obj, form, change)
 
-class VendorAdmin(admin.ModelAdmin):
+class VendorAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    resource_class = VendorResource
     ordering = ('vendor_name',)
     list_display = ('vendor_name', 'vendor_address_1', 'vendor_address_2', 'vendor_city', 'vendor_state', 'vendor_zip', 'vendor_phone')
     search_fields = ('vendor_name', 'vendor_address_1', 'vendor_address_2', 'vendor_city', 'vendor_state', 'vendor_zip', 'vendor_phone')
@@ -52,7 +55,8 @@ class VendorAdmin(admin.ModelAdmin):
         }),
     )
 
-class LocationAdmin(admin.ModelAdmin):
+class LocationAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    resource_class = LocationResource
     ordering = ('location_name',)
     list_display = ('location_name', 'location_address_1', 'location_address_2', 'location_city', 'location_state', 'location_zip', 'location_phone')
     search_fields = ('location_name', 'location_address_1','location_address_2', 'location_city', 'location_state', 'location_zip', 'location_phone')
@@ -63,7 +67,8 @@ class LocationAdmin(admin.ModelAdmin):
         }),
     )
 
-class DepartmentAdmin(admin.ModelAdmin):
+class DepartmentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    resource_class = DepartmentResource
     ordering = ('department_title',)
     list_display = ('department_title',)
     search_fields = ('department_title',)
@@ -74,7 +79,8 @@ class DepartmentAdmin(admin.ModelAdmin):
         }),
     )
 
-class JobTitleAdmin(admin.ModelAdmin):
+class JobTitleAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    resource_class = JobTitleResource
     ordering = ('job_title',)
     list_display = ('job_title', 'department_title')
     search_fields = ('job_title', 'department_title')
