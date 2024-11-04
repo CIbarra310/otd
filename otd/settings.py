@@ -127,7 +127,7 @@ WSGI_APPLICATION = 'otd.wsgi.application'
 # Database configuration
 if os.environ.get('DATABASE_URL'):
     DATABASES = {
-        'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
+        'default': dj_database_url.config(conn_max_age=120, ssl_require=True)
     }
 else:
     DATABASES = {
