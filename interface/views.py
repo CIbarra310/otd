@@ -290,7 +290,7 @@ def dashboard(request):
     production_title_in_session = request.session.get('production_title')
     department_in_session = request.session.get('department')
     if production_title_in_session:
-        if department_in_session == "Admin":
+        if department_in_session == "Admin" or department_in_session == "Production" or department_in_session == "Transportation":
             runs = RunRequest.objects.filter(production_title=production_title_in_session).order_by('run_date')
         else:
             runs = RunRequest.objects.filter(production_title=production_title_in_session, requester_department=department_in_session).order_by('run_date')
