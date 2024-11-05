@@ -283,6 +283,9 @@ def dashboard(request):
     user = get_object_or_404(NewUser, id=request.user.id)
     user_productions = user.productions.filter(is_active=True)[:5]
 
+    # Check if the user is a driver
+    is_driver = Driver.objects.filter(user=user).exists()
+
     # Initialize runs as an empty queryset
     runs = RunRequest.objects.none()
 
@@ -307,6 +310,7 @@ def dashboard(request):
         'completed_runs': completed_runs,
         'open_runs': open_runs,
         'user_productions': user_productions,
+        'is_driver': is_driver,
     }
     return render(request, 'interface/dashboard.html', context=context)
 

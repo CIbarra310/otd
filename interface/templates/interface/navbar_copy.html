@@ -13,7 +13,9 @@
                     </select>
                 </div>
             </form>
-            <a href="{% url 'add_production' %}"><i>Add Production</i></a>
+            <div class="container">
+                <a class="btn btn-sm btn-primary" href="{% url 'add_production' %}"><i>Add Production</i></a>
+            </div>
         </div>
     </div>
     <li><a class="dropdown-item" href="{% url 'dashboard' %}"><i class="fa fa-house"></i> Home Dashboard</a></li>
@@ -28,17 +30,20 @@
     {% if request.session.department == "Transportation" or request.session.department == "Admin" %}
         <ul>
             <strong class="text-white">Transportation</strong>
-            <li><a class="dropdown-item" href="{% url 'driver_times' %}"><i class="fa fa-clock"></i> Submit Times</a></li>
-            <li><a class="dropdown-item" href="{% url 'driver_times_view' %}"><i class="fa fa-clipboard"></i> View Times</a></li>
-            <li><a class="dropdown-item" href="{% url 'driver_roster' %}">
-                <i class="fa fa-user"></i> Driver Roster</a>
-            </li>
-            <li><a class="dropdown-item" href="{% url 'daily_rundown' %}">
-                <i class="fa fa-file"> </i> Daily Rundown</a>
-            </li>
-            <li><a class="dropdown-item" href="{% url 'equipment_admin' %}" >
-                <i class="fa fa-gear"> </i> Equipment</a>
-            </li>
+            {% if is_driver %}
+                <li><a class="dropdown-item" href="{% url 'driver_times' %}"><i class="fa fa-clock"></i> Submit Times</a></li>
+            {% else %}
+                <li><a class="dropdown-item" href="{% url 'driver_times_view' %}"><i class="fa fa-clipboard"></i> View Times</a></li>
+                <li><a class="dropdown-item" href="{% url 'driver_roster' %}">
+                    <i class="fa fa-user"></i> Driver Roster</a>
+                </li>
+                <li><a class="dropdown-item" href="{% url 'daily_rundown' %}">
+                    <i class="fa fa-file"> </i> Daily Rundown</a>
+                </li>
+                <li><a class="dropdown-item" href="{% url 'equipment_admin' %}" >
+                    <i class="fa fa-gear"> </i> Equipment</a>
+                </li>
+            {% endif %}
         </ul>
     {% endif %}
     <br>
