@@ -11,8 +11,6 @@
 <main>
     <div class="run-request-container shadow-md col-6 col-md-6 col-lg-4 col-xl-4">
         <div class="card-body">
-            <h2 class="text-center">Create New Run</h2>
-            <hr>
             <form method="POST" autocomplete="off" action="{% url 'new_run' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                
@@ -43,6 +41,8 @@
                
                 <!-- Step 1: Date/Time Information -->
                 <div class="row" id="step1">
+                    <h2 class="text-center">Date/Time</h2>
+                    <hr>
                     <div class="col-12">
                         <label for="run_date">Date:</label>
                         <input type="date" class="form-control run-request-input" name="run_date" id="run_date">
@@ -63,6 +63,8 @@
                
                 <!-- Step 2: Get location 1-->
                 <div class="row" id="step2" hidden>
+                    <h2 class="text-center">Pickup Location</h2>
+                    <hr>
                     <div class="col-12">
                         <input type="text" class="form-control run-request-input" name="pickup_name" id="pickup-search-input" placeholder="Search for location">
                         <ul id="pickup-search-results" class="list-group"></ul>
@@ -100,6 +102,8 @@
                 
                 <!-- Step 3: Get Location 2  -->
                 <div class="row" id="step3" hidden>
+                    <h2 class="text-center">Stop 2</h2>
+                    <hr>
                     <div class="col-12">
                         <input type="text" class="form-control run-request-input" name="stop_2_name" id="step-2-search-input" placeholder="Search for 2nd location">
                         <ul id="step-2-search-results" class="list-group"></ul>
@@ -137,6 +141,8 @@
 
                 <!-- Step 4: Get Location 3 -->
                 <div class="row" id="step4" hidden>
+                    <h2 class="text-center">Stop 3</h2>
+                    <hr>
                     <div class="col-12">
                         <input type="text" class="form-control run-request-input" name="stop_3_name" id="step-3-search-input" placeholder="Search for 3rd location">
                         <ul id="step-3-search-results" class="list-group"></ul>
@@ -174,6 +180,8 @@
 
                 <!-- Step 5: Get Location 4 -->
                 <div class="row" id="step5" hidden>
+                    <h2 class="text-center">Stop 4</h2>
+                    <hr>
                     <div class="col-12">
                         <input type="text" class="form-control run-request-input" name="stop_4_name" id="step-4-search-input" placeholder="Search for 4th location">
                         <ul id="step-4-search-results" class="list-group"></ul>
@@ -210,6 +218,8 @@
 
                 <!-- Step 6: Get Location 5 -->
                 <div class="row" id="step6" hidden>
+                    <h2 class="text-center">Stop 5</h2>
+                    <hr>
                     <div class="col-12">
                         <input type="text" class="form-control run-request-input" name="stop_5_name" id="step-5-search-input" placeholder="Search for 5th location">
                         <ul id="step-5-search-results" class="list-group"></ul>
@@ -246,6 +256,8 @@
 
                 <!-- Step 7: Get Location 6 -->
                 <div class="row" id="step7" hidden>
+                    <h2 class="text-center">Stop 6</h2>
+                    <hr>
                     <div class="col-12">
                         <input type="text" class="form-control run-request-input" name="stop_6_name" id="step-6-search-input" placeholder="Search for 6th location">
                         <ul id="step-6-search-results" class="list-group"></ul>
@@ -278,6 +290,8 @@
 
                 <!-- Step 8: Get drop off location -->
                 <div class="row" id="step8" hidden>
+                    <h2 class="text-center">Dropoff Location</h2>
+                    <hr>
                     <div class="col-12">
                         <input type="text" class="form-control run-request-input" name="dropoff_name" id="dropoff-search-input" placeholder="Search for drop off location">
                         <ul id="dropoff-search-results" class="list-group"></ul>
@@ -310,6 +324,8 @@
                 </div>
                 <!-- Step 9: Additional information and submission -->        
                 <div class="row" id="step9" hidden>
+                    <h2 class="text-center">Additional Information</h2>
+                    <hr>
                     <div class="col-12">
                         <div class="col-12 mb-3">
                             <select class="form-control run-request-input" name="truck_size" id="truck_size">
