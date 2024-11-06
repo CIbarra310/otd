@@ -1327,3 +1327,8 @@ def get_user_details_by_email(request):
         response = {'exists': False}
     
     return JsonResponse(response)
+
+# fuel log
+@login_required(login_url='login')
+def fuel_log(request):
+   return render(request, 'interface/fuel_log.html')

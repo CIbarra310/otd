@@ -43,7 +43,8 @@ urlpatterns = [
     path('driver_times_view/', views.driver_times_view, name='driver_times_view'),
     path('driver_times_confirmation/', views.driver_times_confirmation, name='driver_times_confirmation'),
     path('driver_times_submit/', views.driver_times_submit, name='driver_times_submit'),
-     path('driver-times-success/', views.driver_times_success, name='driver_times_success'),
+    path('driver-times-success/', views.driver_times_success, name='driver_times_success'),
+    path('fuel_log/', views.fuel_log, name='fuel_log'),
 
     path('equipment_admin', views.equipment_admin, name="equipment_admin"),
     path('add_equipment', views.add_equipment, name="add_equipment"),
