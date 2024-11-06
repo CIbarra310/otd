@@ -23,7 +23,7 @@ class NewRunRequest(forms.ModelForm):
     ]
 
     truck_size = forms.ChoiceField(choices=TRUCK_SIZE_CHOICES, required=False)
-    run_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control datepicker'}))
+    run_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control datepicker'}), required=False)
     ready_time = forms.TimeField(widget=forms.DateInput(attrs={'type': 'time', 'class': 'form-control time'}), required=False)
     need_by_this_time = forms.TimeField(widget=forms.DateInput(attrs={'type': 'time', 'class': 'form-control time'}), required=False)
     run_details = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}))
