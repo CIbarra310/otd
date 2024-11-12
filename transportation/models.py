@@ -184,16 +184,22 @@ class DriverTimes(models.Model):
     production_title = models.CharField(max_length=255)
     work_date = models.DateField()
     call_time = models.DecimalField(max_digits=5, decimal_places=2)
+    non_deducted_breakfast_in = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     wrap_time = models.DecimalField(max_digits=5, decimal_places=2)
     lunch_1_out = models.DecimalField(max_digits=5, decimal_places=2)
     lunch_1_in = models.DecimalField(max_digits=5, decimal_places=2)
     lunch_2_out = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     lunch_2_in = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    non_deducted_meal_out = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    non_deducted_meal_in = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     notes = models.TextField(blank=True, null=True)
     total_hours = models.DecimalField(max_digits=5, decimal_places=2)
     instructions = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    meal_penalty_1 = models.IntegerField(null=True, blank=True)
+    meal_penalty_2 = models.IntegerField(null=True, blank=True)
+    meal_penalty_3 = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.driver} - {self.work_date} - {self.production_title}"    

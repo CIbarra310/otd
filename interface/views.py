@@ -439,9 +439,12 @@ def driver_times(request):
         driver_name = f"{first_name} {last_name}" if first_name and last_name else None
         work_date = request.POST.get('work_date')
         call_time = float(request.POST.get('call_time'))
+        non_deducted_breakfast_in = request.POST.get('non_deducted_breakfast_in') or 0
         wrap_time = float(request.POST.get('wrap_time'))
         lunch_1_out = float(request.POST.get('lunch_1_out'))
         lunch_1_in = float(request.POST.get('lunch_1_in'))
+        non_deducted_meal_out = request.POST.get('non_deducted_meal_out') or 0
+        non_deducted_meal_in = request.POST.get('non_deducted_meal_in') or 0
         lunch_2_out = request.POST.get('lunch_2_out') or 0
         lunch_2_in = request.POST.get('lunch_2_in') or 0
         notes = request.POST.get('notes')
@@ -453,16 +456,48 @@ def driver_times(request):
         # Calculate total hours
         total_hours = wrap_time - call_time - ((lunch_1_in - lunch_1_out) + (lunch_2_in - lunch_2_out))
 
+         # Calculate meal penalty 1
+        if non_deducted_breakfast_in:
+            time_from_start = lunch_1_out - float(non_deducted_breakfast_in)
+        else:
+            time_from_start = lunch_1_out - call_time
+
+        meal_penalty_1 = max(0, (time_from_start - 6.0) // 0.5)
+
+         # Calculate meal penalty 2
+        if non_deducted_meal_out:
+            time_from_lunch_1 = float(non_deducted_meal_out) - lunch_1_in
+        elif lunch_2_out:
+            time_from_lunch_1 = lunch_2_out - lunch_1_in
+        else:
+            time_from_lunch_1 = wrap_time - lunch_1_in
+
+        meal_penalty_2 = max(0, (time_from_lunch_1 - 6.0) // 0.5)
+
+        # Calculate meal penalty 3
+        if non_deducted_meal_in:
+            time_from_last_meal = wrap_time - float(non_deducted_meal_in)
+        else:
+            time_from_last_meal = wrap_time - lunch_2_in
+
+        meal_penalty_3 = max(0, (time_from_last_meal - 6.0) // 0.5)
+
         # Store the form data in the session
         request.session['work_date'] = work_date
         request.session['call_time'] = call_time
+        request.session['non_deducted_breakfast_in'] = non_deducted_breakfast_in
         request.session['wrap_time'] = wrap_time
         request.session['lunch_1_out'] = lunch_1_out
         request.session['lunch_1_in'] = lunch_1_in
+        request.session['non_deducted_meal_out'] = non_deducted_meal_out
+        request.session['non_deducted_meal_in'] = non_deducted_meal_in
         request.session['lunch_2_out'] = lunch_2_out
         request.session['lunch_2_in'] = lunch_2_in
         request.session['notes'] = notes
         request.session['total_hours'] = total_hours
+        request.session['meal_penalty_1'] = meal_penalty_1
+        request.session['meal_penalty_2'] = meal_penalty_2
+        request.session['meal_penalty_3'] = meal_penalty_3
 
         # Redirect to the confirmation page
         return redirect('driver_times_confirmation')
@@ -481,14 +516,20 @@ def driver_times_confirmation(request):
     context = {
         'work_date': request.session.get('work_date'),
         'call_time': request.session.get('call_time'),
+        'non_deducted_breakfast_in': request.session.get('non_deducted_breakfast_in'),
         'wrap_time': request.session.get('wrap_time'),
         'lunch_1_out': request.session.get('lunch_1_out'),
         'lunch_1_in': request.session.get('lunch_1_in'),
+        'non_deducted_meal_out': request.session.get('non_deducted_meal_out'),
+        'non_deducted_meal_in': request.session.get('non_deducted_meal_in'),
         'lunch_2_out': request.session.get('lunch_2_out'),
         'lunch_2_in': request.session.get('lunch_2_in'),
         'notes': request.session.get('notes'),
         'total_hours': request.session.get('total_hours'),
         'user_productions': user_productions,
+        'meal_penalty_1': request.session.get('meal_penalty_1'),
+        'meal_penalty_2': request.session.get('meal_penalty_2'),
+        'meal_penalty_3': request.session.get('meal_penalty_3'),
     }
     return render(request, 'interface/driver_times_confirmation.html', context)
 
@@ -501,13 +542,19 @@ def driver_times_submit(request):
         production_title = request.session.get('production_title')
         work_date = request.session.get('work_date')
         call_time = request.session.get('call_time')
+        non_deducted_breakfast_in = request.session.get('non_deducted_breakfast_in')
         wrap_time = request.session.get('wrap_time')
         lunch_1_out = request.session.get('lunch_1_out')
         lunch_1_in = request.session.get('lunch_1_in')
+        non_deducted_meal_out = request.session.get('non_deducted_meal_out')
+        non_deducted_meal_in = request.session.get('non_deducted_meal_in')
         lunch_2_out = request.session.get('lunch_2_out')
         lunch_2_in = request.session.get('lunch_2_in')
         notes = request.session.get('notes')
         total_hours = request.session.get('total_hours')
+        meal_penalty_1 = request.session.get('meal_penalty_1')
+        meal_penalty_2 = request.session.get('meal_penalty_2')
+        meal_penalty_3 = request.session.get('meal_penalty_3')
 
         # Save the data to the database
         DriverTimes.objects.create(
@@ -515,25 +562,37 @@ def driver_times_submit(request):
             production_title=production_title,
             work_date=work_date,
             call_time=call_time,
+            non_deducted_breakfast_in=non_deducted_breakfast_in,
             wrap_time=wrap_time,
             lunch_1_out=lunch_1_out,
             lunch_1_in=lunch_1_in,
+            non_deducted_meal_out=non_deducted_meal_out,
+            non_deducted_meal_in=non_deducted_meal_in,
             lunch_2_out=lunch_2_out,
             lunch_2_in=lunch_2_in,
             notes=notes,
-            total_hours=total_hours
+            total_hours=total_hours,
+            meal_penalty_1=meal_penalty_1,
+            meal_penalty_2=meal_penalty_2,
+            meal_penalty_3=meal_penalty_3,
         )
 
         # Clear the session data
         request.session.pop('work_date', None)
         request.session.pop('call_time', None)
+        request.session.pop('non_deducted_breakfast_in', None)
         request.session.pop('wrap_time', None)
         request.session.pop('lunch_1_out', None)
         request.session.pop('lunch_1_in', None)
+        request.session.pop('non_deducted_meal_out', None)
+        request.session.pop('non_deducted_meal_in', None)
         request.session.pop('lunch_2_out', None)
         request.session.pop('lunch_2_in', None)
         request.session.pop('notes', None)
         request.session.pop('total_hours', None)
+        request.session.pop('meal_penalty_1', None)
+        request.session.pop('meal_penalty_2', None)
+        request.session.pop('meal_penalty_3', None)
 
         return redirect('driver_times_success')
     return redirect('driver_times')
@@ -566,6 +625,23 @@ def driver_times_view(request):
         'date': date_string,
     }
     return render(request, 'interface/driver_times_view.html', context)
+
+def driver_time_detail(request, id):
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)    
+    
+    driver_time = get_object_or_404(DriverTimes, id=id)
+    
+    if request.method == 'POST':
+        # Handle form submission for editing driver time or sending email
+        pass
+    context = {
+        'driver_time': driver_time,
+        'user_productions': user_productions,
+    }
+
+    return render(request, 'interface/driver_time_detail.html', context=context)
+
 
 # - Create a new run
 @login_required(login_url='login')

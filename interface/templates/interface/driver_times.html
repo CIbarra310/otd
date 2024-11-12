@@ -8,8 +8,8 @@
         </ol>
     </nav>
 
+    <h1 class="text-center">Work Time Submission</h1>
     <div class="card-body">
-        <h1 class="text-center">Work Time Submission</h1>
         <h3 class="text-center">{{ request.session.production_title }}</h3>
         <hr>
         <form action="" method="post">
@@ -19,13 +19,13 @@
             </div>
             {% csrf_token %}
             <div class="row pb-2">
-                <div class="col-6">
+                <div class="col-12">
                     <label for="call_time" class="form-group">Call Time</label>
                     <input type="number" step="0.1" class="form-control" name="call_time" value="">
                 </div>
-                <div class="col-6">
-                    <label for="wrap_time" class="form-group">Wrap time</label>
-                    <input type="number" step="0.1" class="form-control" name="wrap_time" value="">
+                <div class="col-12">
+                    <label for="non_deducted_breakfast_in" class="form-group">NDB In (Crew Call)</label>
+                    <input type="number" step="0.1" class="form-control" name="non_deducted_breakfast_in" value="">
                 </div>
             </div>
             <div class="row pb-2">
@@ -40,12 +40,26 @@
             </div>
             <div class="row pb-2">
                 <div class="col-6">
+                    <label for="lunch_1_out" class="form-group">NDM Out</label>
+                    <input type="number" step="0.1" class="form-control" id="non_deducted_meal_out" name="non_deducted_meal_out" aria-label="Lunch 1 Out" value="">
+                </div>
+                <div class="col-6">
+                    <label for="lunch_1_in" class="form-group">NDM In</label>
+                    <input type="number" step="0.1" class="form-control" id="non_deducted_meal_in" name="non_deducted_meal_in" aria-label="Lunch 1 In" value="">
+                </div>
+            </div>
+            <div class="row pb-2">
+                <div class="col-6">
                     <label for="lunch_2_out" class="form-group">Lunch 2 Out</label>
                     <input type="number" step="0.1" class="form-control" id="lunch_2_out" name="lunch_2_out" aria-label="Lunch 2 Out" value="">
                 </div>
                 <div class="col-6">
                     <label for="lunch_2_in" class="form-group">Lunch 2 In</label>
                     <input type="number" step="0.1" class="form-control" id="lunch_2_in" name="lunch_2_in" aria-label="Lunch 2 In" value="">
+                </div>
+                <div class="col-12">
+                    <label for="wrap_time" class="form-group">Wrap time</label>
+                    <input type="number" step="0.1" class="form-control" name="wrap_time" value="">
                 </div>
             </div>
             <div class="row p-2">
