@@ -200,6 +200,7 @@ class DriverTimes(models.Model):
     meal_penalty_1 = models.IntegerField(null=True, blank=True)
     meal_penalty_2 = models.IntegerField(null=True, blank=True)
     meal_penalty_3 = models.IntegerField(null=True, blank=True)
+    times_status = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         return f"{self.driver} - {self.work_date} - {self.production_title}"    

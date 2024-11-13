@@ -430,6 +430,9 @@ def driver_times(request):
     # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
     user_productions = user.productions.filter(is_active=True)
+
+    # Check if the user is a driver
+    is_driver = Driver.objects.filter(user=user).exists()
     
     if request.method == 'POST':
 
@@ -504,6 +507,7 @@ def driver_times(request):
 
     context = {
         'user_productions': user_productions,
+        'is_driver': is_driver,
     }
     return render(request, 'interface/driver_times.html', context)
 
@@ -512,6 +516,9 @@ def driver_times_confirmation(request):
     # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
     user_productions = user.productions.filter(is_active=True)
+
+    # Check if the user is a driver
+    is_driver = Driver.objects.filter(user=user).exists()
 
     context = {
         'work_date': request.session.get('work_date'),
@@ -530,6 +537,7 @@ def driver_times_confirmation(request):
         'meal_penalty_1': request.session.get('meal_penalty_1'),
         'meal_penalty_2': request.session.get('meal_penalty_2'),
         'meal_penalty_3': request.session.get('meal_penalty_3'),
+        'is_driver': is_driver,
     }
     return render(request, 'interface/driver_times_confirmation.html', context)
 
@@ -601,7 +609,7 @@ def driver_times_submit(request):
 def driver_times_success(request):
     return render(request, 'interface/driver_times_success.html')
 
-
+# - View a list of drivers and their times by date
 @login_required(login_url='login')
 def driver_times_view(request):
     # Fetch current user's productions
@@ -626,15 +634,63 @@ def driver_times_view(request):
     }
     return render(request, 'interface/driver_times_view.html', context)
 
+
+# - Driver time details (view details of an individual driver's times)
 def driver_time_detail(request, id):
     user = get_object_or_404(NewUser, id=request.user.id)
-    user_productions = user.productions.filter(is_active=True)    
-    
+    user_productions = user.productions.filter(is_active=True)  
     driver_time = get_object_or_404(DriverTimes, id=id)
     
+    # Get the dot admin email from the production associated with the driver time
+    production = get_object_or_404(Production, production_title=driver_time.production_title)
+    dot_admin_email = production.dot_admin_email
+    
     if request.method == 'POST':
-        # Handle form submission for editing driver time or sending email
-        pass
+        action = request.POST.get('action')
+        subject = f'Confirmation of Times for {driver_time.work_date}'
+        if action == 'accept':
+            body = f"""
+            Your times have been accepted.
+
+            Call Time: {driver_time.call_time}
+            Non-Deducted Breakfast In: {driver_time.non_deducted_breakfast_in}
+            Lunch 1 Out: {driver_time.lunch_1_out}
+            Lunch 1 In: {driver_time.lunch_1_in}
+            Lunch 2 Out: {driver_time.lunch_2_out}
+            Lunch 2 In: {driver_time.lunch_2_in}
+            Non-Deducted Meal Out: {driver_time.non_deducted_meal_out}
+            Non-Deducted Meal In: {driver_time.non_deducted_meal_in}
+            Wrap Time: {driver_time.wrap_time}
+            
+            Please ensure your timecard is accurate and updated.
+            """
+            driver_time.times_status = 'Accepted'
+            print("Times accepted")
+        elif action == 'request_changes':
+            body = f"""
+            
+            Your times have been reviewed and changes are requested. Please partner with the DOT Admin or Transportation Coordinator.
+
+            """
+            driver_time.times_status = 'Changes Requested'
+            print("Changes requested")
+        elif action == 'reject':
+            body = f"""
+            
+            Your times have been reviewed and changes are requested. Please partner with the DOT Admin or Transportation Coordinator.
+
+            """
+            driver_time.times_status = 'Rejected'
+            print(f"{production} {dot_admin_email} {driver_time.driver.driver_email}")
+        # Save the updated status
+        driver_time.save()
+
+        # Send an email to the driver
+        recipient_list = [driver_time.driver.driver_email]
+        email = EmailMessage(subject, body, settings.DEFAULT_FROM_EMAIL, recipient_list, reply_to=[dot_admin_email])
+        email.send(fail_silently=False)
+        return redirect('driver_times_view')  # Redirect to a success page after sending the email
+
     context = {
         'driver_time': driver_time,
         'user_productions': user_productions,
@@ -642,6 +698,83 @@ def driver_time_detail(request, id):
 
     return render(request, 'interface/driver_time_detail.html', context=context)
 
+# - Driver times history for drivers
+@login_required(login_url='login')
+def driver_times_history(request):
+    user = get_object_or_404(NewUser, id=request.user.id)
+    driver = get_object_or_404(Driver, user=user)
+    user_productions = user.productions.filter(is_active=True)
+
+    # Check if the user is a driver
+    is_driver = Driver.objects.filter(user=user).exists()
+
+    # Get the production title from the session for the filter
+    production_title = request.session.get('production_title')
+
+    # Filter the driver times by the selected date range and user's productions
+    driver_times = DriverTimes.objects.filter(
+        driver=driver,
+        production_title=production_title,
+    )
+
+    context = {
+        'driver_times': driver_times,
+        'user_productions': user_productions,
+        'production_title': production_title,
+        'is_driver': is_driver,
+    }
+    return render(request, 'interface/driver_times_history.html', context)
+
+# - For drivers to edit their times
+@login_required(login_url='login')
+def driver_time_edit(request, id):
+    user = get_object_or_404(NewUser, id=request.user.id)
+    driver_time = get_object_or_404(DriverTimes, id=id, driver__user=user)
+    user_productions = user.productions.filter(is_active=True)
+
+    # Check if the user is a driver
+    is_driver = Driver.objects.filter(user=user).exists()
+
+    # Get the dot admin email from the production associated with the driver time
+    production = get_object_or_404(Production, production_title=driver_time.production_title)
+    dot_admin_email = production.dot_admin_email
+
+    if request.method == 'POST':
+        # Update the driver time with the form data
+        driver_time.call_time = request.POST.get('call_time')
+        driver_time.non_deducted_breakfast_in = request.POST.get('non_deducted_breakfast_in')
+        driver_time.lunch_1_out = request.POST.get('lunch_1_out')
+        driver_time.lunch_1_in = request.POST.get('lunch_1_in')
+        driver_time.lunch_2_out = request.POST.get('lunch_2_out')
+        driver_time.lunch_2_in = request.POST.get('lunch_2_in')
+        driver_time.non_deducted_meal_out = request.POST.get('non_deducted_meal_out')
+        driver_time.non_deducted_meal_in = request.POST.get('non_deducted_meal_in')
+        driver_time.wrap_time = request.POST.get('wrap_time')
+        driver_time.total_hours = request.POST.get('total_hours')
+        driver_time.notes = request.POST.get('notes')
+        driver_time.times_status = None
+
+        subject = f'Driver time edit by {driver_time.driver.first_name} {driver_time.driver.last_name} for {driver_time.work_date}'
+        body = f"""
+            
+            {driver_time.driver.first_name} {driver_time.driver.last_name} has edited times for {driver_time.work_date}. Please review
+
+            """
+        print(f"Email Sent to {dot_admin_email}")
+        recipient_list = [dot_admin_email]
+        email = EmailMessage(subject, body, settings.DEFAULT_FROM_EMAIL, recipient_list)
+        email.send(fail_silently=False)
+
+        driver_time.save()
+
+        return redirect('driver_times_history')  # Redirect to the driver times history page after saving
+
+    context = {
+        'driver_time': driver_time,
+        'user_productions': user_productions,
+        'is_driver': is_driver,
+    }
+    return render(request, 'interface/driver_time_edit.html', context)
 
 # - Create a new run
 @login_required(login_url='login')
@@ -659,6 +792,9 @@ def new_run(request):
     # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
     user_productions = user.productions.filter(is_active=True)
+
+    # Check if the user is a driver
+    is_driver = Driver.objects.filter(user=user).exists()
 
     if request.method == "POST":
         run = NewRunRequest(request.POST, request.FILES)
@@ -712,6 +848,7 @@ def new_run(request):
     context = {
         'run': run,
         'user_productions': user_productions,
+        'is_driver': is_driver,
     }
     return render(request, 'interface/new_run.html', context)
 
@@ -829,6 +966,9 @@ def run_history(request):
     user = get_object_or_404(NewUser, id=request.user.id)
     user_productions = user.productions.filter(is_active=True)
 
+    # Check if the user is a driver
+    is_driver = Driver.objects.filter(user=user).exists()
+
     # Filter runs by production_title in session
     production_title_in_session = request.session.get('production_title')
     if production_title_in_session:
@@ -843,6 +983,7 @@ def run_history(request):
     context = {
         'runs': runs,
         'user_productions': user_productions,
+        'is_driver': is_driver,
     }
     return render(request, 'interface/run_history.html', context=context)
 
@@ -856,6 +997,9 @@ def run_queue(request):
     user = get_object_or_404(NewUser, id=request.user.id)
     user_productions = user.productions.filter(is_active=True)
 
+    # Check if the user is a driver
+    is_driver = Driver.objects.filter(user=user).exists()
+
     # Filter runs by production_title in session
     production_title_in_session = request.session.get('production_title')
     if production_title_in_session:
@@ -870,6 +1014,7 @@ def run_queue(request):
     context = {
         'runs': runs,
         'user_productions': user_productions,
+        'is_driver': is_driver,
     }
     return render(request, 'interface/run_queue.html', context=context)
 
