@@ -65,6 +65,8 @@ class Production(models.Model):
     purchase_order = models.CharField(max_length=10, null=True)
     coordinator_name = models.CharField(max_length=150, null=True)
     coordinator_email = models.EmailField(_('email address'), null=True)
+    dot_admin_name = models.CharField(max_length=150, null=True)
+    dot_admin_email = models.EmailField(_('email address'), null=True)
     captain_name = models.CharField(max_length=150, null=True)
     captain_email = models.EmailField(_('email address'), null=True)
     production_notes = models.TextField(max_length=2000, null=True)

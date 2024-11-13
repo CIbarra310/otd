@@ -44,6 +44,9 @@ urlpatterns = [
     path('driver_times_confirmation/', views.driver_times_confirmation, name='driver_times_confirmation'),
     path('driver_times_submit/', views.driver_times_submit, name='driver_times_submit'),
     path('driver-times-success/', views.driver_times_success, name='driver_times_success'),
+    path('driver_time/<int:id>/', views.driver_time_detail, name='driver_time_detail'),
+    path('driver_times_history/', views.driver_times_history, name='driver_times_history'),
+    path('driver_time_edit/<int:id>/', views.driver_time_edit, name='driver_time_edit'),
     path('fuel_log/', views.fuel_log, name='fuel_log'),
 
     path('equipment_admin', views.equipment_admin, name="equipment_admin"),

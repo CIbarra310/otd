@@ -34,7 +34,7 @@ class ProductionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_filter = ('is_active', 'production_studio')
     fieldsets = (
         (None, {
-            'fields': ('production_title', 'code', 'production_studio', 'production_email', 'purchase_order', 'coordinator_name', 'coordinator_email', 'captain_name', 'captain_email', 'production_notes', 'is_active')
+            'fields': ('production_title', 'code', 'production_studio', 'production_email', 'purchase_order', 'coordinator_name', 'coordinator_email', 'captain_name', 'captain_email', 'dot_admin_name', 'dot_admin_email', 'production_notes', 'is_active')
         }),
     )
 

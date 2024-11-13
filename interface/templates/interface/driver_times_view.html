@@ -5,37 +5,49 @@
     <form method="get" action="{% url 'driver_times_view' %}">
         <label for="date">Select Date:</label>
         <input type="date" id="date" name="date" value="{{ date }}">
-        <button type="submit">Submit</button>
+        <button class="btn btn-primary" type="submit">Submit</button>
     </form>
     <hr>
     <table class="table">
         <thead>
             <tr>
                 <th>Driver</th>
-                <th>Work Date</th>
                 <th>Call Time</th>
+                <th class="hidden-column">Crew Call</th>
+                <th class="hidden-column">Lunch 1 Out</th>
+                <th class="hidden-column">Lunch 1 In</th>
+                <th class="hidden-column">Lunch 2 Out</th>
+                <th class="hidden-column">Lunch 2 In</th>
+                <th class="hidden-column">NDM Out</th>
+                <th class="hidden-column">NDM In</th>
                 <th>Wrap Time</th>
-                <th>Lunch 1 Out</th>
-                <th>Lunch 1 In</th>
-                <th>Lunch 2 Out</th>
-                <th>Lunch 2 In</th>
-                <th>Notes</th>
                 <th>Total Hours</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             {% for time in driver_times %}
                 <tr>
-                    <td>{{ time.driver }}</td>
-                    <td>{{ time.work_date }}</td>
+                    <td>
+                        {{ time.driver }}
+                        {% if time.meal_penalty_1 %}
+                            <br>
+                            <span class="badge bg-danger">Meal Penalties</span>
+                        {% endif %}
+                    </td>
                     <td>{{ time.call_time }}</td>
+                    <td class="hidden-column">{{ time.non_deducted_breakfast_in }}</td>
+                    <td class="hidden-column">{{ time.lunch_1_out }}</td>
+                    <td class="hidden-column">{{ time.lunch_1_in }}</td>
+                    <td class="hidden-column">{{ time.lunch_2_out }}</td>
+                    <td class="hidden-column">{{ time.lunch_2_in }}</td>
+                    <td class="hidden-column">{{ time.non_deducted_meal_out }}</td>
+                    <td class="hidden-column">{{ time.non_deducted_meal_in }}</td>
                     <td>{{ time.wrap_time }}</td>
-                    <td>{{ time.lunch_1_out }}</td>
-                    <td>{{ time.lunch_1_in }}</td>
-                    <td>{{ time.lunch_2_out }}</td>
-                    <td>{{ time.lunch_2_in }}</td>
-                    <td>{{ time.notes }}</td>
                     <td>{{ time.total_hours }}</td>
+                    <td>
+                        <a class="btn btn-sm btn-secondary" href="{% url 'driver_time_detail' time.id %}"><i class="fa-solid fa-eye"></i></a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

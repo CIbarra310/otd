@@ -22,7 +22,9 @@
     <br>
     <ul>
         <strong class="text-white">Runs</strong>
-        <li><a class="dropdown-item" href="{% url 'new_run' %}"><i class="fa fa-truck"></i> Run Request</a></li>
+        {% if not is_driver %}
+            <li><a class="dropdown-item" href="{% url 'new_run' %}"><i class="fa fa-truck"></i> Run Request</a></li>
+        {% endif %}
         <li><a class="dropdown-item" href="{% url 'run_queue' %}"><i class="fa fa-list-ul"></i> Run Queue</a></li>
         <li><a class="dropdown-item" href="{% url 'run_history' %}"><i class="fa fa-clock-rotate-left"></i> Run History</a></li>
     </ul>
@@ -32,6 +34,7 @@
             <strong class="text-white">Transportation</strong>
             {% if is_driver %}
                 <li><a class="dropdown-item" href="{% url 'driver_times' %}"><i class="fa fa-clock"></i> Submit Times</a></li>
+                <li><a class="dropdown-item" href="{% url 'driver_times_history' %}"><i class="fa fa-timeline"></i> My Times</a></li>
             {% else %}
                 <li><a class="dropdown-item" href="{% url 'driver_times_view' %}"><i class="fa fa-clipboard"></i> View Times</a></li>
                 <li><a class="dropdown-item" href="{% url 'driver_roster' %}">
