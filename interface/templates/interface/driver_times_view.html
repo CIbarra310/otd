@@ -35,16 +35,16 @@
                             <span class="badge bg-danger">Meal Penalties</span>
                         {% endif %}
                     </td>
-                    <td>{{ time.call_time }}</td>
-                    <td class="hidden-column">{{ time.non_deducted_breakfast_in }}</td>
-                    <td class="hidden-column">{{ time.lunch_1_out }}</td>
-                    <td class="hidden-column">{{ time.lunch_1_in }}</td>
-                    <td class="hidden-column">{{ time.lunch_2_out }}</td>
-                    <td class="hidden-column">{{ time.lunch_2_in }}</td>
-                    <td class="hidden-column">{{ time.non_deducted_meal_out }}</td>
-                    <td class="hidden-column">{{ time.non_deducted_meal_in }}</td>
-                    <td>{{ time.wrap_time }}</td>
-                    <td>{{ time.total_hours }}</td>
+                    <td>{{ time.call_time|default_if_none:'' }}</td>
+                    <td class="hidden-column">{{ time.non_deducted_breakfast_in|default_if_none:'' }}</td>
+                    <td class="hidden-column">{{ time.lunch_1_out|default_if_none:'' }}</td>
+                    <td class="hidden-column">{{ time.lunch_1_in|default_if_none:'' }}</td>
+                    <td class="hidden-column">{{ time.lunch_2_out|default_if_none:'' }}</td>
+                    <td class="hidden-column">{{ time.lunch_2_in|default_if_none:'' }}</td>
+                    <td class="hidden-column">{{ time.non_deducted_meal_out|default_if_none:'' }}</td>
+                    <td class="hidden-column">{{ time.non_deducted_meal_in|default_if_none:'' }}</td>
+                    <td>{{ time.wrap_time|default_if_none:'' }}</td>
+                    <td>{{ time.total_hours|default_if_none:'' }}</td>
                     <td>
                         <a class="btn btn-sm btn-secondary" href="{% url 'driver_time_detail' time.id %}"><i class="fa-solid fa-eye"></i></a>
                     </td>

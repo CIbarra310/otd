@@ -10,23 +10,39 @@
         <h5>{{ driver_time.driver }}</h5>
         <div class="p-3">
             <p><strong>Shift Date: </strong>{{ driver_time.work_date }}</p>
-            <p><strong>Call Time: </strong>{{ driver_time.call_time }}</p>
-            <p><strong>NDB: </strong>{{ driver_time.non_deducted_breakfast_in }}</p>
-            <p><strong>Lunch 1: </strong>{{ driver_time.lunch_1_out }} to {{ driver_time.lunch_1_in }}</p>
-            <p><strong>NDM: </strong>{{ driver_time.non_deducted_meal_out }} to {{ driver_time.non_deducted_meal_in }}</p>
-            <p><strong>Lunch 2: </strong>{{ driver_time.lunch_2_out }} to {{ driver_time.lunch_2_in }}</p>
-            <p><strong>Wrap Time: </strong>{{ driver_time.wrap_time }}</p>
-            <p><strong>Total Hours: </strong>{{ driver_time.total_hours }} Hours</p>
-            <p><strong>Driver's Notes: </strong>{{ driver_time.notes }}</p>
-            <p><strong>Instructions: </strong>{{ driver_time.instructions }}</p>
+            <p><strong>Call Time: </strong>{{ driver_time.call_time|default_if_none:'' }}</p>
+            <p><strong>NDB: </strong>{{ driver_time.non_deducted_breakfast_in|default_if_none:'' }}</p>
+            <p><strong>Lunch 1: </strong>{{ driver_time.lunch_1_out|default_if_none:'' }} to {{ driver_time.lunch_1_in|default_if_none:'' }}</p>
+            <p><strong>NDM: </strong>{{ driver_time.non_deducted_meal_out|default_if_none:'' }} to {{ driver_time.non_deducted_meal_in|default_if_none:'' }}</p>
+            <p><strong>Lunch 2: </strong>{{ driver_time.lunch_2_out|default_if_none:'' }} to {{ driver_time.lunch_2_in|default_if_none:'' }}</p>
+            <p><strong>Wrap Time: </strong>{{ driver_time.wrap_time|default_if_none:'' }}</p>
+            <p><strong>Total Hours: </strong>{{ driver_time.total_hours|default_if_none:'' }} Hours</p>
+            <p><strong>Driver's Notes: </strong>{{ driver_time.notes|default_if_none:'' }}</p>
+            <p><strong>Instructions: </strong>{{ driver_time.instructions|default_if_none:'' }}</p>
         </div>
+        <hr>
+        <h5>Comments</h5>
+        <ul class="list-group">
+            {% for comment in comments %}
+            <li class="list-group-item">
+                <strong>{{ comment.user.first_name }} {{ comment.user.last_name }}:</strong> {{ comment.comment }}
+                <br>
+                <small class="text-muted">{{ comment.created_at }}</small>
+            </li>
+            {% endfor %}
+        </ul>
         <hr>
         <div class="row">
             <form method="post" action="">
                 {% csrf_token %}
-                    <button class="btn btn-primary" type="submit" name="action" value="accept">Accept Times</button>
-                    <button class="btn btn-warning" type="submit" name="action" value="request_changes">Request Changes</button>
-                    <button class="btn btn-danger" type="submit" name="action" value="reject">Reject Times</button>
+                <div class="form-group mt-3">
+                    <label for="comment">Add Comment:</label>
+                    <textarea id="comment" name="comment" class="form-control"></textarea>
+                </div>
+                <br>
+                <button class="btn btn-primary" type="submit" name="action" value="accept">Accept Times</button>
+                <button class="btn btn-warning" type="submit" name="action" value="request_changes">Request Changes</button>
+                <button class="btn btn-danger" type="submit" name="action" value="reject">Reject Times</button>
             </form>
         </div>
     </div>

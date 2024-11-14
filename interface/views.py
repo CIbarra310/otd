@@ -4,10 +4,11 @@ from core.models import Production, Vendor, Location
 from collections import defaultdict
 from core.models import Location, Production, Vendor, NewUser
 from transportation.forms import NewRunRequest, RunRequest, NewDriver, Driver, NewEquipment, Equipment, NewPictureCars, PictureCars
-from transportation.models import DriverTimes, PictureCars, DriverDailyRundown
+from transportation.models import DriverTimes, PictureCars, DriverDailyRundown, DriverTimeComment
 from production.forms import RadioForm
 from datetime import datetime, timedelta
 from django import forms
+from decimal import Decimal
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -677,13 +678,20 @@ def driver_time_detail(request, id):
         elif action == 'reject':
             body = f"""
             
-            Your times have been reviewed and changes are requested. Please partner with the DOT Admin or Transportation Coordinator.
+            Your times have been rejected for the following reason: 
 
             """
             driver_time.times_status = 'Rejected'
             print(f"{production} {dot_admin_email} {driver_time.driver.driver_email}")
+        
         # Save the updated status
         driver_time.save()
+
+        # Add a new comment if provided
+        comment_text = request.POST.get('comment')
+        if comment_text:
+            DriverTimeComment.objects.create(driver_time=driver_time, user=user, comment=comment_text)
+            body += f"\n\n{user.first_name} {user.last_name}: {comment_text}"
 
         # Send an email to the driver
         recipient_list = [driver_time.driver.driver_email]
@@ -694,6 +702,7 @@ def driver_time_detail(request, id):
     context = {
         'driver_time': driver_time,
         'user_productions': user_productions,
+        'comments': driver_time.comments.all(),
     }
 
     return render(request, 'interface/driver_time_detail.html', context=context)
@@ -741,19 +750,27 @@ def driver_time_edit(request, id):
 
     if request.method == 'POST':
         # Update the driver time with the form data
-        driver_time.call_time = request.POST.get('call_time')
-        driver_time.non_deducted_breakfast_in = request.POST.get('non_deducted_breakfast_in')
-        driver_time.lunch_1_out = request.POST.get('lunch_1_out')
-        driver_time.lunch_1_in = request.POST.get('lunch_1_in')
-        driver_time.lunch_2_out = request.POST.get('lunch_2_out')
-        driver_time.lunch_2_in = request.POST.get('lunch_2_in')
-        driver_time.non_deducted_meal_out = request.POST.get('non_deducted_meal_out')
-        driver_time.non_deducted_meal_in = request.POST.get('non_deducted_meal_in')
-        driver_time.wrap_time = request.POST.get('wrap_time')
-        driver_time.total_hours = request.POST.get('total_hours')
-        driver_time.notes = request.POST.get('notes')
+        driver_time.call_time = Decimal(request.POST.get('call_time')) if request.POST.get('call_time') else driver_time.call_time
+        driver_time.non_deducted_breakfast_in = Decimal(request.POST.get('non_deducted_breakfast_in')) if request.POST.get('non_deducted_breakfast_in') else driver_time.non_deducted_breakfast_in
+        driver_time.lunch_1_out = Decimal(request.POST.get('lunch_1_out')) if request.POST.get('lunch_1_out') else driver_time.lunch_1_out
+        driver_time.lunch_1_in = Decimal(request.POST.get('lunch_1_in')) if request.POST.get('lunch_1_in') else driver_time.lunch_1_in
+        driver_time.lunch_2_out = Decimal(request.POST.get('lunch_2_out')) if request.POST.get('lunch_2_out') else driver_time.lunch_2_out
+        driver_time.lunch_2_in = Decimal(request.POST.get('lunch_2_in')) if request.POST.get('lunch_2_in') else driver_time.lunch_2_in
+        driver_time.non_deducted_meal_out = Decimal(request.POST.get('non_deducted_meal_out')) if request.POST.get('non_deducted_meal_out') else driver_time.non_deducted_meal_out
+        driver_time.non_deducted_meal_in = Decimal(request.POST.get('non_deducted_meal_in')) if request.POST.get('non_deducted_meal_in') else driver_time.non_deducted_meal_in
+        driver_time.wrap_time = Decimal(request.POST.get('wrap_time')) if request.POST.get('wrap_time') else driver_time.wrap_time
+        driver_time.total_hours = Decimal(request.POST.get('total_hours')) if request.POST.get('total_hours') else driver_time.total_hours
+        driver_time.notes = request.POST.get('notes') or driver_time.notes
         driver_time.times_status = None
 
+        # Save the updated driver time
+        driver_time.save()
+
+        # Add a new comment if provided
+        comment_text = request.POST.get('comment')
+        if comment_text:
+            DriverTimeComment.objects.create(driver_time=driver_time, user=user, comment=comment_text)
+        
         subject = f'Driver time edit by {driver_time.driver.first_name} {driver_time.driver.last_name} for {driver_time.work_date}'
         body = f"""
             
@@ -765,7 +782,6 @@ def driver_time_edit(request, id):
         email = EmailMessage(subject, body, settings.DEFAULT_FROM_EMAIL, recipient_list)
         email.send(fail_silently=False)
 
-        driver_time.save()
 
         return redirect('driver_times_history')  # Redirect to the driver times history page after saving
 
@@ -773,6 +789,7 @@ def driver_time_edit(request, id):
         'driver_time': driver_time,
         'user_productions': user_productions,
         'is_driver': is_driver,
+        'comments': driver_time.comments.all(),
     }
     return render(request, 'interface/driver_time_edit.html', context)
 

@@ -25,17 +25,17 @@
         <tbody>
             {% for time in driver_times %}
             <tr>
-                <td>{{ time.work_date }}</td>
-                <td>{{ time.call_time }}</td>
-                <td>{{ time.non_deducted_breakfast_in }}</td>
-                <td>{{ time.lunch_1_out }}</td>
-                <td>{{ time.lunch_1_in }}</td>
-                <td>{{ time.lunch_2_out }}</td>
-                <td>{{ time.lunch_2_in }}</td>
-                <td>{{ time.non_deducted_meal_out }}</td>
-                <td>{{ time.non_deducted_meal_in }}</td>
-                <td>{{ time.wrap_time }}</td>
-                <td>{{ time.total_hours }}</td>
+                <td>{{ time.work_date|default_if_none:'' }}</td>
+                <td>{{ time.call_time|default_if_none:'' }}</td>
+                <td>{{ time.non_deducted_breakfast_in|default_if_none:'' }}</td>
+                <td>{{ time.lunch_1_out|default_if_none:'' }}</td>
+                <td>{{ time.lunch_1_in|default_if_none:'' }}</td>
+                <td>{{ time.lunch_2_out|default_if_none:'' }}</td>
+                <td>{{ time.lunch_2_in|default_if_none:'' }}</td>
+                <td>{{ time.non_deducted_meal_out|default_if_none:'' }}</td>
+                <td>{{ time.non_deducted_meal_in|default_if_none:'' }}</td>
+                <td>{{ time.wrap_time|default_if_none:'' }}</td>
+                <td>{{ time.total_hours|default_if_none:'' }}</td>
                 <td>
                     {% if time.times_status == "Accepted" %}
                         <span class="badge bg-success">Accepted</span>
