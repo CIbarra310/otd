@@ -2,60 +2,74 @@
 
 {% block content %}
 <div class="container">
-    <h1>Edit Driver Time</h1>
+    <h1>Edit My Time</h1>
     <hr>
     <form method="post" action="">
         {% csrf_token %}
         <div class="form-group">
             <label for="call_time">Call Time:</label>
-            <input type="text" id="call_time" name="call_time" value="{{ driver_time.call_time }}" class="form-control">
+            <input type="text" id="call_time" name="call_time" value="{{ driver_time.call_time|default_if_none:'' }}" class="form-control" {% if driver_time.times_status == "Accepted" %}readonly{% endif %}>
         </div>
         <div class="form-group">
             <label for="non_deducted_breakfast_in">NDB:</label>
-            <input type="text" id="non_deducted_breakfast_in" name="non_deducted_breakfast_in" value="{{ driver_time.non_deducted_breakfast_in }}" class="form-control">
+            <input type="text" id="non_deducted_breakfast_in" name="non_deducted_breakfast_in" value="{{ driver_time.non_deducted_breakfast_in|default_if_none:'' }}" class="form-control"  {% if driver_time.times_status == "Accepted" %}readonly{% endif %}>
         </div>
         <div class="form-group">
             <label for="lunch_1_out">Lunch 1 Out:</label>
-            <input type="text" id="lunch_1_out" name="lunch_1_out" value="{{ driver_time.lunch_1_out }}" class="form-control">
+            <input type="text" id="lunch_1_out" name="lunch_1_out" value="{{ driver_time.lunch_1_out|default_if_none:'' }}" class="form-control"  {% if driver_time.times_status == "Accepted" %}readonly{% endif %}>
         </div>
         <div class="form-group">
             <label for="lunch_1_in">Lunch 1 In:</label>
-            <input type="text" id="lunch_1_in" name="lunch_1_in" value="{{ driver_time.lunch_1_in }}" class="form-control">
+            <input type="text" id="lunch_1_in" name="lunch_1_in" value="{{ driver_time.lunch_1_in|default_if_none:'' }}" class="form-control"  {% if driver_time.times_status == "Accepted" %}readonly{% endif %}>
         </div>
         <div class="form-group">
             <label for="lunch_2_out">Lunch 2 Out:</label>
-            <input type="text" id="lunch_2_out" name="lunch_2_out" value="{{ driver_time.lunch_2_out }}" class="form-control">
+            <input type="text" id="lunch_2_out" name="lunch_2_out" value="{{ driver_time.lunch_2_out|default_if_none:'' }}" class="form-control" {% if driver_time.times_status == "Accepted" %}readonly{% endif %}>
         </div>
         <div class="form-group">
             <label for="lunch_2_in">Lunch 2 In:</label>
-            <input type="text" id="lunch_2_in" name="lunch_2_in" value="{{ driver_time.lunch_2_in }}" class="form-control">
+            <input type="text" id="lunch_2_in" name="lunch_2_in" value="{{ driver_time.lunch_2_in|default_if_none:'' }}" class="form-control"  {% if driver_time.times_status == "Accepted" %}readonly{% endif %}>
         </div>
         <div class="form-group">
             <label for="non_deducted_meal_out">NDM Out:</label>
-            <input type="text" id="non_deducted_meal_out" name="non_deducted_meal_out" value="{{ driver_time.non_deducted_meal_out }}" class="form-control">
+            <input type="text" id="non_deducted_meal_out" name="non_deducted_meal_out" value="{{ driver_time.non_deducted_meal_out|default_if_none:'' }}" class="form-control"  {% if driver_time.times_status == "Accepted" %}readonly{% endif %}>
         </div>
         <div class="form-group">
             <label for="non_deducted_meal_in">NDM In:</label>
-            <input type="text" id="non_deducted_meal_in" name="non_deducted_meal_in" value="{{ driver_time.non_deducted_meal_in }}" class="form-control">
+            <input type="text" id="non_deducted_meal_in" name="non_deducted_meal_in" value="{{ driver_time.non_deducted_meal_in|default_if_none:'' }}" class="form-control"  {% if driver_time.times_status == "Accepted" %}readonly{% endif %}>
         </div>
         <div class="form-group">
             <label for="wrap_time">Wrap Time:</label>
-            <input type="text" id="wrap_time" name="wrap_time" value="{{ driver_time.wrap_time }}" class="form-control">
+            <input type="text" id="wrap_time" name="wrap_time" value="{{ driver_time.wrap_time|default_if_none:'' }}" class="form-control"  {% if driver_time.times_status == "Accepted" %}readonly{% endif %}>
         </div>
         <div class="form-group">
             <label for="total_hours">Total Hours:</label>
-            <input type="text" id="total_hours" name="total_hours" value="{{ driver_time.total_hours }}" class="form-control">
+            <input type="text" id="total_hours" name="total_hours" value="{{ driver_time.total_hours|default_if_none:'' }}" class="form-control"  {% if driver_time.times_status == "Accepted" %}readonly{% endif %}>
         </div>
         <div class="form-group">
             <label for="notes">Driver's Notes:</label>
-            <textarea id="notes" name="notes" class="form-control">{{ driver_time.notes }}</textarea>
+            <textarea id="notes" name="notes" class="form-control" readonly>{{ driver_time.notes }}</textarea>
         </div>
         <div class="form-group">
             <label for="instructions">Instructions:</label>
-            <textarea id="instructions" name="instructions" class="form-control">{{ driver_time.instructions }}</textarea>
+            <textarea id="instructions" name="instructions" class="form-control" readonly>{{ driver_time.instructions }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="comment">Add Comment:</label>
+            <textarea id="comment" name="comment" class="form-control"></textarea>
         </div>
         <br>
-        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="submit" class="btn btn-primary"  {% if driver_time.times_status == "Accepted" %}hidden{% endif %}>Save Changes</button>
     </form>
+    <hr>
+    <ul class="list-group">
+        {% for comment in comments %}
+        <li class="list-group-item">
+            <strong>{{ comment.user.first_name }} {{ comment.user.last_name }}:</strong> {{ comment.comment }}
+            <br>
+            <small class="text-muted">{{ comment.created_at }}</small>
+        </li>
+        {% endfor %}
+    </ul>
 </div>
 {% endblock %}

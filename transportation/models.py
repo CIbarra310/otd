@@ -205,6 +205,15 @@ class DriverTimes(models.Model):
     def __str__(self):
         return f"{self.driver} - {self.work_date} - {self.production_title}"    
 
+class DriverTimeComment(models.Model):
+    driver_time = models.ForeignKey(DriverTimes, related_name='comments', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Comment by {self.user} created by {self.created_at}"
+
 class DriverDailyRundown(models.Model):
     production = models.ForeignKey(Production, on_delete=models.CASCADE)
     date = models.DateField()
