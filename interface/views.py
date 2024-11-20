@@ -691,14 +691,20 @@ def driver_weekly_times_view(request, driver_id):
 
     # Get the current date or the date from the query parameter
     date_string = request.GET.get('date', datetime.today().strftime('%Y-%m-%d'))
+    print(f"Received date string: {date_string}")
     try:
         date = datetime.strptime(date_string, '%Y-%m-%d').date()
     except ValueError:
-        date = datetime.strptime(date_string, '%b. %d, %Y').date()
+        try:
+            date = datetime.strptime(date_string, '%b. %d, %Y').date()
+        except ValueError:
+            date = datetime.today().date()
+    print(f"Parsed date: {date}")
 
     # Calculate the start and end of the week (Sunday to Saturday)
-    start_of_week = date - timedelta(days=date.weekday() + 1)
+    start_of_week = date - timedelta(days=date.weekday() + 1) if date.weekday() != 6 else date
     end_of_week = start_of_week + timedelta(days=6)
+    print(f"Start of week: {start_of_week}, End of week: {end_of_week}")
 
     # Filter driver times for the selected week
     driver_times = DriverTimes.objects.filter(driver=driver, work_date__range=[start_of_week, end_of_week])
@@ -706,17 +712,19 @@ def driver_weekly_times_view(request, driver_id):
     # Calculate previous and next week dates
     previous_week = start_of_week - timedelta(days=7)
     next_week = start_of_week + timedelta(days=7)
+    print(f"Previous week: {previous_week}, Next week: {next_week}")
 
     context = {
         'driver': driver,
         'driver_times': driver_times,
         'start_of_week': start_of_week,
         'end_of_week': end_of_week,
-        'previous_week': previous_week,
-        'next_week': next_week,
+        'previous_week': previous_week.strftime('%Y-%m-%d'),
+        'next_week': next_week.strftime('%Y-%m-%d'),
         'user_productions': user_productions,
     }
     return render(request, 'interface/driver_weekly_times_view.html', context)
+
 # - Driver time details (view details of an individual driver's times)
 def driver_time_detail(request, id):
     user = get_object_or_404(NewUser, id=request.user.id)
