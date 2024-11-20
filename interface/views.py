@@ -707,7 +707,7 @@ def driver_weekly_times_view(request, driver_id):
     print(f"Start of week: {start_of_week}, End of week: {end_of_week}")
 
     # Filter driver times for the selected week
-    driver_times = DriverTimes.objects.filter(driver=driver, work_date__range=[start_of_week, end_of_week])
+    driver_times = DriverTimes.objects.filter(driver=driver, work_date__range=[start_of_week, end_of_week]).order_by('work_date')
 
     # Calculate previous and next week dates
     previous_week = start_of_week - timedelta(days=7)
