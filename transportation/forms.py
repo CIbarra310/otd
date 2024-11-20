@@ -262,17 +262,23 @@ class NewEquipment(forms.ModelForm):
     class Meta:
         model = Equipment
         fields = [
-            'production_title',
             'equipment_type_1',
             'equipment_type_2',
+            'trailer_type',
             'vendor_name',
+            'vendor_address_1',
+            'vendor_address_2',
+            'vendor_city',
+            'vendor_state',
+            'vendor_zip',
             'vendor_unit_number',
             'fleet_number',
             'purchase_order',
+            'vendor_invoice',
             'equipment_notes',
             'assigned_department',
             'assigned_driver',
-            'is_active'
+            'is_active',
         ]
 
     def __init__(self, *args, **kwargs):
@@ -285,10 +291,17 @@ class NewEquipment(forms.ModelForm):
                 'production_title',
                 'equipment_type_1',
                 'equipment_type_2',
+                'trailer_type',
                 'vendor_name',
+                'vendor_address_1',
+                'vendor_address_2',
+                'vendor_city',
+                'vendor_state',
+                'vendor_zip',
                 'vendor_unit_number',
                 'fleet_number',
                 'purchase_order',
+                'vendor_invoice',
                 'equipment_notes',
                 'assigned_department',
                 'assigned_driver',
@@ -298,8 +311,8 @@ class NewEquipment(forms.ModelForm):
                 Submit('submit', 'Save Equipment', css_class='btn btn-primary')
             )
         )
-
-        # - Create new picture car
+        
+# - Create new picture car
 class NewPictureCars(forms.ModelForm):
     class Meta:
         model = PictureCars
@@ -317,7 +330,10 @@ class NewPictureCars(forms.ModelForm):
         ]
 
     def __init__(self, *args, **kwargs):
+        production_title_initial = kwargs.pop('production_title_initial', None)
         super(NewPictureCars, self).__init__(*args, **kwargs)
+        if production_title_initial:
+            self.fields['production_title'].initial = production_title_initial
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.layout = Layout(

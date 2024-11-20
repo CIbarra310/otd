@@ -1,40 +1,31 @@
 {% extends 'interface/layout.html' %}
 
+{% load static %}
+
 {% block content %}
-    <h1>Times Submitted for {{ request.session.production_title }}</h1>
-    <form method="get" action="{% url 'driver_times_view' %}">
-        <label for="date">Select Date:</label>
-        <input type="date" id="date" name="date" value="{{ date }}">
-        <button class="btn btn-primary" type="submit">Submit</button>
-    </form>
-    <hr>
+<div class="container mt-5">
+    <h1>Driver Weekly Times for {{ driver }}</h1>
+    <p>Week: {{ start_of_week }} - {{ end_of_week }}</p>
     <table class="table">
         <thead>
             <tr>
-                <th>Driver</th>
+                <th>Date</th>
                 <th>Call Time</th>
-                <th class="hidden-column">Crew Call</th>
+                <th class="hidden-column">Non-Deducted Breakfast In</th>
                 <th class="hidden-column">Lunch 1 Out</th>
                 <th class="hidden-column">Lunch 1 In</th>
                 <th class="hidden-column">Lunch 2 Out</th>
                 <th class="hidden-column">Lunch 2 In</th>
-                <th class="hidden-column">NDM Out</th>
-                <th class="hidden-column">NDM In</th>
+                <th class="hidden-column">Non-Deducted Meal Out</th>
+                <th class="hidden-column">Non-Deducted Meal In</th>
                 <th>Wrap Time</th>
                 <th>Total Hours</th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
             {% for time in driver_times %}
                 <tr>
-                    <td>
-                        {{ time.driver }}
-                        {% if time.meal_penalty_1 %}
-                            <br>
-                            <span class="badge bg-danger">Meal Penalties</span>
-                        {% endif %}
-                    </td>
+                    <td>{{ time.work_date }}</td>
                     <td>{{ time.call_time|default_if_none:'' }}</td>
                     <td class="hidden-column">{{ time.non_deducted_breakfast_in|default_if_none:'' }}</td>
                     <td class="hidden-column">{{ time.lunch_1_out|default_if_none:'' }}</td>
@@ -45,22 +36,14 @@
                     <td class="hidden-column">{{ time.non_deducted_meal_in|default_if_none:'' }}</td>
                     <td>{{ time.wrap_time|default_if_none:'' }}</td>
                     <td>{{ time.total_hours|default_if_none:'' }}</td>
-                    <td>
-                        <a href="{% url 'driver_weekly_times_view' driver.id %}?date={{ previous_week }}" class="btn btn-secondary">Previous Week</a>
-                        <a href="{% url 'driver_weekly_times_view' driver.id %}?date={{ next_week }}" class="btn btn-secondary">Next Week</a>
-                    </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-
-    <h2>Active Drivers Without Time Entries</h2>
-    <ul>
-        {% for driver in drivers_without_times %}
-            <li class="pb-2">
-                {{ driver }}
-                <a href="{% url 'driver_weekly_times_view' driver.id %}" class="btn btn-sm btn-primary">View Weekly Times</a>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="d-flex justify-content-between">
+        <a href="{% url 'driver_weekly_times_view' driver.id %}?date={{ previous_week }}" class="btn btn-secondary">Previous Week</a>
+        <a href="{% url 'driver_weekly_times_view' driver.id %}?date={{ next_week }}" class="btn btn-secondary">Next Week</a>
+    </div>
+    <a href="{% url 'driver_times_view' %}" class="btn btn-secondary mt-3">Back to Driver Times</a>
+</div>
 {% endblock %}
