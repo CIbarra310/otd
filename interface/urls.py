@@ -47,13 +47,16 @@ urlpatterns = [
     path('driver_time/<int:id>/', views.driver_time_detail, name='driver_time_detail'),
     path('driver_times_history/', views.driver_times_history, name='driver_times_history'),
     path('driver_time_edit/<int:id>/', views.driver_time_edit, name='driver_time_edit'),
+    path('driver_times/<int:driver_id>/', views.driver_weekly_times_view, name='driver_weekly_times_view'),
+    
     path('fuel_log/', views.fuel_log, name='fuel_log'),
 
     path('equipment_admin', views.equipment_admin, name="equipment_admin"),
-    path('add_equipment', views.add_equipment, name="add_equipment"),
+    path('add_truck', views.add_truck, name="add_truck"),
+    path('add_trailer', views.add_trailer, name="add_trailer"),
     path('equipment_list', views.equipment_list, name="equipment_list"),
     path('add_picture_cars', views.add_picture_cars, name="add_picture_cars"),  # New URL for adding picture cars
-
+   
     path('new_run', views.new_run, name="new_run"),
     path('run_history', views.run_history, name="run_history"),
     path('run_queue', views.run_queue, name="run_queue"),

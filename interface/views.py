@@ -2,7 +2,7 @@ import logging
 from .forms import LoginForm, CreateUserForm, AddProductionForm
 from core.models import Production, Vendor, Location
 from collections import defaultdict
-from core.models import Location, Production, Vendor, NewUser
+from core.models import Location, Production, Vendor, NewUser, Department
 from transportation.forms import NewRunRequest, RunRequest, NewDriver, Driver, NewEquipment, Equipment, NewPictureCars, PictureCars
 from transportation.models import DriverTimes, PictureCars, DriverDailyRundown, DriverTimeComment
 from production.forms import RadioForm
@@ -339,10 +339,27 @@ def driver_roster(request):
 # - Add Driver
 @login_required(login_url='login')
 def add_driver(request):
-
     # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
     user_productions = user.productions.filter(is_active=True)
+    departments = Department.objects.all()
+
+    # Retrieve production_title from the session
+    production_title = request.session.get('production_title')
+    if production_title:
+        trucks = Equipment.objects.filter(
+            equipment_type_1='truck',
+            production_title__production_title=production_title,
+            assigned_driver__isnull=True  # Filter out trucks that are assigned to other drivers
+        )
+        trailers = Equipment.objects.filter(
+            equipment_type_1='trailer',
+            production_title__production_title=production_title,
+            assigned_driver__isnull=True  # Filter out trailers that are assigned to other drivers
+        )
+    else:
+        trucks = Equipment.objects.filter(equipment_type_1='truck', assigned_driver__isnull=True)
+        trailers = Equipment.objects.filter(equipment_type_1='trailer', assigned_driver__isnull=True)
 
     if request.method == 'POST':
         form = NewDriver(request.POST)
@@ -352,12 +369,10 @@ def add_driver(request):
                 email = form.cleaned_data['driver_email']
                 user = NewUser.objects.filter(email=email).first()
                 if not user:
-                    return render(request, 'interface/add_driver.html', {'form': form, 'error': 'No user with this email exists.'})
+                    return render(request, 'interface/add_driver.html', {'form': form, 'error': 'No user with this email exists.', 'departments': departments, 'trucks': trucks, 'trailers': trailers})
 
-                # Retrieve production_title from the session
-                production_title = request.session.get('production_title')
                 if not production_title:
-                    return render(request, 'interface/add_driver.html', {'form': form, 'error': 'Production title is missing from session.'})
+                    return render(request, 'interface/add_driver.html', {'form': form, 'error': 'Production title is missing from session.', 'departments': departments, 'trucks': trucks, 'trailers': trailers})
 
                 # Create the Driver instance
                 driver = Driver(
@@ -368,29 +383,26 @@ def add_driver(request):
                     driver_email=form.cleaned_data['driver_email'],
                     driver_phone=form.cleaned_data['driver_phone'],
                     occupation_code=form.cleaned_data['occupation_code'],
-                    rate=form.cleaned_data['rate'],
-                    grouping=form.cleaned_data['grouping'],
-                    last_4=form.cleaned_data['last_4'],
-                    is_active=True
+                    # Add other fields as necessary
                 )
                 driver.save()
 
-                return redirect('driver_roster')  # Redirect to the driver roster page
+                return redirect('driver_roster')  # Redirect to the driver roster page after adding the driver
+
             except Exception as e:
-                print(f"Error saving driver: {e}")
-                return render(request, 'interface/add_driver.html', {'form': form, 'error': str(e)})
-        else:
-            print("Form is not valid")
-            print(form.errors)
+                return render(request, 'interface/add_driver.html', {'form': form, 'error': str(e), 'departments': departments, 'trucks': trucks, 'trailers': trailers})
+
     else:
         form = NewDriver()
 
     context = {
         'form': form,
         'user_productions': user_productions,
+        'departments': departments,
+        'trucks': trucks,
+        'trailers': trailers,
     }
-
-    return render(request, 'interface/add_driver.html', context=context)
+    return render(request, 'interface/add_driver.html', context)
 
 # - Activate Driver
 @login_required(login_url='login')
@@ -418,12 +430,41 @@ def driver_rundown(request):
 @login_required(login_url='login')
 def view_driver(request, driver_id):
     driver = get_object_or_404(Driver, id=driver_id)
-
-    # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
     user_productions = user.productions.filter(is_active=True)
 
-    return render(request, 'interface/driver.html', {'driver': driver})
+    departments = Department.objects.all()
+
+    # Retrieve production_title from the session
+    production_title = request.session.get('production_title')
+    if production_title:
+        trucks = Equipment.objects.filter(
+            equipment_type_1='truck',
+            production_title__production_title=production_title,
+            assigned_driver__isnull=True  # Filter out trucks that are assigned to other drivers
+        )
+        trailers = Equipment.objects.filter(
+            equipment_type_1='trailer',
+            production_title__production_title=production_title,
+            assigned_driver__isnull=True  # Filter out trailers that are assigned to other drivers
+        )
+    else:
+        trucks = Equipment.objects.filter(equipment_type_1='truck', assigned_driver__isnull=True)
+        trailers = Equipment.objects.filter(equipment_type_1='trailer', assigned_driver__isnull=True)
+
+    # Fetch assigned trucks and trailers for the driver
+    assigned_trucks = driver.assigned_truck.all()
+    assigned_trailers = driver.assigned_trailer.all()
+
+    context = {
+        'driver': driver,
+        'trucks': trucks,
+        'trailers': trailers,
+        'assigned_trucks': assigned_trucks,
+        'assigned_trailers': assigned_trailers,
+        'user_productions': user_productions,
+    }
+    return render(request, 'interface/driver.html', context)
 
 # - Driver Times
 @login_required(login_url='login')
@@ -625,17 +666,57 @@ def driver_times_view(request):
 
     if production_title_in_session:
         driver_times = DriverTimes.objects.filter(production_title=production_title_in_session, work_date=date)
+        active_drivers = Driver.objects.filter(is_active=True, production_title=production_title_in_session)
     else:
         driver_times = DriverTimes.objects.filter(work_date=date)
+        active_drivers = Driver.objects.filter(is_active=True)
+
+    # Get the list of drivers who do not have a driver time entry
+    drivers_with_times = driver_times.values_list('driver', flat=True)
+    drivers_without_times = active_drivers.exclude(id__in=drivers_with_times)
 
     context = {
         'driver_times': driver_times,
         'user_productions': user_productions,
         'date': date_string,
+        'drivers_without_times': drivers_without_times,
     }
     return render(request, 'interface/driver_times_view.html', context)
 
+@login_required(login_url='login')
+def driver_weekly_times_view(request, driver_id):
+    driver = get_object_or_404(Driver, id=driver_id)
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
 
+    # Get the current date or the date from the query parameter
+    date_string = request.GET.get('date', datetime.today().strftime('%Y-%m-%d'))
+    try:
+        date = datetime.strptime(date_string, '%Y-%m-%d').date()
+    except ValueError:
+        date = datetime.strptime(date_string, '%b. %d, %Y').date()
+
+    # Calculate the start and end of the week (Sunday to Saturday)
+    start_of_week = date - timedelta(days=date.weekday() + 1)
+    end_of_week = start_of_week + timedelta(days=6)
+
+    # Filter driver times for the selected week
+    driver_times = DriverTimes.objects.filter(driver=driver, work_date__range=[start_of_week, end_of_week])
+
+    # Calculate previous and next week dates
+    previous_week = start_of_week - timedelta(days=7)
+    next_week = start_of_week + timedelta(days=7)
+
+    context = {
+        'driver': driver,
+        'driver_times': driver_times,
+        'start_of_week': start_of_week,
+        'end_of_week': end_of_week,
+        'previous_week': previous_week,
+        'next_week': next_week,
+        'user_productions': user_productions,
+    }
+    return render(request, 'interface/driver_weekly_times_view.html', context)
 # - Driver time details (view details of an individual driver's times)
 def driver_time_detail(request, id):
     user = get_object_or_404(NewUser, id=request.user.id)
@@ -1132,7 +1213,11 @@ def equipment_admin(request):
     return render(request, 'interface/equipment_admin.html', context=context)
 
 @login_required(login_url='login')
-def add_equipment(request):
+def add_truck(request):
+        # Fetch the production title from the session data
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
     if request.method == 'POST':
         form = NewEquipment(request.POST)
         if form.is_valid():
@@ -1140,7 +1225,7 @@ def add_equipment(request):
                 # Retrieve production_title from the session
                 production_title = request.session.get('production_title')
                 if not production_title:
-                    return render(request, 'interface/add_equipment.html', {'form': form, 'error': 'Production title is missing from session.'})
+                    return render(request, 'interface/add_truck.html', {'form': form, 'error': 'Production title is missing from session.'})
 
                 # Retrieve or create the Production instance
                 production, created = Production.objects.get_or_create(production_title=production_title)
@@ -1151,20 +1236,69 @@ def add_equipment(request):
                 equipment.save()
                 form.save_m2m()  # Save the many-to-many relationships
 
-                return redirect('equipment_list')  # Redirect to the equipment list page
+                return redirect('equipment_admin')  # Redirect to the equipment list page
             except Exception as e:
                 print(f"Error saving equipment: {e}")
-                return render(request, 'interface/add_equipment.html', {'form': form, 'error': str(e)})
+                return render(request, 'interface/add_truck.html', {'form': form, 'error': str(e)})
         else:
             print("Form is not valid")
             print(form.errors)
     else:
         form = NewEquipment()
 
-    return render(request, 'interface/add_equipment.html', {'form': form})
+    context = {
+        'form': form,
+        'user_productions': user_productions,
+    }
+
+    return render(request, 'interface/add_truck.html', context=context)
+
+@login_required(login_url='login')
+def add_trailer(request):
+        # Fetch the production title from the session data
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
+    if request.method == 'POST':
+        form = NewEquipment(request.POST)
+        if form.is_valid():
+            try:
+                # Retrieve production_title from the session
+                production_title = request.session.get('production_title')
+                if not production_title:
+                    return render(request, 'interface/add_trailer.html', {'form': form, 'error': 'Production title is missing from session.'})
+
+                # Retrieve or create the Production instance
+                production, created = Production.objects.get_or_create(production_title=production_title)
+
+                # Save the Equipment instance with the production_title
+                equipment = form.save(commit=False)
+                equipment.production_title = production
+                equipment.save()
+                form.save_m2m()  # Save the many-to-many relationships
+
+                return redirect('equipment_admin')  # Redirect to the equipment list page
+            except Exception as e:
+                print(f"Error saving equipment: {e}")
+                return render(request, 'interface/add_trailer.html', {'form': form, 'error': str(e)})
+        else:
+            print("Form is not valid")
+            print(form.errors)
+    else:
+        form = NewEquipment()
+
+    context = {
+        'form': form,
+        'user_productions': user_productions,
+    }
+
+    return render(request, 'interface/add_trailer.html', context=context)
 
 @login_required(login_url='login')
 def add_picture_cars(request):
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
     production_title = request.session.get('production_title')
     if not production_title:
         return render(request, 'interface/add_picture_cars.html', {'error': 'Production title is missing from session.'})
@@ -1189,7 +1323,12 @@ def add_picture_cars(request):
     else:
         form = NewPictureCars(production_title_initial=production)
 
-    return render(request, 'interface/add_picture_cars.html', {'form': form})
+    context = {
+        'form': form,
+        'user_productions': user_productions,
+    }
+
+    return render(request, 'interface/add_picture_cars.html', context=context)
 
 @login_required(login_url='login')
 def equipment_list(request):

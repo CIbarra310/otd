@@ -59,9 +59,16 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
 class Production(models.Model):
     create_date = models.DateField(auto_now_add=True)
     code = models.CharField(max_length=6, unique=True, null=True, blank=True)  # Add this field for the 6-digit code
-    production_title = models.CharField(max_length=150, null=True)
+    production_title = models.CharField(max_length=150, null=True) # Official or working title
+    production_type = models.CharField(max_length=150, null=True) # Feature or TV
     production_studio = models.CharField(max_length=150, null=True)
     production_email = models.EmailField(_('email address'), null=True)
+    production_address_1 = models.CharField(max_length=100, null=True, blank=True)
+    production_address_2 = models.CharField(max_length=100, null=True, blank=True)
+    production_city = models.CharField(max_length=100, null=True, blank=True)
+    production_state = models.CharField(max_length=2, null=True, blank=True)
+    production_zip = models.CharField(max_length=10, null=True, blank=True)
+    production_phone = models.CharField(max_length=15, null=True, blank=True)
     purchase_order = models.CharField(max_length=10, null=True)
     coordinator_name = models.CharField(max_length=150, null=True)
     coordinator_email = models.EmailField(_('email address'), null=True)
@@ -69,6 +76,16 @@ class Production(models.Model):
     dot_admin_email = models.EmailField(_('email address'), null=True)
     captain_name = models.CharField(max_length=150, null=True)
     captain_email = models.EmailField(_('email address'), null=True)
+    production_accountant_name = models.CharField(max_length=150, null=True, blank=True)
+    production_accountant_email = models.EmailField(_('email address'), null=True, blank=True)
+    production_accountant_phone = models.CharField(max_length=15, null=True, blank=True)
+    production_supervisor_name = models.CharField(max_length=150, null=True, blank=True)
+    production_supervisor_email = models.EmailField(_('email address'), null=True, blank=True)
+    unit_production_manager_name = models.CharField(max_length=150, null=True, blank=True)
+    unit_production_manager_email = models.EmailField(_('email address'), null=True, blank=True)
+    first_shoot_day = models.DateField(null=True, blank=True)
+    last_shoot_day = models.DateField(null=True, blank=True)
+    total_shoot_days = models.IntegerField(null=True, blank=True)
     production_notes = models.TextField(max_length=2000, null=True)
     is_active = models.BooleanField(default=True)
 
@@ -97,7 +114,9 @@ class Location(models.Model):
     location_address_2 = models.CharField(max_length=100, null=True, blank=True)
     location_city = models.CharField(max_length=100)
     location_state = models.CharField(max_length=2)
-    location_zip = models.CharField(max_length=10) 
+    location_zip = models.CharField(max_length=10)
+    shoot_date = models.DateField(null=True, blank=True)
+    shoot_day = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.location_name

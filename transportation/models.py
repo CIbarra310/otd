@@ -10,16 +10,54 @@ class Driver(models.Model):
     first_name = models.CharField(max_length=150, null=True, blank=True)
     last_name = models.CharField(max_length=150, null=True, blank=True)
     driver_email = models.EmailField(_('email address'), null=True, blank=True)
+    driver_birthdate = models.DateField(null=True, blank=True)
     driver_phone = models.CharField(max_length=15, null=True, blank=True)
     occupation_code = models.CharField(max_length=4, null=True, blank=True)
+    job_classification = models.CharField(max_length=50, null=True, blank=True)
+    driver_hire_date = models.DateField(null=True, blank=True)
     production_status = models.CharField(max_length=50, null=True, blank=True) # On production or off production
     rate = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
     grouping = models.IntegerField(null=True, blank=True)
     local = models.IntegerField(null=True, blank=True)
     last_4 = models.CharField(max_length=6, null=True, blank=True)
+    drivers_license_number = models.CharField(max_length=20, null=True, blank=True)
+    drivers_license_expiration = models.DateField(null=True, blank=True)
+    drivers_license_state = models.CharField(max_length=2, null=True, blank=True)
+    drivers_license_class = models.CharField(max_length=2, null=True, blank=True)
+    drivers_license_endorsements = models.CharField(max_length=50, null=True, blank=True)
+    drivers_license_restrictions = models.CharField(max_length=50, null=True, blank=True)
+    medical_card_expiration = models.DateField(null=True, blank=True)
     assigned_truck = models.ManyToManyField('Equipment', related_name='assigned_truck', limit_choices_to={'equipment_type_1': 'truck'})
     assigned_trailer = models.ManyToManyField('Equipment', related_name='assigned_trailer', limit_choices_to={'equipment_type_1': 'trailer'})
     supporting_department = models.ForeignKey(Department, null=True, blank=True, on_delete=models.CASCADE, related_name='drivers')
+    is_active = models.BooleanField(default=True)
+    
+    def __str__(self):
+        return self.first_name + " " + self.last_name
+
+class MyCrew(models.Model):
+    coordinator_email = models.EmailField(_('email address'), null=True, blank=True)
+    my_crew_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # Use custom user model
+    my_crew_first_name = models.CharField(max_length=150, null=True, blank=True)
+    my_crew_last_name = models.CharField(max_length=150, null=True, blank=True)
+    my_crew_driver_email = models.EmailField(_('email address'), null=True, blank=True)
+    my_crew_driver_birthdate = models.DateField(null=True, blank=True)
+    my_crew_driver_phone = models.CharField(max_length=15, null=True, blank=True)
+    my_crew_occupation_code = models.CharField(max_length=4, null=True, blank=True)
+    my_crew_job_classification = models.CharField(max_length=50, null=True, blank=True)
+    my_crew_driver_hire_date = models.DateField(null=True, blank=True)
+    my_crew_production_status = models.CharField(max_length=50, null=True, blank=True) # On production or off production
+    my_crew_rate = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    my_crew_grouping = models.IntegerField(null=True, blank=True)
+    my_crew_local = models.IntegerField(null=True, blank=True)
+    my_crew_last_4 = models.CharField(max_length=6, null=True, blank=True)
+    my_crew_drivers_license_number = models.CharField(max_length=20, null=True, blank=True)
+    my_crew_drivers_license_expiration = models.DateField(null=True, blank=True)
+    my_crew_drivers_license_state = models.CharField(max_length=2, null=True, blank=True)
+    my_crew_drivers_license_class = models.CharField(max_length=2, null=True, blank=True)
+    my_crew_drivers_license_endorsements = models.CharField(max_length=50, null=True, blank=True)
+    my_crew_drivers_license_restrictions = models.CharField(max_length=50, null=True, blank=True)
+    my_crew_medical_card_expiration = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     
     def __str__(self):
@@ -36,23 +74,40 @@ class Equipment(models.Model):
         ('5_ton', '5-Ton'),
         ('10_ton', '10-Ton'),
         ('tractor', 'Tractor'),
+        ('production_van', 'Production Van'),
         ('van', 'Van'),
         # Add more truck types as needed
     ]
     
     TRAILER_TYPE_CHOICES = [
-        ('2_room', '2 Room'),
-        ('3_room', '3 Room'),
+        ('cast_single', 'Cast Single'),
+        ('cast_2_room', 'Cast 2-Room'),
+        ('cast_3_room', 'Cast 3-Room'),
+        ('cast_5_room', 'Cast 5-Room'),
+        ('office_trailer', 'Office Trailer'),
+        ('wardrobe_trailer', 'Wardrobe Trailer'),
+        ('makeup_trailer', 'Makeup Trailer'),
+        ('grip_trailer', 'Grip Trailer'),
+        ('set_lighting_trailer', 'Set Lighting Trailer'),
+        ('equipment_trailer', 'Equipment Trailer'),
+        ('honeywagon', 'Honeywagon'),
         ('flatbed', 'Flatbed'),
         # Add more trailer types as needed
     ]
     production_title = models.ForeignKey(Production, on_delete=models.CASCADE, related_name='vehicles')
     equipment_type_1 = models.CharField(max_length=150, choices=EQUIPMENT_TYPE_1_CHOICES , null=True) # truck or trailer
-    equipment_type_2 = models.CharField(max_length=150, null=True) # truck or trailer specific (stakebed, 2 room, etc..)
+    equipment_type_2 = models.CharField(max_length=150, choices=TRUCK_TYPE_CHOICES, null=True, blank=True) # truck or trailer specific (stakebed, 2 room, etc..)
+    trailer_type = models.CharField(max_length=150, choices=TRAILER_TYPE_CHOICES, null=True, blank=True)
     vendor_name = models.CharField(max_length=100, null=True)
+    vendor_address_1 = models.CharField(max_length=100, null=True)
+    vendor_address_2 = models.CharField(max_length=100, null=True, blank=True)
+    vendor_city = models.CharField(max_length=100, null=True)
+    vendor_state = models.CharField(max_length=2, null=True)
+    vendor_zip = models.CharField(max_length=10, null=True)
     vendor_unit_number = models.CharField(max_length=10, null=True)
     fleet_number = models.CharField(max_length=20, null=True)
     purchase_order = models.CharField(max_length=10, null=True)
+    vendor_invoice = models.CharField(max_length=10, null=True)
     equipment_notes = models.TextField(max_length=2000, null=True, blank=True)
     assigned_department = models.ForeignKey(Department, null=True, blank=True, on_delete=models.CASCADE, related_name='vehicles')
     assigned_driver = models.ManyToManyField(Driver, blank=True, related_name='vehicles')

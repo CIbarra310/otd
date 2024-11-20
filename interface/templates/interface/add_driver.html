@@ -25,7 +25,7 @@
                 {% csrf_token %}
                 <!-- Information pulled from user information -->
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12" hidden>
                         <label for="production_title">Production Title</label>
                         <input class="form-control" type="text" id="production_title" name="production_title">
                     </div>
@@ -64,6 +64,44 @@
                         <label for="last_4">Last 4</label>
                         <input class="form-control" type="number" id="last_4" name="last_4">
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label for="production_status">On/Off Production</label>
+                        <select class="form-select" id="production_status" name="production_status">
+                            <option value="On Production">On Production</option>
+                            <option value="Off Production">Off Production</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label for="supporting_department">Department</label>
+                        <select class="form-select" id="supporting_department" name="supporting_department">
+                            <option value="" readonly>Select a Department</option>
+                            <option value="Basecamp">Basecamp</option>
+                            {% for department in departments %}
+                                <option value="{{ department.id }}">{{ department.department_title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label for="assigned_truck">Assigned Truck</label>
+                        <select class="form-select" id="assigned_truck" name="assigned_truck">
+                            <option value="" readonly>Select a Truck</option>
+                            {% for truck in trucks %}
+                                <option value="{{ truck.id }}">{{truck.vendor_name}} {{ truck.equipment_type_2 }} {{ truck.fleet_number }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label for="assigned_trailer">Assigned Trailer</label>
+                        <select class="form-select" id="assigned_trailer" name="assigned_trailer">
+                            <option value="" readonly>Select a Trailer</option>
+                            <option value="No Trailer">No Trailer</option>
+                            {% for trailer in trailers %}
+                                <option value="{{ trailer.id }}">{{trailer.vendor_name}} {{ trailer.equipment_type_2 }} {{ trailer.fleet_number }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>  
                 </div>
                 <br>
                 <!-- Submit button -->

@@ -13,6 +13,7 @@
         <p>Group {{ driver.grouping }}</p>
         <hr>
         <form action="" method="post">
+            {% csrf_token %}
             <div class="row pb-2">
                 <div class="col-6">
                     <label for="" class="form-group">First Name</label>
@@ -52,6 +53,56 @@
                     <div class="input-group mb-3">
                         <span class="input-group-text"><i class="fa fa-dollar-sign"></i></span>
                         <input type="text" class="form-control" name="rate" aria-label="Amount (to the nearest dollar)" value="{{ driver.rate }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-2">
+                <div class="col-6">
+                    <label for="grouping" class="form-group">Group</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="fa-solid fa-users"></i></span>
+                        <input type="number" class="form-control" name="grouping" value="{{ driver.grouping }}">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label for="last_4" class="form-group">Last 4</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="fa-solid fa-id-card"></i></span>
+                        <input type="number" class="form-control" name="last_4" value="{{ driver.last_4 }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-2">
+                <div class="col-6">
+                    <label for="production_status" class="form-group">On/Off Production</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="fa-solid fa-toggle-off"></i></span>
+                        <input type="text" class="form-control" name="production_status" value="{{ driver.production_status }}">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label for="supporting_department" class="form-group">Supporting Department</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="fa-solid fa-people-group"></i></span>
+                        <input type="text" class="form-control" name="supporting_department" value="{{ driver.supporting_department.department_title }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-2">
+                <div class="row">
+                    <div class="col-6">
+                        <label for="assigned_truck" class="form-group">Assigned Truck</label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="fa-solid fa-truck"></i></span>
+                            <input type="text" class="form-control" name="assigned_truck" value="{% for truck in assigned_trucks %}{{ truck.equipment_type_2 }}{% if not forloop.last %}, {% endif %}{% endfor %}">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <label for="assigned_trailer" class="form-group">Assigned Trailer</label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="fa-solid fa-trailer"></i></span>
+                            <input type="text" class="form-control" name="assigned_trailer" value="{% for trailer in assigned_trailers %}{{ trailer.equipment_type_2 }}{% if not forloop.last %}, {% endif %}{% endfor %}">
+                        </div>
                     </div>
                 </div>
             </div>
