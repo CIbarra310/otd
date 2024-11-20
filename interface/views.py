@@ -654,7 +654,7 @@ def driver_times_success(request):
 # - View a list of drivers and their times by date
 @login_required(login_url='login')
 def driver_times_view(request):
-    # Fetch current user's productions
+     # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
     user_productions = user.productions.filter(is_active=True)
 
