@@ -46,8 +46,8 @@
                     <td>{{ time.wrap_time|default_if_none:'' }}</td>
                     <td>{{ time.total_hours|default_if_none:'' }}</td>
                     <td>
-                        <a href="{% url 'driver_weekly_times_view' driver.id %}?date={{ previous_week }}" class="btn btn-secondary">Previous Week</a>
-                        <a href="{% url 'driver_weekly_times_view' driver.id %}?date={{ next_week }}" class="btn btn-secondary">Next Week</a>
+                        <a href="" class="btn btn-secondary">Previous Week</a>
+                        <a href="" class="btn btn-secondary">Next Week</a>
                     </td>
                 </tr>
             {% endfor %}
