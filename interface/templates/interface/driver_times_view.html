@@ -54,26 +54,28 @@
         </tbody>
     </table>
 
-    <h2>Active Drivers Without Time Entries</h2>
-    <div class="col-4">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Driver</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for driver in drivers_without_times %}
-                <tr>
-                    <td>{{ driver }}</td>
-                    <td>
-                        <a href="{% url 'driver_weekly_times_view' driver.id %}" class="btn btn-sm btn-primary" title="View Pay Week"><i class="fa-solid fa-calendar-week"></i></a>
-                        <a href="" class="btn btn-sm btn-warning" title="Email Reminder"><i class="fa-solid fa-envelope"></i></a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    {% if drivers_without_times %}
+        <h2>Active Drivers Without Time Entries</h2>
+        <div class="col-4">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Driver</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for driver in drivers_without_times %}
+                    <tr>
+                        <td>{{ driver }}</td>
+                        <td>
+                            <a href="{% url 'driver_weekly_times_view' driver.id %}" class="btn btn-sm btn-primary" title="View Pay Week"><i class="fa-solid fa-calendar-week"></i></a>
+                            <a href="" class="btn btn-sm btn-warning" title="Email Reminder"><i class="fa-solid fa-envelope"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
 {% endblock %}
