@@ -46,8 +46,8 @@
                     <td>{{ time.wrap_time|default_if_none:'' }}</td>
                     <td>{{ time.total_hours|default_if_none:'' }}</td>
                     <td>
-                        <a class="btn btn-sm btn-secondary" href="{% url 'driver_time_detail' time.id %}"><i class="fa-solid fa-eye"></i></a>
-                        <a class="btn btn-sm btn-primary" href="{% url 'driver_weekly_times_view' time.driver.id %}">View Weekly Times</a>
+                        <a class="btn btn-sm btn-secondary" href="{% url 'driver_time_detail' time.id %}" title="View Detials"><i class="fa-solid fa-eye"></i></a>
+                        <a class="btn btn-sm btn-primary" href="{% url 'driver_weekly_times_view' time.driver.id %}" title="View Pay Week"><i class="fa-solid fa-calendar-week"></i></a>
                     </td>
                 </tr>
             {% endfor %}
@@ -55,12 +55,25 @@
     </table>
 
     <h2>Active Drivers Without Time Entries</h2>
-    <ul>
-        {% for driver in drivers_without_times %}
-            <li class="pb-2">
-                {{ driver }}
-                <a href="{% url 'driver_weekly_times_view' driver.id %}" class="btn btn-sm btn-primary">View Weekly Times</a>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="col-4">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Driver</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for driver in drivers_without_times %}
+                <tr>
+                    <td>{{ driver }}</td>
+                    <td>
+                        <a href="{% url 'driver_weekly_times_view' driver.id %}" class="btn btn-sm btn-primary" title="View Pay Week"><i class="fa-solid fa-calendar-week"></i></a>
+                        <a href="" class="btn btn-sm btn-warning" title="Email Reminder"><i class="fa-solid fa-envelope"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
