@@ -9,7 +9,7 @@
     </nav>
 
     <div class="card-body">
-        <h4>{{ driver.first_name }} {{ driver.last_name }}</h4>
+        <h4>{{ driver.first_name }} {{ driver.last_name }} <a href="{% url 'add_favorite' driver.id %}" class="btn btn-sm btn-warning" title="Mark Favorite"><i class="fa-regular fa-star"></i></a></h4>
         <p>Group {{ driver.grouping }}</p>
         <hr>
         <form action="" method="post">

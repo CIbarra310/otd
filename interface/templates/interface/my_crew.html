@@ -1,0 +1,38 @@
+{% extends 'interface/layout.html' %}
+
+{% block content %}
+<h2>My Crew</h2>
+
+{% if my_crews %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Driver Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Grouping</th>
+                <th>Last 4</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for my_crew in my_crews %}
+                <tr>
+                    <td>{{ my_crew.my_crew_first_name }} {{ my_crew.my_crew_last_name }}</td>
+                    <td>{{ my_crew.my_crew_driver_email }}</td>
+                    <td>{{ my_crew.my_crew_driver_phone }}</td>
+                    <td>{{ my_crew.my_crew_grouping }}</td>
+                    <td>{{ my_crew.my_crew_last_4 }}</td>
+                    <td>
+                        <a class="btn btn-secondary" href="{% url 'crew_member_detail' my_crew.id %}" title="View Details"><i class="fa fa-eye"></i></a>
+                        <a class="btn btn-success" href="{% url 'add_to_current_production' my_crew.id %}" title="Add to Production"><i class="fa fa-plus"></i></a>
+                        <a class="btn btn-danger" href="{% url 'remove_favorite' my_crew.id %}" title="Remove From Crew"><i class="fa fa-minus"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>You have no favorite drivers.</p>
+{% endif %}
+{% endblock %}

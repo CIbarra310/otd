@@ -35,6 +35,12 @@ urlpatterns = [
 
     path('add_driver', views.add_driver, name="add_driver"),
     path('driver_roster', views.driver_roster, name="driver_roster"),
+    path('my_crew/', views.my_crew, name="my_crew"),
+    path('crew_member/<int:crew_member_id>/', views.crew_member_detail, name='crew_member_detail'),
+    path('update_crew_member/<int:crew_member_id>/', views.update_crew_member, name='update_crew_member'),
+    path('add_to_current_production/<int:crew_member_id>/', views.add_to_current_production, name='add_to_current_production'),
+    path('add_favorite/<int:driver_id>/', views.add_favorite, name='add_favorite'),
+    path('remove_favorite/<int:crew_member_id>/', views.remove_favorite, name='remove_favorite'),
     path('activate_driver/<int:driver_id>/', views.activate_driver, name='activate_driver'),
     path('deactivate_driver/<int:driver_id>/', views.deactivate_driver, name='deactivate_driver'),
     path('driver/<int:driver_id>/', views.view_driver, name='view_driver'),

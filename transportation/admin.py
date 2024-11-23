@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Driver, Equipment, RunRequest, PictureCars, DriverTimes, DriverDailyRundown
+from .models import Driver, Equipment, RunRequest, PictureCars, DriverTimes, DriverDailyRundown, MyCrew
 # Register your models here.
 
 class DriverAdmin(admin.ModelAdmin):
@@ -97,3 +97,4 @@ admin.site.register(RunRequest, RunRequestAdmin)
 admin.site.register(PictureCars)
 admin.site.register(DriverTimes)
 admin.site.register(DriverDailyRundown)
+admin.site.register(MyCrew)

@@ -30,11 +30,21 @@ class Driver(models.Model):
     assigned_truck = models.ManyToManyField('Equipment', related_name='assigned_truck', limit_choices_to={'equipment_type_1': 'truck'})
     assigned_trailer = models.ManyToManyField('Equipment', related_name='assigned_trailer', limit_choices_to={'equipment_type_1': 'trailer'})
     supporting_department = models.ForeignKey(Department, null=True, blank=True, on_delete=models.CASCADE, related_name='drivers')
+    is_favorite = models.BooleanField(default=False, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     
     def __str__(self):
         return self.first_name + " " + self.last_name
 
+
+class ProductionHistory(models.Model):
+    production_title = models.ForeignKey(Production, on_delete=models.CASCADE)
+    driver = models.ForeignKey('Driver', on_delete=models.CASCADE)
+    my_crew = models.ForeignKey('MyCrew', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.production_title} - {self.driver} - {self.my_crew}"
+    
 class MyCrew(models.Model):
     coordinator_email = models.EmailField(_('email address'), null=True, blank=True)
     my_crew_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # Use custom user model
@@ -45,7 +55,6 @@ class MyCrew(models.Model):
     my_crew_driver_phone = models.CharField(max_length=15, null=True, blank=True)
     my_crew_occupation_code = models.CharField(max_length=4, null=True, blank=True)
     my_crew_job_classification = models.CharField(max_length=50, null=True, blank=True)
-    my_crew_driver_hire_date = models.DateField(null=True, blank=True)
     my_crew_production_status = models.CharField(max_length=50, null=True, blank=True) # On production or off production
     my_crew_rate = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
     my_crew_grouping = models.IntegerField(null=True, blank=True)
@@ -59,9 +68,11 @@ class MyCrew(models.Model):
     my_crew_drivers_license_restrictions = models.CharField(max_length=50, null=True, blank=True)
     my_crew_medical_card_expiration = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
-    
+    my_crew_production_history = models.ManyToManyField(Production, blank=True)
+
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        return f"{self.id} - {self.my_crew_first_name} {self.my_crew_last_name}"
+
 
 class Equipment(models.Model):
     EQUIPMENT_TYPE_1_CHOICES = [

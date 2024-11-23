@@ -1,0 +1,75 @@
+{% extends 'interface/layout.html' %}
+
+{% block content %}
+    <h2>Crew Member Details</h2>
+    <form method="post" action="{% url 'update_crew_member' crew_member.id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ crew_member.my_crew_first_name }}" required>
+        </div>
+        <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ crew_member.my_crew_last_name }}" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ crew_member.my_crew_driver_email }}" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="text" class="form-control" id="phone" name="phone" value="{{ crew_member.my_crew_driver_phone }}" required>
+        </div>
+        <div>
+            <label for="birthdate">Birthdate</label>
+            <input type="date" class="form-control" id="birthdate" name="birthdate" value="{{ crew_member.my_crew_birthdate }}" required>
+        </div>
+        <div class="form-group">
+            <label for="grouping">Grouping</label>
+            <input type="text" class="form-control" id="grouping" name="grouping" value="{{ crew_member.my_crew_grouping }}" required>
+        </div>
+        <div class="form-group">
+            <label for="last_4">Last 4</label>
+            <input type="text" class="form-control" id="last_4" name="last_4" value="{{ crew_member.my_crew_last_4 }}" required>
+        </div>
+        <div class="form-group">
+            <label for="drivers_license_number">License Number</label>
+            <input type="text" class="form-control" id="drivers_license_number" name="drivers_license_number" value="{{ crew_member.my_crew_drivers_license_number }}" required>
+        </div>
+        <div class="form-group">
+            <label for="drivers_license_expiration">License Expiration</label>
+            <input type="date" class="form-control" id="drivers_license_expiration" name="drivers_license_expiration" value="{{ crew_member.my_crew_drivers_license_expiration }}" required>
+        </div>
+        <div class="form-group">
+            <label for="drivers_license_state">License State</label>
+            <input type="text" class="form-control" id="drivers_license_state" name="drivers_license_state" value="{{ crew_member.my_crew_drivers_license_state }}" required>
+        </div>
+        <div class="form-group">
+            <label for="drivers_license_class">License Class</label>
+            <input type="text" class="form-control" id="drivers_license_class" name="drivers_license_class" value="{{ crew_member.my_crew_drivers_license_class }}" required>
+        </div>
+        <div class="form-group">
+            <label for="drivers_license_endorsements">License Endorsements</label>
+            <input type="text" class="form-control" id="drivers_license_endorsements" name="drivers_license_endorsements" value="{{ crew_member.my_crew_drivers_license_endorsements }}" required>
+        </div>
+        <div class="form-group">
+            <label for="drivers_license_restrictions">License Restrictions</label>
+            <input type="text" class="form-control" id="drivers_license_restrictions" name="drivers_license_restrictions" value="{{ crew_member.my_crew_drivers_license_restrictions }}" required>
+        </div>
+        <div class="form-group">
+            <label for="medical_card_expiration">Medical Card Expiration</label>
+            <input type="date" class="form-control" id="medical_card_expiration" name="medical_card_expiration" value="{{ crew_member.my_crew_medical_card_expiration }}" required>
+        </div>
+        <div>
+            <label for="production_history">Production History</label>
+            <input type="text" class="form-control" id="production_history" name="production_history" value="{{ crew_member.my_crew_production_history }}" required>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+    <form method="post" action="{% url 'add_to_current_production' crew_member.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success mt-3">Add to Current Production</button>
+    </form>
+    <a href="{% url 'my_crew' %}" class="btn btn-secondary mt-3">Back to My Crew</a>
+{% endblock %}

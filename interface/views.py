@@ -4,7 +4,7 @@ from core.models import Production, Vendor, Location
 from collections import defaultdict
 from core.models import Location, Production, Vendor, NewUser, Department
 from transportation.forms import NewRunRequest, RunRequest, NewDriver, Driver, NewEquipment, Equipment, NewPictureCars, PictureCars
-from transportation.models import DriverTimes, PictureCars, DriverDailyRundown, DriverTimeComment
+from transportation.models import DriverTimes, PictureCars, DriverDailyRundown, DriverTimeComment, MyCrew, ProductionHistory
 from production.forms import RadioForm
 from datetime import datetime, timedelta
 from django import forms
@@ -15,6 +15,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import auth
 from django.core.mail import EmailMessage
+from django.db import IntegrityError
 from django.db.models.functions import Lower
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -403,6 +404,174 @@ def add_driver(request):
         'trailers': trailers,
     }
     return render(request, 'interface/add_driver.html', context)
+
+@login_required(login_url='login')
+def my_crew(request):
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+    email = request.session.get('email')
+
+    # Fetch all MyCrew objects for the logged-in user
+    my_crews = MyCrew.objects.filter(coordinator_email=email)
+
+    context = {
+        'user_productions': user_productions,
+        'my_crews': my_crews,
+    }
+    return render(request, 'interface/my_crew.html', context)
+
+
+@login_required(login_url='login')
+def add_favorite(request, driver_id):
+    try:
+        driver = get_object_or_404(Driver, id=driver_id)
+        coordinator_email = request.user.email
+        production_title = request.session.get('production_title')
+        
+        # Ensure the production exists
+        production = get_object_or_404(Production, production_title=production_title)
+        
+        # Get or create a MyCrew object for the logged-in user
+        my_crew, created = MyCrew.objects.get_or_create(
+            my_crew_user=request.user,
+            defaults={'coordinator_email': coordinator_email}
+        )
+
+        # Update the MyCrew object with the driver's user information
+        my_crew.coordinator_email = coordinator_email
+        my_crew.my_crew_user = driver.user
+        my_crew.my_crew_first_name = driver.first_name
+        my_crew.my_crew_last_name = driver.last_name
+        my_crew.my_crew_driver_email = driver.driver_email
+        my_crew.my_crew_driver_birthdate = driver.driver_birthdate
+        my_crew.my_crew_driver_phone = driver.driver_phone
+        my_crew.my_crew_occupation_code = driver.occupation_code
+        my_crew.my_crew_job_classification = driver.job_classification
+        my_crew.my_crew_production_status = driver.production_status
+        my_crew.my_crew_rate = driver.rate
+        my_crew.my_crew_grouping = driver.grouping
+        my_crew.my_crew_local = driver.local
+        my_crew.my_crew_last_4 = driver.last_4
+        my_crew.my_crew_drivers_license_number = driver.drivers_license_number
+        my_crew.my_crew_drivers_license_expiration = driver.drivers_license_expiration
+        my_crew.my_crew_drivers_license_state = driver.drivers_license_state
+        my_crew.my_crew_drivers_license_class = driver.drivers_license_class
+        my_crew.my_crew_drivers_license_endorsements = driver.drivers_license_endorsements
+        my_crew.my_crew_drivers_license_restrictions = driver.drivers_license_restrictions
+        my_crew.my_crew_medical_card_expiration = driver.medical_card_expiration
+        my_crew.my_crew_production_history.add(production)
+        my_crew.save()
+
+        return redirect('driver_roster')
+    except IntegrityError as e:
+        return HttpResponse(f"IntegrityError: {e}")
+    except Exception as e:
+        return HttpResponse(f"Error: {e}")
+
+
+@login_required(login_url='login')
+def remove_favorite(request, crew_member_id):
+    try:
+        # Get the MyCrew object for the logged-in user and the specified crew member
+        my_crew = get_object_or_404(MyCrew, id=crew_member_id)
+        
+        # Delete the MyCrew entry
+        my_crew.delete()
+        
+        return redirect('my_crew')
+    except Exception as e:
+        return HttpResponse(f"Error: {e}")
+
+@login_required(login_url='login')
+def crew_member_detail(request, crew_member_id):
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
+    crew_member = get_object_or_404(MyCrew, id=crew_member_id)
+    context = {
+        'crew_member': crew_member,
+        'user_productions': user_productions,
+    }
+    return render(request, 'interface/crew_member_detail.html', context)
+
+@login_required(login_url='login')
+def update_crew_member(request, crew_member_id):
+    crew_member = get_object_or_404(MyCrew, id=crew_member_id)
+    
+    if request.method == 'POST':
+        crew_member.my_crew_first_name = request.POST.get('first_name')
+        crew_member.my_crew_last_name = request.POST.get('last_name')
+        crew_member.my_crew_driver_email = request.POST.get('email')
+        crew_member.my_crew_driver_phone = request.POST.get('phone')
+        crew_member.my_crew_grouping = request.POST.get('grouping')
+        crew_member.my_crew_last_4 = request.POST.get('last_4')
+        crew_member.my_crew_drivers_license_number = request.POST.get('drivers_license_number')
+        crew_member.my_crew_drivers_license_expiration = request.POST.get('drivers_license_expiration')
+        crew_member.my_crew_drivers_license_state = request.POST.get('drivers_license_state')
+        crew_member.my_crew_drivers_license_class = request.POST.get('drivers_license_class')
+        crew_member.my_crew_drivers_license_endorsements = request.POST.get('drivers_license_endorsements')
+        crew_member.my_crew_drivers_license_restrictions = request.POST.get('drivers_license_restrictions')
+        crew_member.my_crew_medical_card_expiration = request.POST.get('medical_card_expiration')
+        crew_member.save()
+        
+        return redirect('crew_member_detail', crew_member_id=crew_member.id)
+    
+    context = {
+        'crew_member': crew_member,
+    }
+    return render(request, 'interface/crew_member_detail.html', context)
+
+
+@login_required(login_url='login')
+def add_to_current_production(request, crew_member_id):
+    crew_member = get_object_or_404(MyCrew, id=crew_member_id)
+    current_production_id = request.session.get('current_production_id')
+    
+    # Ensure the production exists
+    production = get_object_or_404(Production, id=current_production_id)
+    
+    # Create or update the Driver instance
+    driver, created = Driver.objects.get_or_create(
+        user=crew_member.my_crew_user,
+        defaults={
+            'first_name': crew_member.my_crew_first_name,
+            'last_name': crew_member.my_crew_last_name,
+            'driver_email': crew_member.my_crew_driver_email,
+            'driver_phone': crew_member.my_crew_driver_phone,
+            'grouping': crew_member.my_crew_grouping,
+            'last_4': crew_member.my_crew_last_4,
+            'drivers_license_number': crew_member.my_crew_drivers_license_number,
+            'drivers_license_expiration': crew_member.my_crew_drivers_license_expiration,
+            'drivers_license_state': crew_member.my_crew_drivers_license_state,
+            'drivers_license_class': crew_member.my_crew_drivers_license_class,
+            'drivers_license_endorsements': crew_member.my_crew_drivers_license_endorsements,
+            'drivers_license_restrictions': crew_member.my_crew_drivers_license_restrictions,
+            'medical_card_expiration': crew_member.my_crew_medical_card_expiration,
+            'production_title': production.production_title,
+        }
+    )
+
+    if not created:
+        driver.first_name = crew_member.my_crew_first_name
+        driver.last_name = crew_member.my_crew_last_name
+        driver.driver_email = crew_member.my_crew_driver_email
+        driver.driver_phone = crew_member.my_crew_driver_phone
+        driver.grouping = crew_member.my_crew_grouping
+        driver.last_4 = crew_member.my_crew_last_4
+        driver.drivers_license_number = crew_member.my_crew_drivers_license_number
+        driver.drivers_license_expiration = crew_member.my_crew_drivers_license_expiration
+        driver.drivers_license_state = crew_member.my_crew_drivers_license_state
+        driver.drivers_license_class = crew_member.my_crew_drivers_license_class
+        driver.drivers_license_endorsements = crew_member.my_crew_drivers_license_endorsements
+        driver.drivers_license_restrictions = crew_member.my_crew_drivers_license_restrictions
+        driver.medical_card_expiration = crew_member.my_crew_medical_card_expiration
+        driver.production_title = production.production_title
+        driver.save()
+
+    return redirect('my_crew')
+
 
 # - Activate Driver
 @login_required(login_url='login')
