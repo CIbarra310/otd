@@ -3,8 +3,8 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-    path('pwa/', include('pwa.urls')),  # Include PWA URLs under 'pwa/'
     path('', views.home, name="home"),  # Home view at the root
+    path('pwa/', include('pwa.urls')),  # Include PWA URLs under 'pwa/'
 
     path('register', views.register, name="register"),
     path('login', views.login, name="login"),
