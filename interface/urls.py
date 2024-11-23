@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name="home"),  # Home view at the root
-    path('pwa/', include('pwa.urls')),  # Include PWA URLs under 'pwa/'
+    path('', include('pwa.urls')),  # Include PWA URLs under 'pwa/'
 
     path('register', views.register, name="register"),
     path('login', views.login, name="login"),

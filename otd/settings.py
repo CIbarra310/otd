@@ -53,6 +53,8 @@ CSRF_TRUSTED_ORIGINS = ['https://www.ontheday.app',
 CORS_ALLOWED_ORIGINS = [
     'https://www.ontheday.app',
     'https://on-the-day-6d3c5e11e0df.herokuapp.com',
+    "http://127.0.0.1:8000", 
+    "http://localhost:8000",
 ]
 
 CSRF_COOKIE_SECURE = True  # Ensures the CSRF cookie is only sent over HTTPS
@@ -77,7 +79,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'crispy_bootstrap4',
     'import_export',
-    'pwa',
+    # 'pwa',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
@@ -234,17 +236,18 @@ PWA_APP_THEME_COLOR = '#000000'
 PWA_APP_BACKGROUND_COLOR = '#ffffff'
 PWA_APP_DISPLAY = 'standalone'
 PWA_APP_SCOPE = '/'
-PWA_APP_START_URL = '/login'
+PWA_APP_START_URL = '/'
 PWA_APP_ORIENTATION = 'any'
+PWA_APP_STATUS_BAR_COLOR = 'default'
 PWA_APP_ICONS = [
     {
-        'src': '/static/core/images/logo.png',
+        'src': '/static/img/logo.png',
         'sizes': '160x160'
     }
 ]
 PWA_APP_ICONS_APPLE = [
     {
-        'src': '/static/core/images/logo.png',
+        'src': '/static/img/logo.png',
         'sizes': '160x160'
     }
 ]
