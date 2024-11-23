@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'crispy_bootstrap4',
     'import_export',
+    'pwa',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
@@ -225,3 +226,27 @@ MESSAGE_TAGS = {
     messages.SUCCESS: 'success',
     messages.WARNING: 'warning',
 }
+
+# PWA Configuration
+PWA_APP_NAME = 'On The Day'
+PWA_APP_DESCRIPTION = "On The Day is a transportation management system for the film and television industry."
+PWA_APP_THEME_COLOR = '#000000'
+PWA_APP_BACKGROUND_COLOR = '#ffffff'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_START_URL = '/login'
+PWA_APP_ORIENTATION = 'any'
+PWA_APP_ICONS = [
+    {
+        'src': '/static/core/images/logo.png',
+        'sizes': '160x160'
+    }
+]
+PWA_APP_ICONS_APPLE = [
+    {
+        'src': '/static/core/images/logo.png',
+        'sizes': '160x160'
+    }
+]
+PWA_APP_DIR = 'ltr'
+PWA_APP_LANG = 'en-US'
