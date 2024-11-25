@@ -40,4 +40,24 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Content margin-left reset to 0px');
         }
     }
+
+    // Initialize DataTables if on the driver_times_view page
+    if (path === "/driver_times_view/") {
+        console.log('Initializing DataTables on driver_times_view page');
+        if (typeof $.fn.DataTable !== 'undefined') {
+            console.log('DataTable is defined');
+            $('#driverTimesTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                pageLength: 20,
+                dom: 'Bfrtip', // Add this line to enable the Buttons extension
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+        } else {
+            console.log('DataTable is not defined');
+        }
+    }
 });

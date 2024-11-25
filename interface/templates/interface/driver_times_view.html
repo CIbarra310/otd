@@ -8,7 +8,7 @@
         <button class="btn btn-primary" type="submit">Submit</button>
     </form>
     <hr>
-    <table class="table">
+    <table class="table" id="driverTimesTable">
         <thead>
             <tr>
                 <th>Driver</th>
@@ -46,7 +46,7 @@
                     <td>{{ time.wrap_time|default_if_none:'' }}</td>
                     <td>{{ time.total_hours|default_if_none:'' }}</td>
                     <td>
-                        <a class="btn btn-sm btn-secondary" href="{% url 'driver_time_detail' time.id %}" title="View Detials"><i class="fa-solid fa-eye"></i></a>
+                        <a class="btn btn-sm btn-secondary" href="{% url 'driver_time_detail' time.id %}" title="View Details"><i class="fa-solid fa-eye"></i></a>
                         <a class="btn btn-sm btn-primary" href="{% url 'driver_weekly_times_view' time.driver.id %}" title="View Pay Week"><i class="fa-solid fa-calendar-week"></i></a>
                     </td>
                 </tr>
