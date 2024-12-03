@@ -2,8 +2,8 @@ import random
 import string
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
-from .models import Production, Vendor, Location, Department, JobTitle, NewUser
-from .resources import ProductionResource, VendorResource, LocationResource, DepartmentResource, JobTitleResource
+from .models import Production, Vendor, Location, Department, JobTitle, NewUser, PurchaseOrders, PurchaseOrderItem
+from .resources import ProductionResource, VendorResource, LocationResource, DepartmentResource, JobTitleResource, PurchaseOrderResource
 from django.contrib.auth.admin import UserAdmin
 from django.forms import Textarea, TextInput
 
@@ -29,12 +29,41 @@ def generate_production_code(length=6):
 
 class ProductionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = ProductionResource
-    list_display = ('id', 'production_title', 'code', 'production_studio', 'production_email', 'purchase_order', 'coordinator_name', 'captain_name', 'is_active')
+    list_display = ('id', 'production_title', 'code', 'production_studio', 'production_email', 'purchase_order','is_active')
     search_fields = ('production_title', 'production_studio', 'coordinator_name', 'captain_name')
     list_filter = ('is_active', 'production_studio')
     fieldsets = (
         (None, {
-            'fields': ('production_title', 'code', 'production_studio', 'production_email', 'purchase_order', 'coordinator_name', 'coordinator_email', 'captain_name', 'captain_email', 'dot_admin_name', 'dot_admin_email', 'production_notes', 'is_active')
+            'fields': (
+                'production_title', 
+                'code', 
+                'production_studio', 
+                'production_email', 
+                'production_address_1',
+                'production_address_2',
+                'production_city',
+                'production_state',
+                'production_zip',
+                'production_phone',
+                'purchase_order', 
+                'coordinator_name', 
+                'coordinator_email', 
+                'captain_name', 
+                'captain_email', 
+                'dot_admin_name', 
+                'dot_admin_email',
+                'production_accountant_name',
+                'production_accountant_email',
+                'production_accountant_phone',
+                'production_supervisor_name',
+                'production_supervisor_email',
+                'unit_production_manager_name',
+                'unit_production_manager_email',
+                'first_shoot_day',
+                'last_shoot_day', 
+                'total_shoot_days',
+                'production_notes', 
+                'is_active')
         }),
     )
 
@@ -91,6 +120,16 @@ class JobTitleAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         }),
     )
 
+class PurchaseOrderItemInline(admin.TabularInline):
+    model = PurchaseOrderItem
+    extra = 1  # Number of extra forms to display
+
+class PurchaseOrdersAdmin(admin.ModelAdmin):
+    inlines = [PurchaseOrderItemInline]
+    list_display = ('po_number', 'vendor_name', 'po_date', 'po_subtotal', 'po_taxes', 'po_grand_total', 'is_budgeted', 'is_active')
+    search_fields = ('po_number', 'vendor_name')
+    list_filter = ('is_budgeted', 'is_active')
+
 # Register your models here.
 admin.site.register(Production, ProductionAdmin)
 admin.site.register(Vendor, VendorAdmin)
@@ -98,3 +137,5 @@ admin.site.register(Location, LocationAdmin)
 admin.site.register(Department, DepartmentAdmin)
 admin.site.register(JobTitle, JobTitleAdmin)
 admin.site.register(NewUser, UserAdminConfig)
+admin.site.register(PurchaseOrders, PurchaseOrdersAdmin)
+admin.site.register(PurchaseOrderItem)

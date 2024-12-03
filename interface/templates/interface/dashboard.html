@@ -1,6 +1,35 @@
 {% extends 'interface/layout.html' %}
 
 {% block content %}
+<style>
+    .icon-button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 72px;
+        height: 72px;
+        margin: 5px;
+        border: 2px solid #1a85c8;
+        border-radius: 20px;
+        text-align: center;
+        background-color: #f8f9fa;
+        color: #333;
+        text-decoration: none;
+    }
+    .icon-button i {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+    .icon-button + span {
+        font-size: 11px;
+    }
+    .icon-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+</style>
     <main>
         <div class="mx-3 pt-3 dashboard-user-info">
             <h1>{{ user.first_name }} {{ user.last_name }} </h1>
@@ -25,27 +54,47 @@
         {% endif %}
         
         <div class="container">
-            <div class="row px-2">
-                <div class=" col-12">
-                    <a href="{% url 'new_run' %}" title="new_run">
-                        <button class="btn btn-primary">New Run</button>
-                    </a>
-                    <br><br>
-                </div>
-            </div>
-
-            <!--  Notes  -->
-            <div class="row">
-                {% if is_driver %}
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4>Notes</h4>
-                                <p>Submit your times for the day by clicking the "Submit Times" button in the sidebar.</p>
-                            </div>
-                        </div>
+            {% if not is_driver %}
+                <div class="row px-2">
+                    <div class=" col-12">
+                        <a href="{% url 'new_run' %}" title="new_run">
+                            <button class="btn btn-primary">New Run</button>
+                        </a>
+                        <br><br>
                     </div>
-                {% else %}
+                </div>
+            {% endif %}
+            <!--  Notes  -->
+            {% if is_driver %}
+                <div class="icon-grid">
+                    <div class="col" style="display: flex; flex-direction: column; align-items: center;">
+                        <a href="{% url 'driver_times' %}" class="icon-button">
+                            <i class="fa fa-clock"></i>
+                        </a>
+                        <span>Submit Times</span>
+                    </div>
+                    <div class="col" style="display: flex; flex-direction: column; align-items: center;">
+                        <a href="{% url 'driver_times_history' %}" class="icon-button">
+                            <i class="fa fa-calendar"></i>
+                        </a>
+                        <span>My Times</span>
+                    </div>
+                    <div class="col" style="display: flex; flex-direction: column; align-items: center;">
+
+                        <a href="{% url 'run_queue' %}" class="icon-button">
+                            <i class="fa fa-list"></i>
+                        </a>
+                        <span>My Runs</span>
+                    </div>
+                    <div class="col" style="display: flex; flex-direction: column; align-items: center;">
+                        <a href="{% url 'run_history' %}" class="icon-button">
+                            <i class="fa fa-clock-rotate-left"></i>
+                        </a>
+                        <span>Run History</span>
+                    </div>
+                </div>
+            {% else %}
+                <div class="row">
                     <!--  5 Recent Active Runs  -->
                     <div class=" col-12 col-lg-6 mb-2">
                         <div class="card-body">
@@ -109,8 +158,8 @@
                         </div>
                     </div>
                     <!--  End 5 Recent Completed Runs  -->
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
             <br>
         </div>
     </main>

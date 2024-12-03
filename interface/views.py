@@ -1,6 +1,7 @@
 import logging
 from .forms import LoginForm, CreateUserForm, AddProductionForm
-from core.models import Production, Vendor, Location
+from core.forms import LocationForm, ProductionForm, DepartmentForm, JobTitleForm, PurchaseOrdersForm, PurchaseOrderItemFormSet
+from core.models import Production, Vendor, Location, PurchaseOrders, PurchaseOrderItem
 from collections import defaultdict
 from core.models import Location, Production, Vendor, NewUser, Department
 from transportation.forms import NewRunRequest, RunRequest, NewDriver, Driver, NewEquipment, Equipment, NewPictureCars, PictureCars
@@ -876,7 +877,7 @@ def driver_weekly_times_view(request, driver_id):
     print(f"Start of week: {start_of_week}, End of week: {end_of_week}")
 
     # Filter driver times for the selected week
-    driver_times = DriverTimes.objects.filter(driver=driver, work_date__range=[start_of_week, end_of_week]).order_by('work_date')
+    driver_times = DriverTimes.objects.filter(driver=driver, work_date__range=[start_of_week, end_of_week]).order_by('created_at')
 
     # Calculate previous and next week dates
     previous_week = start_of_week - timedelta(days=7)
@@ -1242,7 +1243,8 @@ def run_history(request):
     user_productions = user.productions.filter(is_active=True)
 
     # Check if the user is a driver
-    is_driver = Driver.objects.filter(user=user).exists()
+    driver = Driver.objects.filter(user=user).first()
+    is_driver = driver is not None
 
     # Filter runs by production_title in session
     production_title_in_session = request.session.get('production_title')
@@ -1253,6 +1255,10 @@ def run_history(request):
     user_department = request.session.get('department')
     if user_department not in ['Admin', 'Production', 'Transportation']:
         runs = runs.filter(requester_department=user_department)
+
+    # If the user is a driver, only show runs where the user is an assigned driver
+    if is_driver:
+        runs = runs.filter(assigned_driver=driver)
 
     # Pass the objects to the template context
     context = {
@@ -1266,14 +1272,15 @@ def run_history(request):
 @login_required(login_url='login')
 def run_queue(request):
     # Fetch RunRequest data model
-    runs = RunRequest.objects.exclude(run_status__in=["Completed","Cancelled"]).order_by('run_date', 'need_by_this_time')
+    runs = RunRequest.objects.exclude(run_status__in=["Completed", "Cancelled"]).order_by('run_date', 'need_by_this_time')
 
     # Fetch current user's productions
     user = get_object_or_404(NewUser, id=request.user.id)
     user_productions = user.productions.filter(is_active=True)
 
     # Check if the user is a driver
-    is_driver = Driver.objects.filter(user=user).exists()
+    driver = Driver.objects.filter(user=user).first()
+    is_driver = driver is not None
 
     # Filter runs by production_title in session
     production_title_in_session = request.session.get('production_title')
@@ -1284,6 +1291,10 @@ def run_queue(request):
     user_department = request.session.get('department')
     if user_department not in ['Admin', 'Production', 'Transportation']:
         runs = runs.filter(requester_department=user_department)
+
+    # If the user is a driver, only show runs where the user is an assigned driver
+    if is_driver:
+        runs = runs.filter(assigned_driver=driver)
 
     # Pass the objects to the template context
     context = {
@@ -1886,3 +1897,54 @@ def get_user_details_by_email(request):
 @login_required(login_url='login')
 def fuel_log(request):
    return render(request, 'interface/fuel_log.html')
+
+@login_required(login_url='login')
+def purchase_order(request):
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+    purchase_orders = PurchaseOrders.objects.all()
+
+    context = {
+        'user_productions': user_productions,
+        'purchase_orders': purchase_orders,
+    }
+    return render(request, 'interface/purchase_order.html', context=context)
+
+@login_required(login_url='login')
+def add_purchase_order(request):
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+
+    if request.method == 'POST':
+        form = PurchaseOrdersForm(request.POST)
+        formset = PurchaseOrderItemFormSet(request.POST, instance=form.instance)
+        if form.is_valid() and formset.is_valid():
+            purchase_order = form.save()
+            formset.instance = purchase_order
+            formset.save()
+            return redirect('purchase_order')  # Redirect to the list of purchase orders after saving
+    else:
+        form = PurchaseOrdersForm()
+        formset = PurchaseOrderItemFormSet(instance=PurchaseOrders())
+
+    context = {
+        'user_productions': user_productions,
+        'form': form,
+        'formset': formset,
+    }
+    return render(request, 'interface/add_purchase_order.html', context=context)
+
+@login_required(login_url='login')
+def view_purchase_order(request, purchase_order_id):
+    # Fetch current user's productions
+    user = get_object_or_404(NewUser, id=request.user.id)
+    user_productions = user.productions.filter(is_active=True)
+    purchase_order = get_object_or_404(PurchaseOrders, id=purchase_order_id)
+
+    context = {
+        'user_productions': user_productions,
+        'purchase_order': purchase_order,
+    }
+    return render(request, 'interface/view_purchase_order.html', context=context)

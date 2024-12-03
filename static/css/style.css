@@ -9,6 +9,10 @@ main {
     padding: 0;
 }
 
+.wireframing {
+    border: 1px solid red;
+}
+
 .otd-header {
     z-index: 1100;
 }

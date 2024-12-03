@@ -1,0 +1,172 @@
+{% extends 'interface/layout.html' %}
+
+{% block content %}
+<style>
+    h1, h2, h3 {
+        text-align: center;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .text-right {
+        text-align: right;
+    }
+    .text-center {
+        text-align: center;
+    }
+    .width-150 {
+        width: 150px;
+    }
+    .width-200 {
+        width: 200px;
+    }
+    .width-50 {
+        width: 50px;
+    }
+    .width-300 {
+        width: 300px;
+    }
+    .width-100 {
+        width: 100px;
+    }
+    .align-top-left {
+        vertical-align: top;
+        text-align: left;
+    }
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+        .printable, .printable * {
+            visibility: visible;
+        }
+        .printable {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            width: 100%;
+        }
+        .no-print {
+            display: none !important;
+        }
+    }
+</style>
+<div class="container printable">
+    <br>
+    <div class="float-right text-right">
+        <h4>{{ purchase_order.production_title.production_studio }}</h4>
+        <strong>"{{ purchase_order.production_title.production_title }}"</strong>
+        <p>
+            {{ purchase_order.production_title.production_address_1 }}, 
+            {{ purchase_order.production_title.production_address_2 }}<br>
+            {{ purchase_order.production_title.production_city }}, {{ purchase_order.production_title.production_state }} {{ purchase_order.production_title.production_zip }}<br>
+            {{ purchase_order.production_title.production_phone }}
+        </p>
+    </div>
+    <h1>Purchase Order</h1>
+    <hr>
+    {% if not purchase_order.is_active %}
+        <div class="alert alert-danger text-center" role="alert">
+            This purchase order is closed.
+        </div>
+    {% else %}
+        <div class="alert alert-success text-center" role="alert">
+            This purchase order is open.
+        </div>
+    {% endif %}
+    {% if not purchase_order.is_budgeted %}
+        <div class="alert alert-danger text-center" role="alert">
+            This purchase order is not budgeted.
+        </div>
+    {% else %}
+        <div class="alert alert-success text-center" role="alert">
+            This purchase order is budgeted.
+        </div>
+    {% endif %}
+    <br>
+    <div class="row">
+        <div class="col text-left">
+            <p><strong>Vendor:</strong> {{ purchase_order.vendor_name }}</p>
+            <p><strong>Address:</strong> {{ purchase_order.vendor_address_1 }}</p>
+            <p><strong>Phone:</strong> {{ purchase_order.vendor_phone }}</p> 
+            <p><strong>Contact:</strong> {{ purchase_order.vendor_contact }}</p> 
+        </div>
+        <div class="col text-right">
+            <p><strong>Purchase Order:</strong> {{ purchase_order.po_number }}</p> 
+            <p><strong>Date:</strong> {{ purchase_order.po_date }}</p> 
+            <p><strong>Requested By:</strong> {{ purchase_order.po_date }}</p> 
+            <p><strong>Department:</strong> {{ purchase_order.po_date }}</p> 
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-left">
+            <p><strong>PO Type:</strong> {{ purchase_order.po_type }}</p>
+        </div>
+        <div class="col text-right">
+            <p><strong>Rental Dates:</strong> {{ purchase_order.po_start_date }} - {{ purchase_order.po_end_date }}</p> 
+        </div>
+    </div>
+    <br><br><br><br>
+    <h3>Itemized List</h3>
+    <table>
+        <thead>
+            <tr>
+                <th class="text-center width-50">#</th>
+                <th class="width-300">Item Description</th>
+                <th class="text-right width-100">Quantity</th>
+                <th class="text-right width-100">Unit Price</th>
+                <th class="text-right width-100">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in purchase_order.items.all %}
+            <tr>
+                <td class="text-center">{{ forloop.counter }}</td>
+                <td>{{ item.description }}</td>
+                <td class="text-right">{{ item.quantity }}</td>
+                <td class="text-right">{{ item.unit_price }}</td>
+                <td class="text-right">{{ item.total_price }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="3" rowspan="3" class="align-top-left">
+                    <p>Description: </p>
+                    {{ purchase_order.po_description }}
+                </td>
+                <td class="text-right"><strong>Subtotal</strong></td>
+                <td class="text-right">{{ purchase_order.po_subtotal }}</td>
+            </tr>
+            <tr>
+                <td class="text-right"><strong>Taxes</strong></td>
+                <td class="text-right">{{ purchase_order.po_taxes }}</td>
+            </tr>
+            <tr>
+                <td class="text-right"><strong>Grand Total</strong></td>
+                <td class="text-right">{{ purchase_order.po_grand_total }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<button onclick="printDiv('printable')" class="btn btn-primary no-print">Print</button>
+<a href="{% url 'purchase_order' %}" class="btn btn-secondary no-print">Back to Purchase Orders</a>
+
+<script>
+    function printDiv(divId) {
+        window.print();
+    }
+</script>
+{% endblock %}

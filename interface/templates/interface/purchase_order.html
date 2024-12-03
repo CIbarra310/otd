@@ -1,0 +1,51 @@
+{% extends 'interface/layout.html' %}
+
+{% block content %}
+<h1>Purchase Orders</h1>
+<a href="{% url 'add_purchase_order' %}" class="btn btn-sm btn-primary">New P.O.</a>
+<br><br>
+<table class="table">
+    <thead>
+        <tr>
+            <th>PO Number</th>
+            <th>Vendor</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Type</th>
+            <th>Total</th>
+            <th>Budgeted</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for purchase_order in purchase_orders %}
+        <tr>
+            <td>{{ purchase_order.po_number }}</td>
+            <td>{{ purchase_order.vendor_name }}</td>
+            <td>{{ purchase_order.po_start_date }}</td>
+            <td>{{ purchase_order.po_end_date }}</td>
+            <td>{{ purchase_order.po_type }}</td>
+            <td>{{ purchase_order.po_grand_total }}</td>
+            <td>
+                {% if purchase_order.is_budgeted %}
+                <i class="fa fa-check"></i>
+                {% else %}
+                <i class="fa fa-times"></i>
+                {% endif %}
+            </td>
+            <td>
+                {% if purchase_order.is_active %}
+                <i class="fa fa-check"></i>
+                {% else %}
+                <i class="fa fa-times"></i>
+                {% endif %}
+            <td>
+                <a href="{% url 'view_purchase_order' purchase_order.id %}" class="btn btn-sm btn-secondary">View</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -79,4 +79,8 @@ urlpatterns = [
     path('search_locations/', views.search_locations, name='search_locations'),
     path('search_user_by_email/', views.search_user_by_email, name='search_user_by_email'),
     path('get_user_details_by_email/', views.get_user_details_by_email, name='get_user_details_by_email'),
+
+    path('purchase_order', views.purchase_order, name="purchase_order"),
+    path('add_purchase_order', views.add_purchase_order, name="add_purchase_order"),
+    path('view_purchase_order/<int:purchase_order_id>/', views.view_purchase_order, name="view_purchase_order"),
 ]

@@ -133,3 +133,58 @@ class JobTitle(models.Model):
 
     def __str__(self):
         return f"{self.job_title}"
+    
+class PurchaseOrders(models.Model):
+    PO_TYPE_CHOICES = [
+        ('', 'Select a PO Type'),
+        ('Rental', 'Rental'),
+        ('Purchase', 'Purchase'),
+        ('Service', 'Service'),
+        ('Other', 'Other'),
+    ]
+
+    create_date = models.DateField(auto_now_add=True)
+    production_title = models.ForeignKey(Production, on_delete=models.CASCADE, null=True, blank=True)
+    vendor_name = models.CharField(max_length=100)
+    vendor_phone = models.CharField(max_length=15)
+    vendor_contact = models.CharField(max_length=150, null=True, blank=True)
+    vendor_address_1 = models.CharField(max_length=100)
+    vendor_address_2 = models.CharField(max_length=100, null=True, blank=True)
+    vendor_city = models.CharField(max_length=100)
+    vendor_state = models.CharField(max_length=2)
+    vendor_zip = models.CharField(max_length=10)
+    po_number = models.CharField(max_length=10)
+    po_date = models.DateField(null=True, blank=True)
+    po_start_date = models.DateField(null=True, blank=True)
+    po_end_date = models.DateField(null=True, blank=True)
+    po_duration = models.IntegerField(null=True, blank=True)
+    po_type = models.CharField(max_length=10, choices=PO_TYPE_CHOICES, null=True, blank=True)
+    po_rate = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    po_ammount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    po_subtotal = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    po_taxes = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    po_grand_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    po_description = models.TextField(max_length=2000, null=True, blank=True)
+    is_budgeted = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    def save(self, *args, **kwards):
+        self.po_grand_total = (self.po_subtotal or 0) + (self.po_taxes or 0)
+        super().save(*args, **kwards)
+
+    def __str__(self):
+        return self.po_number
+    
+class PurchaseOrderItem(models.Model):
+    purchase_order = models.ForeignKey(PurchaseOrders, related_name='items', on_delete=models.CASCADE)
+    description = models.CharField(max_length=255)
+    quantity = models.PositiveIntegerField()
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def save(self, *args, **kwargs):
+        self.total_price = self.quantity * self.unit_price
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.description

@@ -1,5 +1,5 @@
 from import_export import resources
-from .models import Production, Vendor, Location, Department, JobTitle
+from .models import Production, Vendor, Location, Department, JobTitle, PurchaseOrders
 
 class ProductionResource(resources.ModelResource):
     class Meta:
@@ -20,3 +20,7 @@ class DepartmentResource(resources.ModelResource):
 class JobTitleResource(resources.ModelResource):
     class Meta:
         model = JobTitle
+
+class PurchaseOrderResource(resources.ModelResource):
+    class Meta:
+        model = PurchaseOrders

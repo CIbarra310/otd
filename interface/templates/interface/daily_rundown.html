@@ -1,73 +1,71 @@
 {% extends 'interface/layout.html' %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1>Driver Daily Rundown for {{ production.production_title }}</h1>
-    <h2>{{ date }} ({{ day_of_week }})</h2>
-    <form method="get" action="{% url 'daily_rundown' %}" id="date-form">
-        <div class="row">
-            <div class="col-10 form-group">
-                <label for="date">Select Date:</label>
+<div class="container mt-5" id="printable" name="printable">
+    <button onclick="printDiv('printable')" class="btn btn-primary mb-3 no-print">Print</button>
+    <h2 class="text-center">Driver Daily Rundown</h2>
+    <h4 class="text-center">{{ production.production_title }}</h4>
+    <div class="row" style="border: 1px solid red">
+        <form method="get" action="{% url 'daily_rundown' %}" id="date-form" class="d-flex justify-content-center">
+            <div>
                 <input type="date" id="date" name="date" class="form-control" value="{{ date }}">
             </div>
-            <div class="col-2 pt-2">
-                <button type="submit" class="btn btn-primary mt-3">View</button>
-            </div>
-        </div>
-    </form>
-    <br>
-    <div id="on-production" name="on-production">
-        <div class="d-flex justify-content-between">
-            <h2>On Production</h2>
-            <a href="{% url 'add_driver_to_rundown' %}?date={{ date }}" class="btn btn-secondary">Add Driver</a>
-        </div>
-        <table class="table border" id="on-production-table">
-            <thead>
+        </form>
+    </div>
+    <hr>
+    <!-- Office Staff -->
+    <div id="office-staff" name="offic-staff" style="border: 1px solid red">
+        <!-- Transportation Coordinator -->
+        <div class="p-1" name="coordinator" id="coordinator" style="border:1px solid red">
+            <table class="table border" id="on-production-table" style="font-size: smaller;">
+                <thead>
+                    <tr>
+                        <th hidden>Driver ID</th>
+                        <th hidden>Department</th>
+                        <th>Name</th>
+                        <th>Call</th>
+                        <th>Wrap</th>
+                        <th>Hours</th>
+                        <th>Assignment</th>
+                        <th>P.O.</th>
+                        <th>Equipment</th>
+                        <th>Instructions</th>
+                        <th class="no-print"></th>
+                    </tr>
+                </thead>
+                <!-- Office Staff -->
                 <tr>
-                    <th hidden>Driver ID</th>
-                    <th>Department</th>
-                    <th>Driver Name</th>
-                    <th>Last 4</th>
-                    <th>Call</th>
-                    <th>Wrap</th>
-                    <th>Assignment</th>
-                    <th>Instructions</th>
-                    <th>Remove</th>
+                    <td colspan="8"><strong>Office Staff</strong></td>
                 </tr>
-            </thead>
-            <tbody>
-                {% for driver in on_production_drivers %}
+                <tbody>
+                    <!-- Transportation Coordinator -->
                     <tr data-driver-id="{{ driver.id }}">
                         <td hidden>{{ driver.id }}</td> <!-- Hidden column for driver ID -->
-                       <td>
-                            {% if driver.supporting_department %}
-                                <span class="badge bg-primary">{{ driver.supporting_department }}</span>
-                            {% else %}
-                                <span class="badge bg-secondary">Floater</span>
-                            {% endif %}
-                       </td>
-                        <td>
-                            <b>{{ driver.first_name }} {{ driver.last_name }}</b><br>
-                            {{ driver.driver_phone }}
-                        </td>
-                        <td>{{ driver.last_4 }}</td>
-                        <td>
-                            {% for dt in driver_times %}
-                                {% if dt.driver_id == driver.id  %}
-                                    {{ dt.call_time }}
+                        <td hidden>
+                                {% if driver.supporting_department %}
+                                    <span class="badge bg-primary">{{ driver.supporting_department }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Floater</span>
                                 {% endif %}
-                            {% empty %}
-                                No call
-                            {% endfor %}
                         </td>
                         <td>
-                            {% for dt in driver_times %}
-                                {% if dt.driver_id == driver.id  %}
-                                    {{ dt.wrap_time }}
-                                {% endif %}
-                            {% empty %}
-                                No wrap
-                            {% endfor %}
+                            <b>Chasen Ibarra</b><br>
+                            (310) 569-0869 8479
+                        </td>
+                        <td>
+                            5.0
+                        </td>
+                        <td>
+                            18.5
+                        </td>
+                        <td>
+                            12.0
+                        </td>
+                        <td>
+                            Camera
+                        </td>
+                        <td>
+                            123456
                         </td>
                         <td>
                             <strong>Truck: </strong>
@@ -97,66 +95,660 @@
                                 {% csrf_token %}
                                 <input type="hidden" name="driver_id" value="{{ driver.id }}">
                                 <input type="hidden" name="date" value="{{ date }}">
-                                <button type="submit" class="btn btn-danger">Remove</button>
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-minus"></i></button>
                             </form>
                         </td>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <div id="off-production" name="off-production">
-        <div class="d-flex justify-content-between">
-            <h2>Off Production</h2>
-        </div>
-        <table class="table border" id="off-production-table">
-            <thead>
+                    <!-- Transportation Captains -->
+                    <tr data-driver-id="{{ driver.id }}">
+                        <td hidden>{{ driver.id }}</td> <!-- Hidden column for driver ID -->
+                        <td hidden>
+                                {% if driver.supporting_department %}
+                                    <span class="badge bg-primary">{{ driver.supporting_department }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Floater</span>
+                                {% endif %}
+                        </td>
+                        <td>
+                            <b>Chasen Ibarra</b><br>
+                            (310) 569-0869 8479
+                        </td>
+                        <td>
+                            5.0
+                        </td>
+                        <td>
+                            18.5
+                        </td>
+                        <td>
+                            12.0
+                        </td>
+                        <td>
+                            Camera
+                        </td>
+                        <td>
+                            123456
+                        </td>
+                        <td>
+                            <strong>Truck: </strong>
+                            {% for truck in driver.assigned_truck.all %}
+                                {{ truck.equipment_type_2 }} {{ truck.fleet_number }}
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}<br>
+                            <strong>Trailer: </strong>
+                            {% for trailer in driver.assigned_trailer.all %}
+                                {{ trailer.equipment_type_2 }} {{ trailer.fleet_number }}<br>
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for dt in driver_times %}
+                                {% if dt.driver_id == driver.id  %}
+                                    {{ dt.instructions }}
+                                {% endif %}
+                            {% empty %}
+                                No instructions
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'remove_driver_from_rundown' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="driver_id" value="{{ driver.id }}">
+                                <input type="hidden" name="date" value="{{ date }}">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-minus"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <!-- DOT Admins-->
+                    <tr data-driver-id="{{ driver.id }}">
+                        <td hidden>{{ driver.id }}</td> <!-- Hidden column for driver ID -->
+                        <td hidden>
+                                {% if driver.supporting_department %}
+                                    <span class="badge bg-primary">{{ driver.supporting_department }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Floater</span>
+                                {% endif %}
+                        </td>
+                        <td>
+                            <b>Chasen Ibarra</b><br>
+                            (310) 569-0869 8479
+                        </td>
+                        <td>
+                            5.0
+                        </td>
+                        <td>
+                            18.5
+                        </td>
+                        <td>
+                            12.0
+                        </td>
+                        <td>
+                            Camera
+                        </td>
+                        <td>
+                            123456
+                        </td>
+                        <td>
+                            <strong>Truck: </strong>
+                            {% for truck in driver.assigned_truck.all %}
+                                {{ truck.equipment_type_2 }} {{ truck.fleet_number }}
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}<br>
+                            <strong>Trailer: </strong>
+                            {% for trailer in driver.assigned_trailer.all %}
+                                {{ trailer.equipment_type_2 }} {{ trailer.fleet_number }}<br>
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for dt in driver_times %}
+                                {% if dt.driver_id == driver.id  %}
+                                    {{ dt.instructions }}
+                                {% endif %}
+                            {% empty %}
+                                No instructions
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'remove_driver_from_rundown' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="driver_id" value="{{ driver.id }}">
+                                <input type="hidden" name="date" value="{{ date }}">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-minus"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <!-- Dispatchers-->
+                    <tr data-driver-id="{{ driver.id }}">
+                        <td hidden>{{ driver.id }}</td> <!-- Hidden column for driver ID -->
+                        <td hidden>
+                                {% if driver.supporting_department %}
+                                    <span class="badge bg-primary">{{ driver.supporting_department }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Floater</span>
+                                {% endif %}
+                        </td>
+                        <td>
+                            <b>Chasen Ibarra</b><br>
+                            (310) 569-0869 8479
+                        </td>
+                        <td>
+                            5.0
+                        </td>
+                        <td>
+                            18.5
+                        </td>
+                        <td>
+                            12.0
+                        </td>
+                        <td>
+                            Camera
+                        </td>
+                        <td>
+                            123456
+                        </td>
+                        <td>
+                            <strong>Truck: </strong>
+                            {% for truck in driver.assigned_truck.all %}
+                                {{ truck.equipment_type_2 }} {{ truck.fleet_number }}
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}<br>
+                            <strong>Trailer: </strong>
+                            {% for trailer in driver.assigned_trailer.all %}
+                                {{ trailer.equipment_type_2 }} {{ trailer.fleet_number }}<br>
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for dt in driver_times %}
+                                {% if dt.driver_id == driver.id  %}
+                                    {{ dt.instructions }}
+                                {% endif %}
+                            {% empty %}
+                                No instructions
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'remove_driver_from_rundown' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="driver_id" value="{{ driver.id }}">
+                                <input type="hidden" name="date" value="{{ date }}">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-minus"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+                <!-- On Production -->
                 <tr>
-                    <th hidden>Driver ID</th>
-                    <th>Department</th>
-                    <th>Driver Name</th>
-                    <th>Last 4</th>
-                    <th>Call</th>
-                    <th>Wrap</th>
-                    <th>Assignment</th>
-                    <th>Instructions</th>
-                    <th>Remove</th>
+                    <td colspan="8"><strong>On Production</strong></td>
                 </tr>
-            </thead>
-            <tbody>
-                {% for driver in off_production_drivers %}
-                <tr data-driver-id="{{ driver.id }}">
-                    <td hidden>{{ driver.id }}</td> <!-- Hidden column for driver ID -->
-                    <td>
-                        {% if driver.supporting_department %}
-                            <span class="badge bg-primary">{{ driver.supporting_department }}</span>
-                        {% else %}
-                            <span class="badge bg-secondary">Floater</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <b>{{ driver.first_name }} {{ driver.last_name }}</b><br>
-                        {{ driver.driver_phone }}
-                    </td>
-                    <td>{{ driver.last_4 }}</td>
-                    <td>
-                        {% for dt in driver_times %}
-                            {% if dt.driver_id == driver.id  %}
-                                {{ dt.call_time }}
+                <tbody>
+                    <!-- Camera -->
+                    <tr data-driver-id="{{ driver.id }}">
+                        <td hidden>{{ driver.id }}</td> <!-- Hidden column for driver ID -->
+                        <td hidden>
+                                {% if driver.supporting_department %}
+                                    <span class="badge bg-primary">{{ driver.supporting_department }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Floater</span>
+                                {% endif %}
+                        </td>
+                        <td>
+                            <b>Chasen Ibarra</b><br>
+                            (310) 569-0869 8479
+                        </td>
+                        <td>
+                            5.0
+                        </td>
+                        <td>
+                            18.5
+                        </td>
+                        <td>
+                            12.0
+                        </td>
+                        <td>
+                            Camera
+                        </td>
+                        <td>
+                            123456
+                        </td>
+                        <td>
+                            <strong>Truck: </strong>
+                            {% for truck in driver.assigned_truck.all %}
+                                {{ truck.equipment_type_2 }} {{ truck.fleet_number }}
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}<br>
+                            <strong>Trailer: </strong>
+                            {% for trailer in driver.assigned_trailer.all %}
+                                {{ trailer.equipment_type_2 }} {{ trailer.fleet_number }}<br>
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for dt in driver_times %}
+                                {% if dt.driver_id == driver.id  %}
+                                    {{ dt.instructions }}
+                                {% endif %}
+                            {% empty %}
+                                No instructions
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'remove_driver_from_rundown' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="driver_id" value="{{ driver.id }}">
+                                <input type="hidden" name="date" value="{{ date }}">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-minus"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <!-- Set Lighting -->
+                    <tr data-driver-id="{{ driver.id }}">
+                        <td hidden>{{ driver.id }}</td> <!-- Hidden column for driver ID -->
+                        <td hidden>
+                                {% if driver.supporting_department %}
+                                    <span class="badge bg-primary">{{ driver.supporting_department }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Floater</span>
+                                {% endif %}
+                        </td>
+                        <td>
+                            <b>Chasen Ibarra</b><br>
+                            (310) 569-0869 8479
+                        </td>
+                        <td>
+                            5.0
+                        </td>
+                        <td>
+                            18.5
+                        </td>
+                        <td>
+                            12.0
+                        </td>
+                        <td>
+                            Camera
+                        </td>
+                        <td>
+                            123456
+                        </td>
+                        <td>
+                            <strong>Truck: </strong>
+                            {% for truck in driver.assigned_truck.all %}
+                                {{ truck.equipment_type_2 }} {{ truck.fleet_number }}
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}<br>
+                            <strong>Trailer: </strong>
+                            {% for trailer in driver.assigned_trailer.all %}
+                                {{ trailer.equipment_type_2 }} {{ trailer.fleet_number }}<br>
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for dt in driver_times %}
+                                {% if dt.driver_id == driver.id  %}
+                                    {{ dt.instructions }}
+                                {% endif %}
+                            {% empty %}
+                                No instructions
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'remove_driver_from_rundown' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="driver_id" value="{{ driver.id }}">
+                                <input type="hidden" name="date" value="{{ date }}">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-minus"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <!-- Grip -->
+                    <tr data-driver-id="{{ driver.id }}">
+                        <td hidden>{{ driver.id }}</td> <!-- Hidden column for driver ID -->
+                        <td hidden>
+                                {% if driver.supporting_department %}
+                                    <span class="badge bg-primary">{{ driver.supporting_department }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Floater</span>
+                                {% endif %}
+                        </td>
+                        <td>
+                            <b>Chasen Ibarra</b><br>
+                            (310) 569-0869 8479
+                        </td>
+                        <td>
+                            5.0
+                        </td>
+                        <td>
+                            18.5
+                        </td>
+                        <td>
+                            12.0
+                        </td>
+                        <td>
+                            Camera
+                        </td>
+                        <td>
+                            123456
+                        </td>
+                        <td>
+                            <strong>Truck: </strong>
+                            {% for truck in driver.assigned_truck.all %}
+                                {{ truck.equipment_type_2 }} {{ truck.fleet_number }}
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}<br>
+                            <strong>Trailer: </strong>
+                            {% for trailer in driver.assigned_trailer.all %}
+                                {{ trailer.equipment_type_2 }} {{ trailer.fleet_number }}<br>
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for dt in driver_times %}
+                                {% if dt.driver_id == driver.id  %}
+                                    {{ dt.instructions }}
+                                {% endif %}
+                            {% empty %}
+                                No instructions
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'remove_driver_from_rundown' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="driver_id" value="{{ driver.id }}">
+                                <input type="hidden" name="date" value="{{ date }}">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-minus"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <!-- Sound -->
+                    <tr data-driver-id="{{ driver.id }}">
+                        <td hidden>{{ driver.id }}</td> <!-- Hidden column for driver ID -->
+                        <td hidden>
+                                {% if driver.supporting_department %}
+                                    <span class="badge bg-primary">{{ driver.supporting_department }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Floater</span>
+                                {% endif %}
+                        </td>
+                        <td>
+                            <b>Chasen Ibarra</b><br>
+                            (310) 569-0869 8479
+                        </td>
+                        <td>
+                            5.0
+                        </td>
+                        <td>
+                            18.5
+                        </td>
+                        <td>
+                            12.0
+                        </td>
+                        <td>
+                            Camera
+                        </td>
+                        <td>
+                            123456
+                        </td>
+                        <td>
+                            <strong>Truck: </strong>
+                            {% for truck in driver.assigned_truck.all %}
+                                {{ truck.equipment_type_2 }} {{ truck.fleet_number }}
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}<br>
+                            <strong>Trailer: </strong>
+                            {% for trailer in driver.assigned_trailer.all %}
+                                {{ trailer.equipment_type_2 }} {{ trailer.fleet_number }}<br>
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for dt in driver_times %}
+                                {% if dt.driver_id == driver.id  %}
+                                    {{ dt.instructions }}
+                                {% endif %}
+                            {% empty %}
+                                No instructions
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'remove_driver_from_rundown' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="driver_id" value="{{ driver.id }}">
+                                <input type="hidden" name="date" value="{{ date }}">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-minus"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <!-- Video -->
+                    <tr data-driver-id="{{ driver.id }}">
+                        <td hidden>{{ driver.id }}</td> <!-- Hidden column for driver ID -->
+                        <td hidden>
+                                {% if driver.supporting_department %}
+                                    <span class="badge bg-primary">{{ driver.supporting_department }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Floater</span>
+                                {% endif %}
+                        </td>
+                        <td>
+                            <b>Chasen Ibarra</b><br>
+                            (310) 569-0869 8479
+                        </td>
+                        <td>
+                            5.0
+                        </td>
+                        <td>
+                            18.5
+                        </td>
+                        <td>
+                            12.0
+                        </td>
+                        <td>
+                            Camera
+                        </td>
+                        <td>
+                            123456
+                        </td>
+                        <td>
+                            <strong>Truck: </strong>
+                            {% for truck in driver.assigned_truck.all %}
+                                {{ truck.equipment_type_2 }} {{ truck.fleet_number }}
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}<br>
+                            <strong>Trailer: </strong>
+                            {% for trailer in driver.assigned_trailer.all %}
+                                {{ trailer.equipment_type_2 }} {{ trailer.fleet_number }}<br>
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for dt in driver_times %}
+                                {% if dt.driver_id == driver.id  %}
+                                    {{ dt.instructions }}
+                                {% endif %}
+                            {% empty %}
+                                No instructions
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'remove_driver_from_rundown' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="driver_id" value="{{ driver.id }}">
+                                <input type="hidden" name="date" value="{{ date }}">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-minus"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <!-- Property -->
+                    <tr data-driver-id="{{ driver.id }}">
+                        <td hidden>{{ driver.id }}</td> <!-- Hidden column for driver ID -->
+                        <td hidden>
+                                {% if driver.supporting_department %}
+                                    <span class="badge bg-primary">{{ driver.supporting_department }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Floater</span>
+                                {% endif %}
+                        </td>
+                        <td>
+                            <b>Chasen Ibarra</b><br>
+                            (310) 569-0869 8479
+                        </td>
+                        <td>
+                            5.0
+                        </td>
+                        <td>
+                            18.5
+                        </td>
+                        <td>
+                            12.0
+                        </td>
+                        <td>
+                            Camera
+                        </td>
+                        <td>
+                            123456
+                        </td>
+                        <td>
+                            <strong>Truck: </strong>
+                            {% for truck in driver.assigned_truck.all %}
+                                {{ truck.equipment_type_2 }} {{ truck.fleet_number }}
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}<br>
+                            <strong>Trailer: </strong>
+                            {% for trailer in driver.assigned_trailer.all %}
+                                {{ trailer.equipment_type_2 }} {{ trailer.fleet_number }}<br>
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for dt in driver_times %}
+                                {% if dt.driver_id == driver.id  %}
+                                    {{ dt.instructions }}
+                                {% endif %}
+                            {% empty %}
+                                No instructions
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'remove_driver_from_rundown' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="driver_id" value="{{ driver.id }}">
+                                <input type="hidden" name="date" value="{{ date }}">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-minus"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <!-- Craft Services -->
+                    <tr data-driver-id="{{ driver.id }}">
+                        <td hidden>{{ driver.id }}</td> <!-- Hidden column for driver ID -->
+                        <td hidden>
+                                {% if driver.supporting_department %}
+                                    <span class="badge bg-primary">{{ driver.supporting_department }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Floater</span>
+                                {% endif %}
+                        </td>
+                        <td>
+                            <b>Chasen Ibarra</b><br>
+                            (310) 569-0869 8479
+                        </td>
+                        <td>
+                            5.0
+                        </td>
+                        <td>
+                            18.5
+                        </td>
+                        <td>
+                            12.0
+                        </td>
+                        <td>
+                            Camera
+                        </td>
+                        <td>
+                            123456
+                        </td>
+                        <td>
+                            <strong>Truck: </strong>
+                            {% for truck in driver.assigned_truck.all %}
+                                {{ truck.equipment_type_2 }} {{ truck.fleet_number }}
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}<br>
+                            <strong>Trailer: </strong>
+                            {% for trailer in driver.assigned_trailer.all %}
+                                {{ trailer.equipment_type_2 }} {{ trailer.fleet_number }}<br>
+                            {% empty %}
+                                No trucks assigned
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for dt in driver_times %}
+                                {% if dt.driver_id == driver.id  %}
+                                    {{ dt.instructions }}
+                                {% endif %}
+                            {% empty %}
+                                No instructions
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'remove_driver_from_rundown' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="driver_id" value="{{ driver.id }}">
+                                <input type="hidden" name="date" value="{{ date }}">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-minus"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+                <!-- Off Production -->
+                <tr>
+                    <td colspan="8"><strong>Off Production</strong></td>
+                </tr>
+                <tbody>
+                    <tr data-driver-id="{{ driver.id }}">
+                        <td hidden>{{ driver.id }}</td> <!-- Hidden column for driver ID -->
+                    <td hidden>
+                            {% if driver.supporting_department %}
+                                <span class="badge bg-primary">{{ driver.supporting_department }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Floater</span>
                             {% endif %}
-                        {% empty %}
-                            No call
-                        {% endfor %}
                     </td>
                     <td>
-                        {% for dt in driver_times %}
-                            {% if dt.driver_id == driver.id  %}
-                                {{ dt.wrap_time }}
-                            {% endif %}
-                        {% empty %}
-                            No wrap
-                        {% endfor %}
+                        <b>Chasen Ibarra</b><br>
+                        (310) 569-0869 8479
                     </td>
+                    <td>
+                        5.0
+                    </td>
+                    <td>
+                        18.5
+                    </td>
+                    <td>
+                        12.0
+                    </td>
+                    <td>
+                        Camera
+                    </td>
+                    <td>
+                        123456
+                    </td>  
                     <td>
                         <strong>Truck: </strong>
                         {% for truck in driver.assigned_truck.all %}
@@ -180,20 +772,56 @@
                             No instructions
                         {% endfor %}
                     </td>
-                    <td>
+                    <td class="no-print">
                         <form method="post" action="{% url 'remove_driver_from_rundown' %}">
                             {% csrf_token %}
                             <input type="hidden" name="driver_id" value="{{ driver.id }}">
                             <input type="hidden" name="date" value="{{ date }}">
-                            <button type="submit" class="btn btn-danger">Remove</button>
+                            <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-minus"></i></button>
                         </form>
                     </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
-    <button id="save-rundown" class="btn btn-primary mt-3">Save Rundown</button>
-    <button id="copy-rundown" class="btn btn-secondary mt-3">Copy to Next Day</button>
+    <hr>
+    <button id="save-rundown" class="btn btn-primary mt-3 no-print">Save Rundown</button>
+    <button id="copy-rundown" class="btn btn-secondary mt-3 no-print">Copy to Next Day</button>
 </div>
+
+<style>
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+        #printable, #printable * {
+            visibility: visible;
+        }
+        
+        #printable {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        font-size: x-small;
+        }
+
+        .no-print {
+            display: none !important;
+        }
+    }
+</style>
+
+<script>
+    function printDiv(divId) {
+        var printContents = document.getElementById(divId).innerHTML;
+        var originalContents = document.body.innerHTML;
+    
+        document.body.innerHTML = printContents;
+    
+        window.print();
+    
+        document.body.innerHTML = originalContents;
+    }
+</script>
 {% endblock %}
